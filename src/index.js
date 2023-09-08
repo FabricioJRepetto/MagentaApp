@@ -1,20 +1,28 @@
-require('dotenv').config()
-const { WebClient } = require('@slack/web-api');
+import * as dotenv from 'dotenv'
+dotenv.config()
+import express, { json, urlencoded } from "express";
+import router from "./routes/index.js";
+import { allowCors, error404, generalErrorHandler } from './middlewares/index.js';
+import cors from "cors";
+import morgan from "morgan";
 
-const TOKEN = process.env.SLACK_TOKEN
-const GENERAL_ID = 'C05RAAHM077';
+const { CLIENT_URL } = process.env;
 
-const client = new WebClient(TOKEN);
+const app = express();
 
-(async () => {
-    const result = await client.chat.postMessage({
-        text: 'Hello world! :smiley:',
-        channel: GENERAL_ID,
-    });
+app.use(allowCors())
+app.use(cors({
+    origin: {
+        origin: ['http://localhost:3000', CLIENT_URL,]
+    }
+}));
 
-    console.log(`Successfully send message ${result.ts} in conversation ${GENERAL_ID}`);
+app.use(json({ limit: "50mb" }));
+app.use(urlencoded({ extended: true, limit: "50mb" }));
+app.use(morgan("dev"));
 
-    client.on('message', (data) => {
-        console.log(data);
-    })
-})()
+app.use("/", router);
+app.use('*', error404)
+app.use(generalErrorHandler);
+
+export default app
