@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 import express, { json, urlencoded } from "express";
-import router from "./routes/index.js";
+import router from "./infra/routes/index.js";
 import { allowCors, error404, generalErrorHandler } from './middlewares/index.js';
 import cors from "cors";
 import morgan from "morgan";
