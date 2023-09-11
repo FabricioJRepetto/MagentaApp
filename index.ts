@@ -2,8 +2,8 @@ import "dotenv/config"
 import express from "express"
 import cors from "cors"
 import morgan from "morgan";
-import routes from "./infra/routes/index"
-import { error404, generalErrorHandler } from "./infra/middlewares";
+import routes from "./src/infra/routes/index"
+import { error404, generalErrorHandler } from "./src/infra/middlewares";
 
 const PORT = process.env.PORT || 3000
 const app = express()
