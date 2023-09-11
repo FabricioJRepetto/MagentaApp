@@ -39,8 +39,9 @@ export default class TestCtrl {
     public mention = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
             //TODO implementar
-            const { event } = body;
             console.log(body);
+
+            if (!body?.event) return res.status(400).json({ error: "No event received" })
 
             /*
                 {
@@ -75,14 +76,16 @@ export default class TestCtrl {
                 }
             */
 
-            switch (event.text) {
-                case /test/g.test(event.text):
-                    this.requestCreator.sendMessage({ message: "Testeando menciones", channel: event.channel });
+            const { text, channel } = body.event;
+
+            switch (text) {
+                case /test/g.test(text):
+                    this.requestCreator.sendMessage({ message: "Testeando menciones", channel });
 
                     break;
 
                 default:
-                    this.requestCreator.mention(event);
+                    this.requestCreator.mention(body.event);
 
                     break;
             }
