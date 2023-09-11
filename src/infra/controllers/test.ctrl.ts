@@ -35,4 +35,13 @@ export default class TestCtrl {
             next(err)
         }
     }
+
+    public mention = async ({ body }: Request, res: Response, next: NextFunction) => {
+        try {
+            //TODO implementar 
+            res.sendStatus(200)
+        } catch (err) {
+            next(err)
+        }
+    }
 }

@@ -1,0 +1,3 @@
+# Magenta App
+## Slack Bot
+
