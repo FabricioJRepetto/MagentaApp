@@ -34,10 +34,10 @@ class SlackClient extends WebClient implements RepositoryExternal {
         return res;
     }
 
-    async replyMention(): Promise<any> {
+    async replyMention(): Promise<ChatPostMessageResponse> {
         //TODO implementar 
         const res = await this.chat.postMessage({
-            text: 'Mention received! :wave:',
+            text: 'Mention received! Hi :wave:',
             channel: GENERAL_ID,
         });
         return res;
