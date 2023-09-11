@@ -39,9 +39,9 @@ export default class TestCtrl {
     public mention = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
             //TODO implementar 
-            const { challenge } = body;
+            const { type, token, challenge } = body;
             this.requestCreator.mention();
-            res.sendStatus(200).json({ challenge })
+            res.send(challenge)
         } catch (err) {
             next(err)
         }
