@@ -27,4 +27,9 @@ export class RequestCreator {
         const responseClient = await this.repositoryExternal.sendMsg({ message, channel });
         return responseClient;
     }
+
+    public async mention(): Promise<ChatPostMessageResponse> {
+        const responseClient = await this.repositoryExternal.replyMention();
+        return responseClient;
+    }
 }

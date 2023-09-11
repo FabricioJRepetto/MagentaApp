@@ -39,6 +39,7 @@ export default class TestCtrl {
     public mention = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
             //TODO implementar 
+            this.requestCreator.mention();
             res.sendStatus(200)
         } catch (err) {
             next(err)
