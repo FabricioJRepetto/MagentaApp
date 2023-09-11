@@ -16,10 +16,7 @@ export class RequestCreator {
         return responseClient;
     }
 
-    public async sendMessage({
-        message,
-        channel,
-    }: {
+    public async sendMessage({ message, channel }: {
         message: string;
         channel: string;
     }): Promise<ChatPostMessageResponse> {
@@ -27,8 +24,8 @@ export class RequestCreator {
         return responseClient;
     }
 
-    public async mention(): Promise<ChatPostMessageResponse> {
-        const responseClient = await this.repositoryExternal.replyMention();
+    public async mention({ user, text, channel }: { user: string; text: string; channel: string }): Promise<ChatPostMessageResponse> {
+        const responseClient = await this.repositoryExternal.replyMention({ user, text, channel });
         return responseClient;
     }
 }

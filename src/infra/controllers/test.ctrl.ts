@@ -38,10 +38,53 @@ export default class TestCtrl {
 
     public mention = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
-            //TODO implementar 
-            console.log(body);
+            //TODO implementar
+            const { event } = body;
+            /*
+                {
+                    token: 'avN58IGqjeItHMO0MvbAPQ7D',
+                    team_id: 'T05RD573ML3',
+                    api_app_id: 'A05RFMNFBD2',
+                    event: {
+                        client_msg_id: '881606c1-fe0b-4089-8567-39ffb66b59da',
+                        type: 'app_mention',
+                        text: '<@U05S2QA8Z5E> bienvenido padrino',
+                        user: 'U05QYMSN93R',
+                        ts: '1694468725.193549',
+                        blocks: [ [Object] ],
+                        team: 'T05RD573ML3',
+                        channel: 'C05RAAHM077',
+                        event_ts: '1694468725.193549'
+                    },
+                    type: 'event_callback',
+                    event_id: 'Ev05RT5D2X1T',
+                    event_time: 1694468725,
+                    authorizations: [
+                        {
+                        enterprise_id: null,
+                        team_id: 'T05RD573ML3',
+                        user_id: 'U05S2QA8Z5E',
+                        is_bot: true,
+                        is_enterprise_install: false
+                        }
+                    ],
+                    is_ext_shared_channel: false,
+                    event_context: '4-eyJldCI6ImFwcF9tZW50aW9uIiwidGlkIjoiVDA1UkQ1NzNNTDMiLCJhaWQiOiJBMDVSRk1ORkJEMiIsImNpZCI6IkMwNVJBQUhNMDc3In0'
+                }
+            */
 
-            this.requestCreator.mention();
+            switch (event.text) {
+                case /test/g.test(event.text):
+                    this.requestCreator.sendMessage({ message: "Testeando menciones", channel: event.channel });
+
+                    break;
+
+                default:
+                    this.requestCreator.mention(event);
+
+                    break;
+            }
+
             res.send(body?.challenge ? body.challenge : body)
         } catch (err) {
             next(err)
