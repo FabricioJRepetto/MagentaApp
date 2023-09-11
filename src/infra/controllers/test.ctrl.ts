@@ -40,6 +40,8 @@ export default class TestCtrl {
         try {
             //TODO implementar
             const { event } = body;
+            console.log(body);
+
             /*
                 {
                     token: 'avN58IGqjeItHMO0MvbAPQ7D',
