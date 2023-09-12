@@ -1,0 +1,383 @@
+{
+	"type": "modal",
+	"title": {
+		"type": "plain_text",
+		"text": "Magenta productividad",
+		"emoji": true
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "Submit",
+		"emoji": true
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": true
+	},
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Registra una nueva actividad"
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"block_id": "time",
+			"type": "actions",
+			"elements": [
+				{
+					"type": "timepicker",
+					"initial_time": "08:00",
+					"placeholder": {
+						"type": "plain_text",
+						"text": "Desde",
+						"emoji": true
+					},
+					"action_id": "from"
+				},
+				{
+					"type": "timepicker",
+					"initial_time": "13:00",
+					"placeholder": {
+						"type": "plain_text",
+						"text": "Hasta",
+						"emoji": true
+					},
+					"action_id": "to"
+				}
+			]
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"block_id": "category",
+			"type": "input",
+			"element": {
+				"type": "static_select",
+				"placeholder": {
+					"type": "plain_text",
+					"text": "Selecciona una categoría",
+					"emoji": true
+				},
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Productividad",
+							"emoji": true
+						},
+						"value": "PRODUCTIVIDAD"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Ocio",
+							"emoji": true
+						},
+						"value": "OCIO"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Descanso",
+							"emoji": true
+						},
+						"value": "DESCANSO"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Autocuidado",
+							"emoji": true
+						},
+						"value": "AUTOCUIDADO"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Inproductividad",
+							"emoji": true
+						},
+						"value": "INPRODUCTIVIDAD"
+					}
+				],
+				"action_id": "category_select"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "Categoría",
+				"emoji": true
+			}
+		},
+		{
+			"block_id": "subcategory",
+			"type": "input",
+			"element": {
+				"type": "static_select",
+				"placeholder": {
+					"type": "plain_text",
+					"text": "Selecciona actividad",
+					"emoji": true
+				},
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Trabajo",
+							"emoji": true
+						},
+						"value": "TRABAJO"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Estudio",
+							"emoji": true
+						},
+						"value": "ESTUDIO"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Actividad fisica",
+							"emoji": true
+						},
+						"value": "ACTIVIDAD_FISICA"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Sociales",
+							"emoji": true
+						},
+						"value": "SOCIALES"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Actividades",
+							"emoji": true
+						},
+						"value": "ACTIVIDADES"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Zapping",
+							"emoji": true
+						},
+						"value": "ZAPPING"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Dormir",
+							"emoji": true
+						},
+						"value": "DORMIR"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Meditación",
+							"emoji": true
+						},
+						"value": "MEDITACION"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Comer",
+							"emoji": true
+						},
+						"value": "COMER"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Ducha",
+							"emoji": true
+						},
+						"value": "DUCHA"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Medico",
+							"emoji": true
+						},
+						"value": "MEDICO"
+					}
+				],
+				"action_id": "subcategory_select"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "Actividad",
+				"emoji": true
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"block_id": "energy",
+			"type": "input",
+			"element": {
+				"type": "radio_buttons",
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "1",
+							"emoji": true
+						},
+						"value": "1"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "2",
+							"emoji": true
+						},
+						"value": "2"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "3",
+							"emoji": true
+						},
+						"value": "3"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "4",
+							"emoji": true
+						},
+						"value": "4"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "5",
+							"emoji": true
+						},
+						"value": "5"
+					}
+				],
+				"action_id": "energy_select"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "¿Cuánto esfuerzo consideras que te tomó?",
+				"emoji": true
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"block_id": "emotion",
+			"type": "input",
+			"element": {
+				"type": "radio_buttons",
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Alegría 😀",
+							"emoji": true
+						},
+						"value": "ALEGRIA"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Confianza 😎",
+							"emoji": true
+						},
+						"value": "CONFIANZA"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Miedo 😨",
+							"emoji": true
+						},
+						"value": "MIEDO"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Sorpresa 😲",
+							"emoji": true
+						},
+						"value": "SORPRESA"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Tristeza 😢",
+							"emoji": true
+						},
+						"value": "TRISTEZA"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Tedio 😴",
+							"emoji": true
+						},
+						"value": "TEDIO"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Enfado 😡",
+							"emoji": true
+						},
+						"value": "ENFADO"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Interés 🤩",
+							"emoji": true
+						},
+						"value": "INTERES"
+					}
+				],
+				"action_id": "emotion_select"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "¿Cuál fue la emoción que predominó en está actividad?",
+				"emoji": true
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"block_id": "description",
+			"type": "input",
+			"element": {
+				"type": "plain_text_input",
+				"action_id": "description_text"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "Descripción",
+				"emoji": true
+			}
+		}
+	]
+}

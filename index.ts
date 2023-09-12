@@ -16,4 +16,4 @@ app.use(`/`, routes)
 app.use('*', error404)
 app.use(generalErrorHandler);
 
-app.listen(PORT, () => console.log(`\x1b[32m✔ \x1b[0m · Server listening on port ${PORT}`))
+app.listen(PORT, () => console.log(`\x1b[32m✔ \x1b[0m · Server listening on port ${PORT}`));
