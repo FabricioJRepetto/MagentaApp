@@ -1,9 +1,9 @@
 import { Router } from "express"
 const router: Router = Router()
 import container from "../ioc";
-import TestCtrl from "../controllers/test.ctrl"
+import InterCtrl from "../controllers/interaction.ctrl"
 
-const testCtrl: TestCtrl = container.get("test.ctrl");
-router.post('/', testCtrl.send)
+const interCtrl: InterCtrl = container.get("interaction.ctrl");
+router.post('/', interCtrl.interactionHandler)
 
 export { router }
