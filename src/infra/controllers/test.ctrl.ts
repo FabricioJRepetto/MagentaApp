@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { RequestCreator } from "../../application/controller.create";
+import { ExternalCreator } from "../../application/controller.create";
 
 // Controlador, solo recibe y responde
 export default class TestCtrl {
-    constructor(private readonly requestCreator: RequestCreator) { }
+    constructor(private readonly external: ExternalCreator) { }
 
     public test = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const response = await this.requestCreator.sayHello();
+            const response = await this.external.sayHello();
 
             const message: string = `Successfully successfully greeted (ID ${response.ts}) on "General" channel`
             console.log(response, message);
@@ -24,7 +24,7 @@ export default class TestCtrl {
                 return res.status(403).json({ error: 'message & channel id needed' })
             }
 
-            const response = await this.requestCreator.sendMessage(body);
+            const response = await this.external.sendMessage(body);
 
             const message = `Successfully sended message: "${body.message}" (ID ${response.ts}) on channel ID: ${body.channel}`
 
@@ -39,7 +39,7 @@ export default class TestCtrl {
     public mention = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
             //TODO implementar
-            console.log(body);
+            // console.log(body);
 
             if (!body?.event) return res.status(400).json({ error: "No event received" })
 
@@ -80,12 +80,12 @@ export default class TestCtrl {
 
             switch (text) {
                 case /test/g.test(text):
-                    this.requestCreator.sendMessage({ message: "Testeando menciones", channel });
+                    this.external.sendMessage({ message: "Testeando menciones", channel });
 
                     break;
 
                 default:
-                    this.requestCreator.mention(body.event);
+                    this.external.mention(body.event);
 
                     break;
             }

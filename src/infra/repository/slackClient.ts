@@ -14,8 +14,6 @@ class SlackClient extends WebClient implements RepositoryExternal {
 
     constructor() {
         super(SLACK_TOKEN)
-
-        this.sayHello()
     }
 
     async sayHello(): Promise<ChatPostMessageResponse> {

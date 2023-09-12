@@ -2,7 +2,7 @@ import { ChatPostMessageResponse } from "@slack/web-api";
 import RepositoryExternal from "../domain/repository.external";
 
 // interaccion con los repositorios
-export class RequestCreator {
+export class ExternalCreator {
     private repositoryExternal: RepositoryExternal;
 
     //TODO añador repositorio DB y Google Calendar methods 
