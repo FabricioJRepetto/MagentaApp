@@ -13,14 +13,14 @@ export default class InteractionCtrl {
                 return res.sendStatus(400)
             }
 
-            const { callback_id } = body;
+            // const { callback_id } = body;
             // new_activity
 
-            if (callback_id === 'new_activity') {
-                // newActivity()
-            }
+            // if (callback_id === 'new_activity') {
+            //     // newActivity()
+            // }
 
-            res.json({});
+            res.sendStatus(200);
 
         } catch (err) {
             next(err)
