@@ -11,6 +11,9 @@ router.get("/", (__, res: Response) => {
 router.get('/sensei', (__, res: Response) => {
     res.send('El facusama te bendice.')
 })
+router.get('/favicon.ico', (__, res: Response) => {
+    res.sendStatus(200)
+})
 
 // router.use('/test', testRouter)
 router.use('/interaction', interRouter)

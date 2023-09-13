@@ -5,13 +5,13 @@ import newActivity from "../../user-interface/modals/new-activity";
 export default class InteractionCtrl {
     // constructor(private readonly ???: ???) { } // agregar repositorios necesarios
 
-    public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
+    public interactionHandler = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(body);
+            console.log(req);
 
-            if (!body?.callback_id) {
-                return res.sendStatus(400)
-            }
+            // if (!req?.body?.callback_id) {
+            //     return res.sendStatus(400)
+            // }
 
             // const { callback_id } = body;
             // new_activity
