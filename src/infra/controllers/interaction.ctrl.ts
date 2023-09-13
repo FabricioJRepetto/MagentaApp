@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { newActivityCallback } from "../listeners/shortcuts/newActivity.js";
+import newActivity from "../../user-interface/modals/new-activity";
 
 export default class InteractionCtrl {
     // constructor(private readonly ???: ???) { } // agregar repositorios necesarios
@@ -16,7 +16,7 @@ export default class InteractionCtrl {
             // new_activity
 
             if (callback_id === 'new_activity') {
-                newActivityCallback()
+                // newActivity()
             }
 
             res.json({});
