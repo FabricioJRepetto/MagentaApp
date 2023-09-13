@@ -7,11 +7,12 @@ export default class InteractionCtrl {
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
+            console.log(body);
+
             if (!body?.callback_id) {
                 return res.sendStatus(400)
             }
 
-            console.log(body);
             const { callback_id } = body;
             // new_activity
 
