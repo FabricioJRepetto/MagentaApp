@@ -1,5 +1,5 @@
-import { readdirSync } from "fs";
-import path from "node:path";
+// import { readdirSync } from "fs";
+// import path from "node:path";
 import { Response, Router } from "express"
 const router: Router = Router()
 import { router as testRouter } from "./test.routes"
