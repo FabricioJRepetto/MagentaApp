@@ -3,6 +3,7 @@ dotenv.config()
 
 import { ChatPostMessageResponse, WebClient } from '@slack/web-api';
 import RepositoryExternal from '../../domain/repository.external';
+import newActivity from '../../user-interface/modals/new-activity';
 
 const { SLACK_TOKEN } = process.env;
 const GENERAL_ID = 'C05RAAHM077';
@@ -14,6 +15,7 @@ class SlackClient extends WebClient implements RepositoryExternal {
 
     constructor() {
         super(SLACK_TOKEN)
+        console.log(`\x1b[32m✔ \x1b[0m · Slack API running`)
     }
 
     async sayHello(): Promise<ChatPostMessageResponse> {
@@ -42,6 +44,12 @@ class SlackClient extends WebClient implements RepositoryExternal {
         return res;
     }
 
+    async openModal(id: string, user?: string): Promise<any> {
+        this.views.open({
+            trigger_id: id,
+            view: JSON.parse(newActivity(user || 'U05QYMSN93R'))
+        })
+    }
 
 }
 

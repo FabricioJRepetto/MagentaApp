@@ -1,24 +1,23 @@
 import { NextFunction, Request, Response } from "express";
+import { ExternalCreator } from "../../application/controller.create";
 
 import newActivity from "../../user-interface/modals/new-activity";
 
 export default class InteractionCtrl {
     // constructor(private readonly ???: ???) { } // agregar repositorios necesarios
+    constructor(private readonly external: ExternalCreator) { }
 
-    public interactionHandler = async (req: Request, res: Response, next: NextFunction) => {
+    public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(req);
+            console.log(body);
 
-            // if (!req?.body?.callback_id) {
-            //     return res.sendStatus(400)
-            // }
+            if (!body?.trigger_id) {
+                return res.sendStatus(400)
+            }
 
-            // const { callback_id } = body;
-            // new_activity
-
-            // if (callback_id === 'new_activity') {
-            //     // newActivity()
-            // }
+            if (body.callback_id === 'new_activity') {
+                this.external.openModal({ id: body.trigger_id, user: body.user.id })
+            }
 
             res.sendStatus(200);
 
@@ -26,4 +25,24 @@ export default class InteractionCtrl {
             next(err)
         }
     }
-} 
+}
+
+/* Payload
+
+    {
+    "type": "shortcut",
+    "token": "XXXXXXXXXXXXX",
+    "action_ts": "1581106241.371594",
+    "team": {
+        "id": "TXXXXXXXX",
+        "domain": "shortcuts-test"
+    },
+    "user": {
+        "id": "UXXXXXXXXX",
+        "username": "aman",
+        "team_id": "TXXXXXXXX"
+    },
+    "callback_id": "shortcut_create_task",
+    "trigger_id": "944799105734.773906753841.38b5894552bdd4a780554ee59d1f3638"
+    } 
+ */

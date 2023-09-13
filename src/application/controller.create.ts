@@ -28,4 +28,8 @@ export class ExternalCreator {
         const responseClient = await this.repositoryExternal.replyMention({ user, text, channel });
         return responseClient;
     }
+
+    public async openModal({ id, user }: { id: string, user: string }): Promise<any> {
+        this.repositoryExternal.openModal(id, user)
+    }
 }
