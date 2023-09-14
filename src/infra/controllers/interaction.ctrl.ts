@@ -16,9 +16,6 @@ export default class InteractionCtrl {
         try {
             const payload = JSON.parse(body.payload)
 
-            console.log("interactionHandler");
-            console.log(payload);
-
             switch (payload.type) {
                 case 'url_verification': {
                     // verify Events API endpoint by returning challenge if present
@@ -68,6 +65,8 @@ export default class InteractionCtrl {
 
 const openModal = async (trigger_id: string, user: string) => {
     try {
+        console.log("trigger id: ", trigger_id, "user: ", user);
+
         const args = {
             token: SLACK_BOT_TOKEN,
             trigger_id,
