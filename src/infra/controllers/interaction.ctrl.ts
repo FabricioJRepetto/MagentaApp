@@ -46,8 +46,7 @@ export default class InteractionCtrl {
                 case 'view_submission': {
                     try {
                         const { user, view: { state: { values } } }: ViewSubmissionPayload = payload;
-                        console.log(user);
-                        console.log(values);
+                        // console.log(values);
 
                         const data = {
                             user,
@@ -65,6 +64,7 @@ export default class InteractionCtrl {
                         return res.sendStatus(200)
 
                     } catch (error) {
+                        console.log(error);
                         return res.sendStatus(400)
                     }
                 }
