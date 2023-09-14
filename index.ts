@@ -39,7 +39,7 @@ const app = new App({
 //     await ack("Hi there!");
 // })
 
-app.shortcut("open_modal", async ({ ack, payload, client }) => {
+app.command("Registrar", async ({ ack, payload, client }) => {
     try {
         await ack();
         const result = await client.views.open({
