@@ -12,15 +12,16 @@ export default class InteractionCtrl {
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
             console.log("interactionHandler");
+            console.log(body);
 
-            switch (body.type) {
+            switch (body.payload.type) {
                 case 'url_verification': {
                     // verify Events API endpoint by returning challenge if present
                     res.send({ challenge: body.challenge });
                     break;
                 }
                 case 'shortcut': {
-                    const { type, user, callback_id, trigger_id } = body;
+                    const { type, user, callback_id, trigger_id } = body.payload;
                     // Verify the signing secret
                     // if (!signature.isVerified(req)) {
                     //     res.sendStatus(404);
@@ -55,7 +56,7 @@ export default class InteractionCtrl {
             // res.sendStatus(200);
 
         } catch (err) {
-            next(err)
+            res.status(400).send(err)
         }
     }
 }
@@ -67,6 +68,8 @@ const openModal = async (trigger_id: string, user: string) => {
         view: await newActivity(user)
     };
     const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
+    console.log(result.data);
+
 };
 
 
