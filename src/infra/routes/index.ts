@@ -2,7 +2,7 @@
 // import path from "node:path";
 import { Response, Router } from "express"
 const router: Router = Router()
-import { router as testRouter } from "./test.routes"
+// import { router as testRouter } from "./test.routes"
 import { router as interRouter } from "./interaction.routes"
 
 router.get("/", (__, res: Response) => {
@@ -15,7 +15,7 @@ router.get('/favicon.ico', (__, res: Response) => {
     res.sendStatus(200)
 })
 
-router.use('/test', testRouter)
+// router.use('/test', testRouter)
 router.use('/slack/events', interRouter)
 
 export default router

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ExternalCreator } from "../../application/controller.create";
+// import { ExternalCreator } from "../../application/controller.create";
 import QueryString from "qs";
 import axios from "axios";
 
@@ -7,7 +7,7 @@ import newActivity from "../../user-interface/modals/new-activity";
 
 export default class InteractionCtrl {
     // constructor(private readonly ???: ???) { } // agregar repositorios necesarios
-    constructor(private readonly external: ExternalCreator) { }
+    // constructor(private readonly external: ExternalCreator) { }
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
@@ -20,8 +20,7 @@ export default class InteractionCtrl {
                     break;
                 }
                 case 'shortcut': {
-                    console.log(body.event);
-
+                    const { type, user, callback_id, trigger_id } = body;
                     // Verify the signing secret
                     // if (!signature.isVerified(req)) {
                     //     res.sendStatus(404);
@@ -29,17 +28,17 @@ export default class InteractionCtrl {
                     // }
 
                     // Request is verified --
-                    const { type, user, channel, tab, text, subtype, callback_id } = body.event;
                     console.log(type);
+
+                    if (callback_id === "new_activity") {
+                        res.sendStatus(200)
+                        openModal(trigger_id, user.id)
+                    }
 
                     // Triggered when the App Home is opened by a user
                     if (type === 'app_home_opened') {
                         // Display App Home
-                        res.sendStatus(200)
-                    }
-                    if (callback_id === "new_activity") {
-                        res.sendStatus(200)
-                        openModal(user.id)
+                        // res.sendStatus(200)
                     }
 
                 }
@@ -63,10 +62,10 @@ export default class InteractionCtrl {
     }
 }
 
-const openModal = async (user: string) => {
+const openModal = async (trigger_id: string, user: string) => {
     const args = {
         token: process.env.SLACK_BOT_TOKEN,
-        user_id: user,
+        trigger_id: trigger_id,
         view: await newActivity(user)
     };
     const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
