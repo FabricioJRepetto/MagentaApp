@@ -33,12 +33,16 @@ export default class InteractionCtrl {
 
                     // Request is verified --
                     if (callback_id === "new_activity") {
-                        res.sendStatus(200)
-                        // openModal(trigger_id, user.id)
-                        const client = new SlackClient()
-                        setTimeout(() => {
-                            client.openModal(trigger_id, user.id)
-                        }, 1000);
+                        try {
+                            res.sendStatus(200)
+                            // openModal(trigger_id, user.id)
+                            const client = new SlackClient()
+                            setTimeout(() => {
+                                client.openModal(trigger_id, user.id)
+                            }, 5000);
+                        } catch (error) {
+                            console.log(error);
+                        }
                     }
 
                     // Triggered when the App Home is opened by a user
