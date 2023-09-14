@@ -29,12 +29,12 @@ export default class InteractionCtrl {
                     //     return res.sendStatus(404);
                     // }
 
-                    if (callback_id === "log_activity") {
+                    if (callback_id === "new_activity") {
                         await openModal(trigger_id, user.id)
                         res.sendStatus(200)
                     }
 
-                    else if (type === 'new_activity') {
+                    else if (type === 'log_activity') {
                         res.sendStatus(200)
                         const { user, view } = JSON.parse(payload);
                         console.log(view);
