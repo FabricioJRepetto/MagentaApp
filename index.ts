@@ -24,9 +24,9 @@ const receiver = new ExpressReceiver({
     app: expressApp,
     clientId: SLACK_CLIENT_ID,
     clientSecret: SLACK_CLIENT_SECRET,
-    signingSecret: SLACK_SIGNING_SECRET || "",
+    signingSecret: SLACK_SIGNING_SECRET || "b9312e18af1746f7d1d2f85b44d5bbbd",
     stateSecret: 'my-state-secret',
-    scopes: ['commands', 'chat:write'],
+    scopes: ['commands', 'chat:write', 'channels:read', 'app_mentions:read'],
     installationStore: new FileInstallationStore({})
 });
 
