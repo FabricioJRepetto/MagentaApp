@@ -2,7 +2,7 @@ import { Modal, Blocks, Elements, Option } from 'slack-block-builder';
 
 export default (currentUser: string) => {
 
-    return Modal({ title: 'Registrar nueva actividad', submit: 'Enviar', close: "cancelar", callbackId: 'new_activity' })
+    const modal = Modal({ title: 'Registrar nueva actividad', submit: 'Enviar', close: "cancelar", callbackId: 'new_activity' })
         .blocks(
             Blocks.Section({ text: "Registra una nueva actividad" }),
             Blocks.Input({ label: 'Description', blockId: 'description' }).element(
@@ -81,4 +81,6 @@ export default (currentUser: string) => {
                 }).initialUser(currentUser),
             ),
         ).buildToJSON();
+
+    return JSON.parse(modal);
 };

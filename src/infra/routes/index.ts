@@ -16,7 +16,7 @@ router.get('/favicon.ico', (__, res: Response) => {
 })
 
 router.use('/test', testRouter)
-router.use('/interaction', interRouter)
+router.use('/slack/events', interRouter)
 
 export default router
 
