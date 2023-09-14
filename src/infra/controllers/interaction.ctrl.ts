@@ -33,16 +33,8 @@ export default class InteractionCtrl {
 
                     // Request is verified --
                     if (callback_id === "new_activity") {
-                        try {
-                            res.sendStatus(200)
-                            // openModal(trigger_id, user.id)
-                            const client = new SlackClient()
-                            setTimeout(() => {
-                                client.openModal(trigger_id, user.id)
-                            }, 5000);
-                        } catch (error) {
-                            console.log(error);
-                        }
+                        res.sendStatus(200)
+                        await openModal(trigger_id, user.id)
                     }
 
                     // Triggered when the App Home is opened by a user
@@ -53,18 +45,6 @@ export default class InteractionCtrl {
 
                 }
             }
-
-            // console.log(body);
-
-            // if (!body?.trigger_id) {
-            //     return res.sendStatus(400)
-            // }
-
-            // if (body.callback_id === 'new_activity') {
-            //     this.external.openModal({ id: body.trigger_id, user: body.user.id })
-            // }
-
-            // res.sendStatus(200);
 
         } catch (err) {
             res.status(400).send(err)
@@ -79,6 +59,8 @@ const openModal = async (trigger_id: string, user: string) => {
             trigger_id,
             view: newActivity(user)
         };
+        console.log(QueryString.stringify(args));
+
         const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
         console.log(result.data);
     } catch (error) {
