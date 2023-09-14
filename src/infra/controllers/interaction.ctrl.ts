@@ -35,16 +35,26 @@ export default class InteractionCtrl {
                     }
 
                     else if (type === 'log_activity') {
-                        res.sendStatus(200)
-                        const { user, view } = JSON.parse(payload);
-                        console.log(view);
+                        try {
+                            const { user, view } = JSON.parse(payload);
+                            console.log(user);
+                            console.log(view.state.values);
 
-                        // const data = {
-                        //     timestamp: ts.toLocaleString(),
-                        //     note: view.state.values.note01.content.value,
-                        //     color: view.state.values.note02.color.selected_option.value
-                        // }
-                        // appHome.displayHome(user.id, data);
+                            const data = {
+                                from: 'time.from.selected_time',
+                                to: 'time.to.selected_time',
+                                category: 'category.category_select.selected_option.value',
+                                subcategory: 'subcategory.subcategory_select.selected_option.value',
+                                energy: 'energy.energy_select.selected_option.value',
+                                emotion: 'emotion.emotion_select.selected_option.value',
+                                description: 'description.description_text.value'
+                            }
+                            // appHome.displayHome(user.id, data);
+                            return res.sendStatus(200)
+
+                        } catch (error) {
+                            return res.sendStatus(400)
+                        }
                     }
 
                     // Triggered when the App Home is opened by a user
@@ -73,7 +83,7 @@ const openModal = async (trigger_id: string, user: string) => {
         const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
 
         console.log(result.data);
-        console.log(result.data.response_metadata.messages);
+        result?.data?.response_metadata?.messages && console.log(result.data.response_metadata.messages);
     } catch (error) {
         console.log(error);
     }
