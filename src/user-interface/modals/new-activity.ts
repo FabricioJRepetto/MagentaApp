@@ -1,7 +1,7 @@
 import { Modal, Blocks, Elements, Option } from 'slack-block-builder';
 
 export default (currentUser: string) => {
-    const time = new Date().toLocaleString("es-MX", { timeZone: "America/Argentina/Buenos_Aires" }),
+    const time = new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" }),
         hour = new Date(time).getHours();
 
     const modal = Modal({ title: 'Registrar actividad', submit: 'Enviar', close: "cancelar", callbackId: 'new_activity' })
