@@ -42,7 +42,7 @@ export default class InteractionCtrl {
                     }
 
                 }
-                case 'log_activity': {
+                case 'view_submission': {
                     try {
                         const { user, view } = JSON.parse(payload);
                         console.log(user);
