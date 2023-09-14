@@ -15,7 +15,7 @@ export default class InteractionCtrl {
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
             const payload = JSON.parse(body.payload)
-            console.log(payload);
+            // console.log(payload);
 
             switch (payload.type) {
                 case 'url_verification': {
@@ -46,7 +46,7 @@ export default class InteractionCtrl {
                 case 'view_submission': {
                     try {
                         const { user, view: { state: { values } } }: ViewSubmissionPayload = payload;
-                        // console.log(values);
+                        console.log(values);
 
                         const data = {
                             user,
