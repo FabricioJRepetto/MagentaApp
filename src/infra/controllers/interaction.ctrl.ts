@@ -11,17 +11,19 @@ export default class InteractionCtrl {
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
-            console.log("interactionHandler");
-            console.log(body);
+            const payload = JSON.parse(body.payload)
 
-            switch (body.payload.type) {
+            console.log("interactionHandler");
+            console.log(payload);
+
+            switch (payload.type) {
                 case 'url_verification': {
                     // verify Events API endpoint by returning challenge if present
-                    res.send({ challenge: body.challenge });
+                    res.send({ challenge: payload.challenge });
                     break;
                 }
                 case 'shortcut': {
-                    const { type, user, callback_id, trigger_id } = JSON.parse(body.payload);
+                    const { type, user, callback_id, trigger_id } = payload;
                     // Verify the signing secret
                     // if (!signature.isVerified(req)) {
                     //     res.sendStatus(404);
