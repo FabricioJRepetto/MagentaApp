@@ -44,7 +44,7 @@ export default class InteractionCtrl {
                 }
                 case 'view_submission': {
                     try {
-                        const { user, view } = JSON.parse(payload);
+                        const { user, view } = payload;
                         console.log(user);
                         console.log(view.state.values);
 
