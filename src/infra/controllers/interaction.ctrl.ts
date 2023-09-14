@@ -59,9 +59,8 @@ const openModal = async (trigger_id: string, user: string) => {
             trigger_id,
             view: newActivity(user)
         };
-        console.log(QueryString.stringify(args));
 
-        const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
+        const result = await axios.post('https://slack.com/api/views.open', args);
         console.log(result.data);
     } catch (error) {
         console.log(error);
