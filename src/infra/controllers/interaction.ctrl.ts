@@ -5,12 +5,10 @@ import QueryString from "qs";
 import axios from "axios";
 
 import newActivity from "../../user-interface/modals/new-activity";
-import SlackClient from "../repository/slackClient";
 
 const { SLACK_BOT_TOKEN } = process.env;
 
 export default class InteractionCtrl {
-    // constructor(private readonly ???: ???) { } // agregar repositorios necesarios
     // constructor(private readonly external: ExternalCreator) { }
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
@@ -25,16 +23,28 @@ export default class InteractionCtrl {
                 }
                 case 'shortcut': {
                     const { type, user, callback_id, trigger_id } = payload;
-                    // Verify the signing secret
+
+                    //TODO Verify the signing secret
                     // if (!signature.isVerified(req)) {
-                    //     res.sendStatus(404);
-                    //     return;
+                    //     return res.sendStatus(404);
                     // }
 
-                    // Request is verified --
-                    if (callback_id === "new_activity") {
+                    if (callback_id === "log_activity") {
                         await openModal(trigger_id, user.id)
                         res.sendStatus(200)
+                    }
+
+                    else if (type === 'new_activity') {
+                        res.sendStatus(200)
+                        const { user, view } = JSON.parse(payload);
+                        console.log(view);
+
+                        // const data = {
+                        //     timestamp: ts.toLocaleString(),
+                        //     note: view.state.values.note01.content.value,
+                        //     color: view.state.values.note02.color.selected_option.value
+                        // }
+                        // appHome.displayHome(user.id, data);
                     }
 
                     // Triggered when the App Home is opened by a user
@@ -61,8 +71,9 @@ const openModal = async (trigger_id: string, user: string) => {
         };
 
         const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
-        console.log(result.data);
-        console.log(result.data.response_metadata.messages);
+
+        // console.log(result.data);
+        // console.log(result.data.response_metadata.messages);
     } catch (error) {
         console.log(error);
     }
@@ -70,7 +81,7 @@ const openModal = async (trigger_id: string, user: string) => {
 };
 
 
-/* Payload
+/*//? Payload ?//
 
     {
     "type": "shortcut",
@@ -92,4 +103,88 @@ const openModal = async (trigger_id: string, user: string) => {
     {
   payload: '{"type":"shortcut","token":"avN58IGqjeItHMO0MvbAPQ7D","action_ts":"1694707129.972629","team":{"id":"T05RD573ML3","domain":"magentaproduc-dqe3450"},"user":{"id":"U05QYMSN93R","username":"fabricio.j.repetto","team_id":"T05RD573ML3"},"is_enterprise_install":false,"enterprise":null,"callback_id":"new_activity","trigger_id":"5882852648727.5863177123683.954e0abea1f3924a6d19dc3254473f61"}'
 }
- */
+
+//? Modal submit body ?//
+
+user: ????
+
+from: time.from.selected_time,
+to: time.to.selected_time,
+category: category.category_select.selected_option.value,
+subcategory: subcategory.subcategory_select.selected_option.value,
+energy: energy.energy_select.selected_option.value,
+emotion: emotion.emotion_select.selected_option.value,
+description: description.description_text.value
+
+{
+  "time": {
+    "from": {
+      "type": "timepicker",
+      "selected_time": "08:00"
+    },
+    "to": {
+      "type": "timepicker",
+      "selected_time": "13:00"
+    }
+  },
+  "category": {
+    "category_select": {
+      "type": "static_select",
+      "selected_option": {
+        "text": {
+          "type": "plain_text",
+          "text": "Productividad",
+          "emoji": true
+        },
+        "value": "PRODUCTIVIDAD"
+      }
+    }
+  },
+  "subcategory": {
+    "subcategory_select": {
+      "type": "static_select",
+      "selected_option": {
+        "text": {
+          "type": "plain_text",
+          "text": "Sociales",
+          "emoji": true
+        },
+        "value": "SOCIALES"
+      }
+    }
+  },
+  "energy": {
+    "energy_select": {
+      "type": "radio_buttons",
+      "selected_option": {
+        "text": {
+          "type": "plain_text",
+          "text": "3",
+          "emoji": true
+        },
+        "value": "3"
+      }
+    }
+  },
+  "emotion": {
+    "emotion_select": {
+      "type": "radio_buttons",
+      "selected_option": {
+        "text": {
+          "type": "plain_text",
+          "text": "Sorpresa 😲",
+          "emoji": true
+        },
+        "value": "SORPRESA"
+      }
+    }
+  },
+  "description": {
+    "description_text": {
+      "type": "plain_text_input",
+      "value": "desc"
+    }
+  }
+}
+
+*/
