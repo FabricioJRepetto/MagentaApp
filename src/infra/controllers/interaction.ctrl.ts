@@ -65,12 +65,10 @@ export default class InteractionCtrl {
 
 const openModal = async (trigger_id: string, user: string) => {
     try {
-        console.log("trigger id: ", trigger_id, "user: ", user);
-
         const args = {
             token: SLACK_BOT_TOKEN,
             trigger_id,
-            view: await newActivity(user)
+            view: newActivity(user)
         };
         const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
         console.log(result.data);

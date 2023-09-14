@@ -82,5 +82,5 @@ export default (currentUser: string) => {
             ),
         ).buildToJSON();
 
-    return JSON.parse(modal);
+    return modal;
 };
