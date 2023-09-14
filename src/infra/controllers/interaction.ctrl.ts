@@ -11,7 +11,7 @@ export default class InteractionCtrl {
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(body);
+            console.log("interactionHandler");
 
             switch (body.type) {
                 case 'url_verification': {
@@ -28,8 +28,6 @@ export default class InteractionCtrl {
                     // }
 
                     // Request is verified --
-                    console.log(type);
-
                     if (callback_id === "new_activity") {
                         res.sendStatus(200)
                         openModal(trigger_id, user.id)
