@@ -46,7 +46,7 @@ export default class InteractionCtrl {
                 case 'view_submission': {
                     try {
                         const { user, view: { state: { values } } }: ViewSubmissionPayload = payload;
-                        console.log(values);
+                        // console.log(values);
 
                         const data = {
                             user,
@@ -59,7 +59,12 @@ export default class InteractionCtrl {
                             emotion: values.emotion.emotion_select.selected_option.value
                         }
                         // appHome.displayHome(user.id, data);
-                        console.log(data);
+                        console.log('submited data: ', data);
+                        //TODO Guardar en DB 
+                        //TODO Sincronizar Google Calendar 
+
+                        //TODO Close view 
+                        // https://api.slack.com/surfaces/modals#lifecycle
 
                         return res.sendStatus(200)
 

@@ -49,6 +49,7 @@ class SlackClient extends WebClient implements RepositoryExternal {
             trigger_id,
             view: JSON.parse(newActivity(user || 'U05QYMSN93R'))
         })
+
     }
 
 }

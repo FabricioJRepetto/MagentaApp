@@ -75,13 +75,7 @@ export default (currentUser: string) => {
                     Option({ text: "Enfado 😡", value: "ENFADO" }),
                     Option({ text: "Interés 🤩", value: "INTERES" })
                 ])
-            ),
-
-            Blocks.Input({ label: 'Assign user', blockId: 'taskAssignUser' }).element(
-                Elements.UserSelect({
-                    actionId: 'taskAssignUser',
-                }).initialUser(currentUser),
-            ),
+            )
         ).buildToJSON();
 
     return modal;

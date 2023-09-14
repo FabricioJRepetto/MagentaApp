@@ -118,8 +118,4 @@ export interface Values {
             }
         }
     }
-    taskAssignUser: {
-        type: string
-        selected_user: string
-    }
 }
