@@ -65,7 +65,7 @@ export default (currentUser: string) => {
             ),
             Blocks.Divider(),
             Blocks.Input({ label: "¿Cuál fue la emoción que predominó en está actividad?", blockId: "emotion" }).element(
-                Elements.RadioButtons({ actionId: "energy_select" }).options([
+                Elements.RadioButtons({ actionId: "emotion_select" }).options([
                     Option({ text: "Alegría 😀", value: "ALEGRIA" }),
                     Option({ text: "Confianza 😎", value: "CONFIANZA" }),
                     Option({ text: "Miedo 😨", value: "MIEDO" }),

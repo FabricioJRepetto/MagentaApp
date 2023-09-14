@@ -5,6 +5,7 @@ import QueryString from "qs";
 import axios from "axios";
 
 import newActivity from "../../user-interface/modals/new-activity";
+import { ViewSubmissionPayload } from "../../domain/ViewSubmissionPayload";
 
 const { SLACK_BOT_TOKEN } = process.env;
 
@@ -44,21 +45,22 @@ export default class InteractionCtrl {
                 }
                 case 'view_submission': {
                     try {
-                        const { user, view } = payload;
+                        const { user, view: { state: { values } } }: ViewSubmissionPayload = payload;
                         console.log(user);
-                        console.log(view.state.values);
+                        console.log(values);
 
                         const data = {
-                            from: 'time.from.selected_time',
-                            to: 'time.to.selected_time',
-                            category: 'category.category_select.selected_option.value',
-                            subcategory: 'subcategory.subcategory_select.selected_option.value',
-                            energy: 'energy.energy_select.selected_option.value',
-                            emotion: 'emotion.emotion_select.selected_option.value',
-                            description: 'description.description_text.value'
+                            user,
+                            description: values.description.taskTitle.value,
+                            from: values.time_from.from.selected_time,
+                            to: values.time_to.to.selected_time,
+                            category: values.category.category_select.selected_option.value,
+                            subcategory: values.subcategory.subcategory_select.selected_option.value,
+                            energy: values.energy.energy_select.selected_option.value,
+                            emotion: values.emotion.emotion_select.selected_option.value
                         }
                         // appHome.displayHome(user.id, data);
-                        // console.log(data);
+                        console.log(data);
 
                         return res.sendStatus(200)
 
