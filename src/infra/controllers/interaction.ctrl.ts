@@ -1,9 +1,12 @@
+import "dotenv/config"
 import { NextFunction, Request, Response } from "express";
 // import { ExternalCreator } from "../../application/controller.create";
 import QueryString from "qs";
 import axios from "axios";
 
 import newActivity from "../../user-interface/modals/new-activity";
+
+const { SLACK_BOT_TOKEN } = process.env;
 
 export default class InteractionCtrl {
     // constructor(private readonly ???: ???) { } // agregar repositorios necesarios
@@ -64,13 +67,17 @@ export default class InteractionCtrl {
 }
 
 const openModal = async (trigger_id: string, user: string) => {
-    const args = {
-        token: process.env.SLACK_BOT_TOKEN,
-        trigger_id: trigger_id,
-        view: await newActivity(user)
-    };
-    const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
-    console.log(result.data);
+    try {
+        const args = {
+            token: SLACK_BOT_TOKEN,
+            trigger_id,
+            view: await newActivity(user)
+        };
+        const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
+        console.log(result.data);
+    } catch (error) {
+        console.log(error);
+    }
 
 };
 
