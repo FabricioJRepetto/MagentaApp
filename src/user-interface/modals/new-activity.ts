@@ -1,6 +1,8 @@
 import { Modal, Blocks, Elements, Option } from 'slack-block-builder';
 
 export default (currentUser: string) => {
+    const time = new Date().toLocaleString("es-MX", { timeZone: "America/Argentina/Buenos_Aires" }),
+        hour = new Date(time).getHours();
 
     const modal = Modal({ title: 'Registrar actividad', submit: 'Enviar', close: "cancelar", callbackId: 'new_activity' })
         .blocks(
@@ -14,14 +16,14 @@ export default (currentUser: string) => {
             Blocks.Divider(),
             Blocks.Input({ label: "Desde", blockId: "time_from" }).element(
                 Elements.TimePicker({
-                    initialTime: new Date().getHours() + ":00",
+                    initialTime: hour + ":00",
                     placeholder: "desde",
                     actionId: "from"
                 })
             ),
             Blocks.Input({ label: "Hasta", blockId: "time_to" }).element(
                 Elements.TimePicker({
-                    initialTime: new Date().getHours() + 1 + ":00",
+                    initialTime: hour + 1 + ":00",
                     placeholder: "hasta",
                     actionId: "to"
                 })
