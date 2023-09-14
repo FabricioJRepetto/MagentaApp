@@ -12,7 +12,7 @@ import container from "./src/infra/ioc";
 import newActivity from "./src/user-interface/modals/new-activity";
 
 const {
-    PORT,
+    PORT = 3000,
     SLACK_SIGNING_SECRET,
     SLACK_CLIENT_ID,
     SLACK_CLIENT_SECRET
@@ -54,8 +54,16 @@ app.shortcut("open_modal", async ({ ack, payload, client }) => {
     }
 })
 
-expressApp.listen(PORT || 3000, () => {
-    console.log('⚡️ Bolt app is running! ⚡️');
+expressApp.use(cors())
+expressApp.use(express.json())
+expressApp.use(morgan("dev"));
+expressApp.use(`/`, routes)
+
+expressApp.use('*', error404)
+expressApp.use(generalErrorHandler);
+
+expressApp.listen(PORT, () => {
+    console.log(`⚡️ Bolt+Express app is running on port ${PORT}`);
 });
 
 
