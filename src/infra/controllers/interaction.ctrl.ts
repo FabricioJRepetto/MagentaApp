@@ -27,19 +27,23 @@ export default class InteractionCtrl {
                     //     res.sendStatus(404);
                     //     return;
                     // }
+
                     // Request is verified --
-                    const { type, user, channel, tab, text, subtype } = body.event;
+                    const { type, user, channel, tab, text, subtype, callback_id } = body.event;
                     console.log(type);
 
                     // Triggered when the App Home is opened by a user
                     if (type === 'app_home_opened') {
                         // Display App Home
-                        openModal(user);
+                        res.sendStatus(200)
                     }
+                    if (callback_id === "new_activity") {
+                        res.sendStatus(200)
+                        openModal(user.id)
+                    }
+
                 }
             }
-
-            res.sendStatus(200)
 
             // console.log(body);
 
@@ -87,4 +91,8 @@ const openModal = async (user: string) => {
     "callback_id": "shortcut_create_task",
     "trigger_id": "944799105734.773906753841.38b5894552bdd4a780554ee59d1f3638"
     } 
+
+    {
+  payload: '{"type":"shortcut","token":"avN58IGqjeItHMO0MvbAPQ7D","action_ts":"1694707129.972629","team":{"id":"T05RD573ML3","domain":"magentaproduc-dqe3450"},"user":{"id":"U05QYMSN93R","username":"fabricio.j.repetto","team_id":"T05RD573ML3"},"is_enterprise_install":false,"enterprise":null,"callback_id":"new_activity","trigger_id":"5882852648727.5863177123683.954e0abea1f3924a6d19dc3254473f61"}'
+}
  */
