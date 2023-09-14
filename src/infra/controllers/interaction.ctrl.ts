@@ -33,8 +33,8 @@ export default class InteractionCtrl {
 
                     // Request is verified --
                     if (callback_id === "new_activity") {
-                        res.sendStatus(200)
                         await openModal(trigger_id, user.id)
+                        res.sendStatus(200)
                     }
 
                     // Triggered when the App Home is opened by a user
