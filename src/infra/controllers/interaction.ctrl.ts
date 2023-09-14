@@ -14,6 +14,7 @@ export default class InteractionCtrl {
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
             const payload = JSON.parse(body.payload)
+            console.log(payload);
 
             switch (payload.type) {
                 case 'url_verification': {
