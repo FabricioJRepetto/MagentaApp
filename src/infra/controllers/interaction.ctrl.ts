@@ -11,7 +11,7 @@ export default class InteractionCtrl {
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(body.type);
+            console.log(body);
 
             switch (body.type) {
                 case 'url_verification': {
@@ -19,7 +19,7 @@ export default class InteractionCtrl {
                     res.send({ challenge: body.challenge });
                     break;
                 }
-                case 'event_callback': {
+                case 'shortcut': {
                     console.log(body.event);
 
                     // Verify the signing secret
@@ -38,6 +38,8 @@ export default class InteractionCtrl {
                     }
                 }
             }
+
+            res.sendStatus(200)
 
             // console.log(body);
 
