@@ -21,7 +21,7 @@ export default class InteractionCtrl {
                     break;
                 }
                 case 'shortcut': {
-                    const { type, user, callback_id, trigger_id } = body.payload;
+                    const { type, user, callback_id, trigger_id } = JSON.parse(body.payload);
                     // Verify the signing secret
                     // if (!signature.isVerified(req)) {
                     //     res.sendStatus(404);
