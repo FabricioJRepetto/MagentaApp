@@ -35,35 +35,36 @@ export default class InteractionCtrl {
                         res.sendStatus(200)
                     }
 
-                    else if (type === 'log_activity') {
-                        try {
-                            const { user, view } = JSON.parse(payload);
-                            console.log(user);
-                            console.log(view.state.values);
-
-                            const data = {
-                                from: 'time.from.selected_time',
-                                to: 'time.to.selected_time',
-                                category: 'category.category_select.selected_option.value',
-                                subcategory: 'subcategory.subcategory_select.selected_option.value',
-                                energy: 'energy.energy_select.selected_option.value',
-                                emotion: 'emotion.emotion_select.selected_option.value',
-                                description: 'description.description_text.value'
-                            }
-                            // appHome.displayHome(user.id, data);
-                            return res.sendStatus(200)
-
-                        } catch (error) {
-                            return res.sendStatus(400)
-                        }
-                    }
-
                     // Triggered when the App Home is opened by a user
                     if (type === 'app_home_opened') {
                         // Display App Home
                         // res.sendStatus(200)
                     }
 
+                }
+                case 'log_activity': {
+                    try {
+                        const { user, view } = JSON.parse(payload);
+                        console.log(user);
+                        console.log(view.state.values);
+
+                        const data = {
+                            from: 'time.from.selected_time',
+                            to: 'time.to.selected_time',
+                            category: 'category.category_select.selected_option.value',
+                            subcategory: 'subcategory.subcategory_select.selected_option.value',
+                            energy: 'energy.energy_select.selected_option.value',
+                            emotion: 'emotion.emotion_select.selected_option.value',
+                            description: 'description.description_text.value'
+                        }
+                        // appHome.displayHome(user.id, data);
+                        // console.log(data);
+
+                        return res.sendStatus(200)
+
+                    } catch (error) {
+                        return res.sendStatus(400)
+                    }
                 }
             }
 
