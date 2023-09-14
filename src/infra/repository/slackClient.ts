@@ -44,11 +44,10 @@ class SlackClient extends WebClient implements RepositoryExternal {
         return res;
     }
 
-    async openModal(id: string, user?: string): Promise<any> {
-
+    async openModal(trigger_id: string, user?: string): Promise<any> {
         this.views.open({
-            trigger_id: id,
-            view: newActivity(user || 'U05QYMSN93R')
+            trigger_id,
+            view: JSON.parse(newActivity(user || 'U05QYMSN93R'))
         })
     }
 

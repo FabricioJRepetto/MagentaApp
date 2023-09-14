@@ -5,6 +5,7 @@ import QueryString from "qs";
 import axios from "axios";
 
 import newActivity from "../../user-interface/modals/new-activity";
+import SlackClient from "../repository/slackClient";
 
 const { SLACK_BOT_TOKEN } = process.env;
 
@@ -33,7 +34,11 @@ export default class InteractionCtrl {
                     // Request is verified --
                     if (callback_id === "new_activity") {
                         res.sendStatus(200)
-                        openModal(trigger_id, user.id)
+                        // openModal(trigger_id, user.id)
+                        const client = new SlackClient()
+                        setTimeout(() => {
+                            client.openModal(trigger_id, user.id)
+                        }, 1000);
                     }
 
                     // Triggered when the App Home is opened by a user
