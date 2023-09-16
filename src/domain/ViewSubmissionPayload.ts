@@ -1,3 +1,5 @@
+import { CATEGORY, EMOTION, SUBCATEGORY } from "./ActivityPayload"
+
 export interface ViewSubmissionPayload {
     type: string
     team: Team
@@ -90,7 +92,7 @@ export interface Values {
         category_select: {
             type: string
             selected_option: {
-                value: string
+                value: CATEGORY
             }
         }
     }
@@ -98,7 +100,7 @@ export interface Values {
         subcategory_select: {
             type: string
             selected_option: {
-                value: string
+                value: SUBCATEGORY
             }
         }
     }
@@ -114,7 +116,7 @@ export interface Values {
         emotion_select: {
             type: string
             selected_option: {
-                value: string
+                value: EMOTION
             }
         }
     }

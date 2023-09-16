@@ -5,7 +5,8 @@ import QueryString from "qs";
 import axios from "axios";
 
 import newActivity from "../../user-interface/modals/new-activity";
-import { ViewSubmissionPayload } from "../../domain/ViewSubmissionPayload";
+import { User, Values, ViewSubmissionPayload } from "../../domain/ViewSubmissionPayload";
+import { ActivityPayload } from "../../domain/ActivityPayload";
 
 const { SLACK_BOT_TOKEN } = process.env;
 
@@ -45,19 +46,11 @@ export default class InteractionCtrl {
                 }
                 case 'view_submission': {
                     try {
-                        const { user, view: { state: { values } } }: ViewSubmissionPayload = payload;
-                        // console.log(values);
+                        const data = parseData({
+                            user: payload.user,
+                            values: payload.view.state.values
+                        })
 
-                        const data = {
-                            user,
-                            description: values.description.taskTitle.value,
-                            from: values.time_from.from.selected_time,
-                            to: values.time_to.to.selected_time,
-                            category: values.category.category_select.selected_option.value,
-                            subcategory: values.subcategory.subcategory_select.selected_option.value,
-                            energy: values.energy.energy_select.selected_option.value,
-                            emotion: values.emotion.emotion_select.selected_option.value
-                        }
                         // appHome.displayHome(user.id, data);
                         console.log('submited data: ', data);
                         //TODO Guardar en DB 
@@ -98,6 +91,22 @@ const openModal = async (trigger_id: string, user: string) => {
     }
 
 };
+
+const parseData = ({ user, values }: { user: User, values: Values }): ActivityPayload => {
+    const data = {
+        user,
+        description: values.description.taskTitle.value,
+        from: values.time_from.from.selected_time,
+        to: values.time_to.to.selected_time,
+        category: values.category.category_select.selected_option.value,
+        subcategory: values.subcategory.subcategory_select.selected_option.value,
+        energy: parseInt(values.energy.energy_select.selected_option.value),
+        emotion: values.emotion.emotion_select.selected_option.value
+    }
+    // console.log(data);    
+
+    return data
+}
 
 
 /*//? Payload ?//
