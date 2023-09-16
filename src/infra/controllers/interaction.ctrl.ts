@@ -52,7 +52,7 @@ export default class InteractionCtrl {
                         })
 
                         // appHome.displayHome(user.id, data);
-                        console.log('submited data: ', data);
+                        console.log('view_submission switch: submited data', data);
                         //TODO Guardar en DB 
                         //TODO Sincronizar Google Calendar 
 
@@ -84,7 +84,7 @@ const openModal = async (trigger_id: string, user: string) => {
 
         const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
 
-        console.log(result.data);
+        console.log('openModal()', result.data);
         result?.data?.response_metadata?.messages && console.log(result.data.response_metadata.messages);
     } catch (error) {
         console.log(error);
