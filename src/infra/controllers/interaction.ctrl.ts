@@ -16,7 +16,7 @@ export default class InteractionCtrl {
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
             const payload = JSON.parse(body.payload)
-            // console.log(payload);
+            console.log(payload);
 
             switch (payload.type) {
                 case 'url_verification': {
@@ -84,7 +84,7 @@ const openModal = async (trigger_id: string, user: string) => {
 
         const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
 
-        console.log('openModal()', result.data);
+        console.log('openModal()', result.data.ok);
         result?.data?.response_metadata?.messages && console.log(result.data.response_metadata.messages);
     } catch (error) {
         console.log(error);
