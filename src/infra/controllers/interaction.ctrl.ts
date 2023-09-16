@@ -59,7 +59,7 @@ export default class InteractionCtrl {
                         //TODO Close view 
                         // https://api.slack.com/surfaces/modals#lifecycle
 
-                        return res.sendStatus(200)
+                        return res.send()
 
                     } catch (error) {
                         console.log(error);
