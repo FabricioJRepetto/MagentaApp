@@ -1,6 +1,6 @@
 import { Modal, Blocks, Elements, Option } from 'slack-block-builder';
 
-export default (currentUser: string) => {
+export default (): string => {
     const time = new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" }),
         hour = new Date(time).getHours();
 

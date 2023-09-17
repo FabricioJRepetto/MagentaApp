@@ -6,7 +6,7 @@ import InteractionCtrl from "./controllers/interaction.ctrl";
 
 const container = new ContainerBuilder();
 
-// Inicamos servicio de Slack Bot
+//? Inicamos servicio de Slack Bot
 // container.register("slack.service", SlackClient);
 // const slackService = container.get("slack.service");
 

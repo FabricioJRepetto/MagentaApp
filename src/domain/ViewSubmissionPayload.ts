@@ -21,7 +21,7 @@ export interface Team {
 export interface User {
     id: string
     username: string
-    name: string
+    name?: string
     team_id: string
 }
 
