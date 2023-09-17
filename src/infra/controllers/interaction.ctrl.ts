@@ -16,7 +16,7 @@ export default class InteractionCtrl {
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
             const payload = JSON.parse(body.payload)
-            console.log(payload);
+            // console.log(payload);
 
             switch (payload.type) {
                 case 'url_verification': {
@@ -52,8 +52,9 @@ export default class InteractionCtrl {
                         })
 
                         // appHome.displayHome(user.id, data);
-                        console.log('view_submission switch: submited data', data);
+                        console.log('# view_submission switch: data', data);
                         //TODO Guardar en DB 
+
                         //TODO Sincronizar Google Calendar 
 
                         //TODO Close view 
@@ -84,7 +85,7 @@ const openModal = async (trigger_id: string, user: string) => {
 
         const result = await axios.post('https://slack.com/api/views.open', QueryString.stringify(args));
 
-        console.log('openModal()', result.data.ok);
+        console.log('# openModal()', result.data.ok);
         result?.data?.response_metadata?.messages && console.log(result.data.response_metadata.messages);
     } catch (error) {
         console.log(error);
@@ -93,6 +94,8 @@ const openModal = async (trigger_id: string, user: string) => {
 };
 
 const parseData = ({ user, values }: { user: User, values: Values }): ActivityPayload => {
+    console.log('# parseData() values', values);
+
     const data = {
         user,
         description: values.description.taskTitle.value,
