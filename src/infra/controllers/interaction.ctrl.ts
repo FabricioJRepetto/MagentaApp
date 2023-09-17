@@ -34,7 +34,7 @@ export default class InteractionCtrl {
 
                     if (callback_id === "new_activity") {
                         await openModal(trigger_id, user.id)
-                        res.sendStatus(200)
+                        return res.send()
                     }
 
                     // Triggered when the App Home is opened by a user
@@ -64,12 +64,17 @@ export default class InteractionCtrl {
 
                     } catch (error) {
                         console.log(error);
-                        return res.sendStatus(400)
+                        return res.status(400).send(error)
                     }
+                }
+
+                default: {
+                    return
                 }
             }
 
         } catch (err) {
+            console.log(err);
             res.status(400).send(err)
         }
     }
