@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 // import { ExternalCreator } from "../../application/controller.create";
 import { User, Values } from "../../domain/ViewSubmissionPayload";
 import { ActivityPayload } from "../../domain/ActivityPayload";
-import { openModal } from "../listeners/shortcuts/newActivityModal";
+import { openModal } from "../events/shortcuts/newActivityModal";
 
 export default class InteractionCtrl {
     // constructor(private readonly external: ExternalCreator) { }
