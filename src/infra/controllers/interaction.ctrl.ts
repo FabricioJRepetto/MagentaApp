@@ -1,9 +1,9 @@
 import "dotenv/config"
 import { NextFunction, Request, Response } from "express";
 // import { ExternalCreator } from "../../application/controller.create";
-import { User, Values } from "../../domain/ViewSubmissionPayload";
-import { ActivityPayload } from "../../domain/ActivityPayload";
-import { openModal } from "../events/shortcuts/newActivityModal";
+import { User, Values } from "../../types/ViewSubmissionPayload";
+import { ActivityPayload } from "../../types/ActivityPayload";
+import { openModal } from "../repository/slack.api.repository";
 
 export default class InteractionCtrl {
     // constructor(private readonly external: ExternalCreator) { }
@@ -15,7 +15,7 @@ export default class InteractionCtrl {
 
             switch (payload.type) {
                 case 'url_verification': {
-                    // verify Events API endpoint by returning challenge if present
+                    // verify API endpoint for Slack events
                     res.send({ challenge: payload.challenge });
                     break;
                 }

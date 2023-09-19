@@ -1,5 +1,5 @@
 import { ChatPostMessageResponse } from "@slack/web-api";
-import RepositoryExternal from "../domain/repository.external";
+import RepositoryExternal from "../types/repository.external";
 
 // interaccion con los repositorios
 export class ExternalCreator {
