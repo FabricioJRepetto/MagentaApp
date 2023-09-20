@@ -8,6 +8,7 @@ const userSchema = new Schema<IUser>({
     phone: { type: String, required: true, unique: true },
     slack_id: { type: String, required: true },
     active: { type: Boolean, default: false },
+    password: { type: String },
     role: { type: String, default: ROLES.USER }
 });
 
