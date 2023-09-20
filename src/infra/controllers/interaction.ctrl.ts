@@ -32,15 +32,15 @@ export default class InteractionCtrl {
                     //? Abre el modal para registrar usuario
                     if (callback_id === "user_signin") {
                         //: await openModal ??
-                        openModal(trigger_id, newUser)
-                        return res.send()
+                        res.send()
+                        await openModal(trigger_id, newUser)
                     }
 
                     //? Abre el modal para registrar actividad
                     if (callback_id === "new_activity") {
                         //: await openModal ??
-                        openModal(trigger_id, newActivity)
-                        return res.send()
+                        res.send()
+                        await openModal(trigger_id, newActivity)
                     }
 
                     //TODO Abre la Home
