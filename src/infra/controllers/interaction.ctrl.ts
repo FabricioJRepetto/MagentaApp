@@ -69,6 +69,8 @@ export default class InteractionCtrl {
                 }
 
                 case 'view_submission': {
+                    console.log(payload);
+
                     try {
                         const data = parseData({
                             user: payload.user,

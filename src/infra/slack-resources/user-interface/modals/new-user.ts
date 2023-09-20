@@ -9,19 +9,19 @@ export default (): string => {
             Blocks.Input({ label: "Nombre y Apellido", blockId: "name" }).element(
                 Elements.TextInput({
                     actionId: "name_input",
-                    placeholder: ""
+                    placeholder: " "
                 })
             ),
             Blocks.Input({ label: "Email", blockId: "email" }).element(
                 Elements.TextInput({
                     actionId: "email_input",
-                    placeholder: ""
+                    placeholder: " "
                 })
             ),
             Blocks.Input({ label: "Teléfono", blockId: "phone" }).element(
                 Elements.TextInput({
                     actionId: "phone_input",
-                    placeholder: ""
+                    placeholder: " "
                 })
             )
         ).buildToJSON();
