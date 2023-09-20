@@ -9,7 +9,11 @@ import { newActivity, newUser } from "../slack-resources/user-interface/modals";
 import Bridge from "../../application/bridge";
 
 export default class InteractionCtrl {
-    constructor(private readonly bridge: Bridge) { }
+    private bridge;
+    // constructor(private readonly bridge: Bridge) { }
+    constructor() {
+        this.bridge = new Bridge();
+    }
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
