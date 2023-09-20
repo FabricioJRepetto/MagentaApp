@@ -18,8 +18,11 @@ app.use(`/`, routes)
 app.use('*', error404)
 app.use(generalErrorHandler);
 
-const startSever = () => {
+export const startServer = () => {
     app.listen(PORT, () => console.log(`[✔] · Server listening on port ${PORT}`));
 }
 
-export default startSever;
+export const closeServer = () => {
+    console.log("[!] · Closing server");
+    process.exit()
+}

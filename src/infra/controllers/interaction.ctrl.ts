@@ -1,9 +1,11 @@
 import "dotenv/config"
 import { NextFunction, Request, Response } from "express";
 // import { ExternalCreator } from "../../application/controller.create";
-import { User, Values } from "../../types/ViewSubmissionPayload";
+import { ActivityValues, User, UserValues } from "../../types/ViewSubmissionPayload";
 import { ActivityPayload } from "../../types/ActivityPayload";
 import { openModal } from "../repository/slack.api.repository";
+import { UserPayload } from "../../types/UserPayload";
+import { newActivity, newUser } from "../slack-resources/user-interface/modals";
 
 export default class InteractionCtrl {
     // constructor(private readonly external: ExternalCreator) { }
@@ -14,8 +16,8 @@ export default class InteractionCtrl {
             // console.log(payload);
 
             switch (payload.type) {
+                // verificar API para eventos de Slack
                 case 'url_verification': {
-                    // verify API endpoint for Slack events
                     res.send({ challenge: payload.challenge });
                     break;
                 }
@@ -27,19 +29,47 @@ export default class InteractionCtrl {
                     //     return res.sendStatus(404);
                     // }
 
-                    //? Abre el modal para registrar actividad
-                    if (callback_id === "new_activity") {
-                        await openModal(trigger_id, user.id)
+                    //? Abre el modal para registrar usuario
+                    if (callback_id === "user_signin") {
+                        //: await openModal ??
+                        openModal(trigger_id, newUser)
                         return res.send()
                     }
 
-                    // Triggered when the App Home is opened by a user
+                    //? Abre el modal para registrar actividad
+                    if (callback_id === "new_activity") {
+                        //: await openModal ??
+                        openModal(trigger_id, newActivity)
+                        return res.send()
+                    }
+
+                    //TODO Abre la Home
                     if (type === 'app_home_opened') {
                         // Display App Home
                         // return res.send()
                     }
 
                 }
+
+                case 'user_signin': {
+                    try {
+                        const data = parseUserData({
+                            user: payload.user,
+                            values: payload.view.state.values
+                        })
+                        // console.log('# view_submission switch: data', data);
+                        //TODO Guardar en DB 
+
+                        //TODO Sincronizar Google Calendar 
+
+                        return res.send()
+
+                    } catch (error) {
+                        console.log(error);
+                        return res.status(400).send(error)
+                    }
+                }
+
                 case 'view_submission': {
                     try {
                         const data = parseData({
@@ -70,7 +100,7 @@ export default class InteractionCtrl {
     }
 }
 
-const parseData = ({ user, values }: { user: User, values: Values }): ActivityPayload | undefined => {
+const parseData = ({ user, values }: { user: User, values: ActivityValues }): ActivityPayload | undefined => {
     // console.log('# parseData() values', values);
     try {
         const data = {
@@ -87,6 +117,23 @@ const parseData = ({ user, values }: { user: User, values: Values }): ActivityPa
         return data
     } catch (error) {
         console.log('error @ parseData()', error);
+        return
+    }
+}
+
+const parseUserData = ({ user, values }: { user: User, values: UserValues }): UserPayload | undefined => {
+    try {
+        const data = {
+            name: values.name.name_input.value,
+            email: values.email.email_input.value,
+            phone: values.phone.phone_input.value,
+            username: user.username,
+            slack_id: user.id
+        }
+
+        return data;
+    } catch (error) {
+        console.log('error @ parseUserData()', error);
         return
     }
 }

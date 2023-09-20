@@ -5,13 +5,13 @@ import newActivity from "../slack-resources/user-interface/modals/new-activity";
 
 const { SLACK_BOT_TOKEN } = process.env;
 
-export const openModal = async (trigger_id: string, user?: string) => {
+export const openModal = async (trigger_id: string, view: () => string) => {
     //TODO refactor para abrir cualqueir el modal indicado 
     try {
         const args = {
             token: SLACK_BOT_TOKEN,
             trigger_id,
-            view: newActivity()
+            view: view()
         };
 
         const result = await axios.post('https://slack.com/api/views.open', qs.stringify(args));

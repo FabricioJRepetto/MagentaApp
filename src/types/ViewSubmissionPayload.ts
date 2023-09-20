@@ -48,7 +48,7 @@ export interface View {
 }
 
 export interface State {
-    values: Values
+    values: ActivityValues
 }
 
 export interface Title {
@@ -69,7 +69,7 @@ export interface Submit {
     emoji: boolean
 }
 
-export interface Values {
+export interface ActivityValues {
     description: {
         taskTitle: {
             type: string
@@ -118,6 +118,27 @@ export interface Values {
             selected_option: {
                 value: EMOTION
             }
+        }
+    }
+}
+
+export interface UserValues {
+    name: {
+        name_input: {
+            type: string
+            value: string
+        }
+    },
+    email: {
+        email_input: {
+            type: string
+            value: string
+        }
+    },
+    phone: {
+        phone_input: {
+            type: string
+            value: string
         }
     }
 }

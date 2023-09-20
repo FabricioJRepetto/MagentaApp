@@ -1,6 +1,6 @@
 import "dotenv/config";
 import mongoose from "mongoose";
-import startServer from "../../app";
+import { startServer, closeServer } from "../../app";
 const { DB_URL } = process.env;
 
 const options = {}; // atributos posibles al final ⬇⬇⬇
@@ -38,9 +38,12 @@ process.on("uncaughtException", () => {
 const closeConnection = function () {
     mongoose.connection.close();
     console.log("[!] · MongoDB disconnected due to app termination");
+
+    closeServer() // Terminate Express server
 };
 
-process.on("SIGINT", closeConnection).on("SIGTERM", closeConnection);
+process.on("SIGINT", closeConnection);
+process.on("SIGTERM", closeConnection);
 
 export default connectDB;
 
