@@ -6,9 +6,10 @@ import { ActivityPayload } from "../../types/ActivityPayload";
 import { openModal } from "../repository/slack.api.repository";
 import { UserPayload } from "../../types/UserPayload";
 import { newActivity, newUser } from "../slack-resources/user-interface/modals";
+import Bridge from "../../application/bridge";
 
 export default class InteractionCtrl {
-    // constructor(private readonly external: ExternalCreator) { }
+    constructor(private readonly bridge: Bridge) { }
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
@@ -49,42 +50,47 @@ export default class InteractionCtrl {
 
                 }
 
-                case 'user_signin': {
-                    try {
-                        const data = parseUserData({
-                            user: payload.user,
-                            values: payload.view.state.values
-                        })
-                        // console.log('# view_submission switch: data', data);
-                        //TODO Guardar en DB 
-
-                        //TODO Sincronizar Google Calendar 
-
-                        return res.send()
-
-                    } catch (error) {
-                        console.log(error);
-                        return res.status(400).send(error)
-                    }
-                }
-
                 case 'view_submission': {
-                    console.log(payload);
 
-                    try {
-                        const data = parseData({
-                            user: payload.user,
-                            values: payload.view.state.values
-                        })
-                        // console.log('# view_submission switch: data', data);
-                        //TODO Guardar en DB 
-                        //TODO Sincronizar Google Calendar 
+                    switch (payload.view.callback_id) {
+                        case 'user_signin': {
+                            try {
+                                // console.log('# view_submission switch: data', data);
+                                //TODO Guardar en DB 
+                                const response = await this.bridge.newUser({
+                                    user: payload.user,
+                                    values: payload.view.state.values
+                                })
+                                //TODO Sincronizar Google Calendar 
 
-                        return res.send()
+                                return res.send()
 
-                    } catch (error) {
-                        console.log(error);
-                        return res.status(400).send(error)
+                            } catch (error) {
+                                console.log(error);
+                                return res.status(400).send(error)
+                            }
+                        }
+
+                        case 'new_activity': {
+                            try {
+                                const response = await ({
+                                    user: payload.user,
+                                    values: payload.view.state.values
+                                })
+                                // console.log('# view_submission switch: data', data);
+                                //TODO Guardar en DB 
+                                //TODO Sincronizar Google Calendar 
+
+                                return res.send()
+
+                            } catch (error) {
+                                console.log(error);
+                                return res.status(400).send(error)
+                            }
+                        }
+
+                        default:
+                            break;
                     }
                 }
 
@@ -120,24 +126,6 @@ const parseData = ({ user, values }: { user: User, values: ActivityValues }): Ac
         return
     }
 }
-
-const parseUserData = ({ user, values }: { user: User, values: UserValues }): UserPayload | undefined => {
-    try {
-        const data = {
-            name: values.name.name_input.value,
-            email: values.email.email_input.value,
-            phone: values.phone.phone_input.value,
-            username: user.username,
-            slack_id: user.id
-        }
-
-        return data;
-    } catch (error) {
-        console.log('error @ parseUserData()', error);
-        return
-    }
-}
-
 
 /*//? Payload ?//
     {

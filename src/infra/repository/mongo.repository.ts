@@ -15,7 +15,18 @@ export default class MongoDB implements dbRepository {
     }
 
     async getUser(user_id: string): Promise<any> {
-        throw new Error("Method not implemented.");
+        try {
+            let user;
+            if (user_id.length === 24) {
+                user = await User.findById(user_id)
+            } else {
+                user = await User.findOne({ slack_id: user_id })
+            }
+
+            return user;
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async getUserActivity(user_id: string): Promise<any> {
