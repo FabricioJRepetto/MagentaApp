@@ -1,32 +1,43 @@
 import { Schema, model } from "mongoose";
-import ILogs from "../../types/models/ILogs.interface";
+import ILogs, { Entry, Activity } from "../../types/models/ILogs.interface";
 
-const logsSchema = new Schema<ILogs>({
-    user: { type: Schema.Types.ObjectId, ref: "User" },
-    entries: [
-        {
-            month: { type: String },
-            days: [
-                {
-                    date: { type: String },
-                    activity: [
-                        {
-                            date: { type: String },
-                            hours: {
-                                from: { type: String },
-                                to: { type: String }
-                            },
-                            category: { type: String },
-                            subcategory: { type: String },
-                            energy: { type: Number },
-                            emotion: { type: String },
-                            gc_event_id: { type: String }
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-});
+const activitySchema = new Schema<Activity>(
+    {
+        date: { type: String },
+        hours: {
+            from: { type: String },
+            to: { type: String }
+        },
+        category: { type: String },
+        subcategory: { type: String },
+        energy: { type: Number },
+        emotion: { type: String },
+        gc_event_id: { type: String }
+    }
+)
+const entriesSchema = new Schema<Entry>(
+    {
+        month: { type: String },
+        days: [
+            {
+                date: { type: String },
+                activity: [activitySchema]
+            }
+        ]
+    }
+)
+
+const logsSchema = new Schema<ILogs>(
+    {
+        user: { type: Schema.Types.ObjectId, ref: "User" },
+        entries: [entriesSchema]
+    },
+    {
+        versionKey: false,
+        timestamps: true,
+        toJSON: { getters: true, virtuals: true },
+        toObject: { getters: true, virtuals: true },
+    }
+);
 
 export default model<ILogs>('Logs', logsSchema);

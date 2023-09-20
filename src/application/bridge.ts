@@ -23,10 +23,17 @@ export default class Bridge {
             }
 
             const data = this.parseUserData({ user, values })
-            const response = await this.db.createUser(data)
+            //TODO validar datos 
 
-            console.log(response);
-            return response;
+            const result = await this.db.createUser(data)
+
+            if (result?._id) {
+                await this.db.createConfig(result._id)
+                await this.db.createLogs(result._id)
+            }
+
+            console.log(result);
+            return result;
         } catch (error) {
             console.log('error @ Bridge.newUser()', error);
             return error

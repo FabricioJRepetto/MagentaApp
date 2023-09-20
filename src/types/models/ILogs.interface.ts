@@ -1,17 +1,17 @@
 import { Types } from "mongoose";
-import { CATEGORY, EMOTION, SUBCATEGORY } from "./ActivityPayload";
+import { CATEGORY, EMOTION, SUBCATEGORY } from "../ActivityPayload";
 
 export default interface ILogs {
     user: Types.ObjectId;
     entries: Entry[]
 }
 
-interface Entry {
+export interface Entry {
     month: string;
     days: Day[];
 }
 
-interface Day {
+export interface Day {
     date: string;
     activity: Activity[]
 }

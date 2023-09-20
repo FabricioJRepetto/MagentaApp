@@ -1,14 +1,22 @@
-import { Number, Schema, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import IConfig from "../../types/models/IConfig.interface";
 
-const configSchema = new Schema<IConfig>({
-    user: { type: Schema.Types.ObjectId, ref: "User" },
-    active_hours: {
-        from: { type: String },
-        to: { type: String }
+const configSchema = new Schema<IConfig>(
+    {
+        user: { type: Schema.Types.ObjectId, ref: "User" },
+        active_hours: {
+            from: { type: String, default: "09:00" },
+            to: { type: String, default: "21:00" }
+        },
+        active_days: [0, 1, 2, 3, 4, 5, 6],
+        reminder_time: { type: Number, default: 1 }
     },
-    active_days: [0, 1, 2, 3, 4, 5, 6],
-    reminder_time: { type: Number, default: 1 }
-})
+    {
+        versionKey: false,
+        timestamps: true,
+        toJSON: { getters: true, virtuals: true },
+        toObject: { getters: true, virtuals: true },
+    }
+)
 
 export default model<IConfig>('Configuration', configSchema)

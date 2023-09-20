@@ -10,7 +10,10 @@ export default interface dbRepository {
      * @returns 
      */
     getUser(user_id: string): Promise<any>
-    saveActivity(data: ActivityPayload): Promise<any>
+    saveUserActivity(data: ActivityPayload): Promise<any>
     getUserActivity(user_id: string): Promise<any>
     checkUserCurrentEvent(user_id: string): Promise<any>
+
+    createLogs(user_id: string): Promise<any>
+    createConfig(user_id: string): Promise<any>
 }
