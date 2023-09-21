@@ -4,6 +4,7 @@ import IConfig from "../../types/models/IConfig.interface";
 const configSchema = new Schema<IConfig>(
     {
         user: { type: Schema.Types.ObjectId, ref: "User" },
+        user_slack_id: { type: String, required: true },
         active_hours: {
             from: { type: String, default: "09:00" },
             to: { type: String, default: "21:00" }

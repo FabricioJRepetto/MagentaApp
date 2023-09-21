@@ -8,31 +8,33 @@ import User from "../models/user.model";
 
 export default class MongoDB implements dbRepository {
 
-    async createLogs(user_id: string): Promise<any> {
+    async createLogs(user_id: string, slack_id: string): Promise<any> {
         try {
             const response = await Logs.create({
                 user: user_id,
+                user_slack_id: slack_id,
                 entries: []
             })
 
-            console.log(response);
             return response
         } catch (error: any) {
             console.log(error);
+            return Promise.reject(error)
         }
     }
 
-    async createConfig(user_id: string): Promise<any> {
+    async createConfig(user_id: string, slack_id: string): Promise<any> {
         try {
             const response = await Config.create({
                 user: user_id,
-                entries: []
+                user_slack_id: slack_id
             })
 
             console.log(response);
             return response
         } catch (error) {
             console.log(error);
+            return Promise.reject(error)
         }
     }
 
@@ -42,6 +44,7 @@ export default class MongoDB implements dbRepository {
             return response
         } catch (error) {
             console.log(error);
+            return Promise.reject(error)
         }
     }
 
@@ -57,6 +60,7 @@ export default class MongoDB implements dbRepository {
             return user;
         } catch (error) {
             console.log(error);
+            return Promise.reject(error)
         }
     }
 
@@ -73,23 +77,24 @@ export default class MongoDB implements dbRepository {
     async saveUserActivity(user_id: string, data: Activity, date: { day: string, month: number, year: number }): Promise<any> {
         try {
             //TODO Refactor:
-            //: A_ añadir slack_id al esquema de logs para ahorrar una consulta a la DB
-            //: B_ añadir referencia a Logs en esquema de User
-            const user = await User.findOne({ slack_id: user_id }) // Buscamos id del usuario utilizando su slack_id
-            if (!user) {
-                throw new Error("Wrong user slack_id");
-            }
+            //* A_ añadir slack_id al esquema de logs para ahorrar una consulta a la DB
+            //: B_ enviar la ID de usuario al modal?
+            // const user = await User.findOne({ slack_id: user_id }) // Buscamos id del usuario utilizando su slack_id
+            // if (!user) {
+            //     throw new Error("Wrong user slack_id");
+            // }
 
-            let logs = await Logs.findOne({ user: user._id }) // Buscamos los Logs del usuario utilizando su _id
+            let logs = await Logs.findOne({ user_slack_id: user_id }) // Buscamos los Logs del usuario utilizando su _id
             if (!logs) {
                 throw new Error("Wrong user slack_id");
             }
 
             //? Logica para saber donde guardar la actividad
-            let targetMonth: Entry | undefined = logs.entries.find(e => e.month === date.month && e.year === date.year) // Checkeamos si hay una entrada con la fecha indicada
+            // Checkeamos si hay una entrada con la fecha indicada
+            let targetMonth: Entry | undefined = logs.entries.find(e => e.month === date.month && e.year === date.year)
 
-            if (targetMonth) {
-                let targetDay = targetMonth.days.find(day => day.date === date.day) // Buscamos ua lista de actividades con la fecha indicada
+            if (targetMonth) { // Buscamos ua lista de actividades con la fecha indicada
+                let targetDay = targetMonth.days.find(day => day.date === date.day)
 
                 if (targetDay) { // Si existe fecha, guardar data
                     targetDay.activity.push(data)
@@ -118,7 +123,7 @@ export default class MongoDB implements dbRepository {
 
         } catch (error) {
             console.log('error @ MongoDB.saveUserActivity', error);
-            return new Promise(() => { reject: error })
+            return Promise.reject(error)
         }
     }
 

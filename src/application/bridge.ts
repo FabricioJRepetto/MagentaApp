@@ -30,8 +30,8 @@ export default class Bridge {
             const result = await this.db.createUser(data)
 
             if (result?._id) {
-                await this.db.createConfig(result._id)
-                await this.db.createLogs(result._id)
+                await this.db.createConfig(result._id, user.id)
+                await this.db.createLogs(result._id, user.id)
             }
 
             console.log(result);

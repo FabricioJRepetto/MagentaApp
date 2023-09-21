@@ -32,6 +32,7 @@ const entriesSchema = new Schema<Entry>(
 const logsSchema = new Schema<ILogs>(
     {
         user: { type: Schema.Types.ObjectId, ref: "User" },
+        user_slack_id: { type: String, required: true },
         entries: [entriesSchema]
     },
     {

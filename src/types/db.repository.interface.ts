@@ -3,8 +3,8 @@ import { UserPayload } from "./UserPayload"
 import { Activity } from "./models/ILogs.interface"
 
 export default interface dbRepository {
-    createLogs(user_id: string): Promise<any>
-    createConfig(user_id: string): Promise<any>
+    createLogs(user_id: string, slack_id: string): Promise<any>
+    createConfig(user_id: string, slack_id: string): Promise<any>
     createUser(data: UserPayload): Promise<any>
     /**
      * Busca un usuario por ID o por SLACK ID

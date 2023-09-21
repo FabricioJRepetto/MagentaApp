@@ -3,6 +3,7 @@ import { CATEGORY, EMOTION, SUBCATEGORY } from "../ActivityPayload";
 
 export default interface ILogs {
     user: Types.ObjectId;
+    user_slack_id: string;
     entries: Entry[]
 }
 
