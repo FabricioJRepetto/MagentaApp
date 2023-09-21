@@ -1,5 +1,5 @@
 // import { readdirSync } from "fs";
-// import path from "node:path";
+import path from "node:path";
 import { Response, Router } from "express"
 const router: Router = Router()
 // import { router as testRouter } from "./test.routes"
@@ -13,15 +13,14 @@ router.get('/sensei', (__, res: Response) => {
 })
 router.get('/favicon.ico', (__, res: Response) => {
     // res.sendStatus(200)
-
-    res.status(200).sendFile('"./src/assets/icons/favicon-16x16.png"')
+    const PATH = path.resolve(process.cwd() + '/src/assets/icons/icon.ico');
+    res.status(200).sendFile(PATH)
 })
 
 // router.use('/test', testRouter)
 router.use('/slack/events', interRouter)
 
 export default router
-
 
 //_-----------------------------------------------------_//
 
