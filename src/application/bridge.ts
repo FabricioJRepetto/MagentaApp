@@ -4,9 +4,11 @@
  */
 
 import MongoDB from "../infra/repository/mongo.repository"
+import { ActivityPayload } from "../types/ActivityPayload";
 import { UserPayload } from "../types/UserPayload";
-import { User, UserValues } from "../types/ViewSubmissionPayload";
-import dbRepository from "../types/db.repository";
+import { User, UserValues, ActivityValues } from "../types/ViewSubmissionPayload";
+import dbRepository from "../types/db.repository.interface";
+import { Activity } from "../types/models/ILogs.interface";
 
 export default class Bridge {
     private db: dbRepository;
@@ -22,8 +24,8 @@ export default class Bridge {
                 return userExists
             }
 
-            const data = this.parseUserData({ user, values })
             //TODO validar datos 
+            const data = this.parseUserData({ user, values })
 
             const result = await this.db.createUser(data)
 
@@ -40,6 +42,27 @@ export default class Bridge {
         }
     }
 
+    async newActivity({ user, values }: { user: User; values: ActivityValues; }) {
+        try {
+            //TODO validar datos 
+            const data = this.parseActivityData({ values });
+
+            //TODO recibir fechas o definir por defecto 
+            const day = new Date().toLocaleDateString('en-Us');
+            const month = new Date().getMonth();
+            const year = new Date().getFullYear();
+
+            const result = await this.db.saveUserActivity(user.id, data, { day, month, year });
+
+
+        } catch (error) {
+            console.log('error @ Bridge.newActivity()', error);
+            return error
+        }
+    }
+
+    //________________________________________________________
+
     private parseUserData = ({ user, values }: { user: User, values: UserValues }): UserPayload => {
         try {
             const data = {
@@ -53,6 +76,28 @@ export default class Bridge {
             return data;
         } catch (error: any) {
             console.log('error @ parseUserData()', error);
+            throw new Error(error);
+        }
+    }
+
+    private parseActivityData = ({ values }: { values: ActivityValues }): Activity => {
+        try {
+            const data = {
+                date: new Date().toISOString().split('T')[0],
+                hours: {
+                    from: values.time_from.from.selected_time,
+                    to: values.time_to.to.selected_time
+                },
+                category: values.category.category_select.selected_option.value,
+                subcategory: values.subcategory.subcategory_select.selected_option.value,
+                energy: parseInt(values.energy.energy_select.selected_option.value),
+                emotion: values.emotion.emotion_select.selected_option.value,
+                description: values.description.taskTitle.value
+            }
+
+            return data
+        } catch (error: any) {
+            console.log('error @ parseData()', error);
             throw new Error(error);
         }
     }

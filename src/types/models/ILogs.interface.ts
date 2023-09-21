@@ -7,7 +7,8 @@ export default interface ILogs {
 }
 
 export interface Entry {
-    month: string;
+    month: number;
+    year: number;
     days: Day[];
 }
 
@@ -22,6 +23,7 @@ export interface Activity {
         from: string;
         to: string;
     };
+    description: string;
     category: CATEGORY,
     subcategory: SUBCATEGORY,
     energy: number,
@@ -34,13 +36,14 @@ const example_logs = {
     user: '12312309851', // ObjectID
     entries: [
         {
-            month: "9-23", // mes+año. Ej.: 9-23
+            month: 9,
+            year: 23,
             days: [
                 {
                     date: "19-9-2023",
                     activity: [
                         {
-                            date: "1-9-2023",
+                            date: "19-9-2023",
                             hours: {
                                 from: "9:00",
                                 to: "11:00"

@@ -8,6 +8,7 @@ const activitySchema = new Schema<Activity>(
             from: { type: String },
             to: { type: String }
         },
+        description: { type: String },
         category: { type: String },
         subcategory: { type: String },
         energy: { type: Number },
@@ -17,7 +18,8 @@ const activitySchema = new Schema<Activity>(
 )
 const entriesSchema = new Schema<Entry>(
     {
-        month: { type: String },
+        month: { type: Number },
+        year: { type: Number },
         days: [
             {
                 date: { type: String },

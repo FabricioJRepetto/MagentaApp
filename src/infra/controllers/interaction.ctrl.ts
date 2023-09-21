@@ -59,13 +59,13 @@ export default class InteractionCtrl {
                     switch (payload.view.callback_id) {
                         case 'user_signin': {
                             try {
-                                // console.log('# view_submission switch: data', data);
-                                //TODO Guardar en DB 
+                                // Guardar en DB
                                 const response = await this.bridge.newUser({
-                                    user: payload.user,
-                                    values: payload.view.state.values
+                                    user: <User>payload.user,
+                                    values: <UserValues>payload.view.state.values
                                 })
-                                //TODO Sincronizar Google Calendar 
+                                //: Sincronizar Google Calendar al crear usuario?
+                                //TODO enviar/mostrar mensaje de confirmación 
 
                                 return res.send()
 
@@ -77,13 +77,14 @@ export default class InteractionCtrl {
 
                         case 'new_activity': {
                             try {
-                                const response = await ({
-                                    user: payload.user,
-                                    values: payload.view.state.values
+                                //TODO Guardar en DB 
+                                const response = await this.bridge.newActivity({
+                                    user: <User>payload.user,
+                                    values: <ActivityValues>payload.view.state.values
                                 })
                                 // console.log('# view_submission switch: data', data);
-                                //TODO Guardar en DB 
                                 //TODO Sincronizar Google Calendar 
+                                //TODO enviar/mostrar mensaje de confirmación 
 
                                 return res.send()
 
@@ -107,27 +108,6 @@ export default class InteractionCtrl {
             console.log(err);
             res.status(400).send(err)
         }
-    }
-}
-
-const parseData = ({ user, values }: { user: User, values: ActivityValues }): ActivityPayload | undefined => {
-    // console.log('# parseData() values', values);
-    try {
-        const data = {
-            user,
-            description: values.description.taskTitle.value,
-            from: values.time_from.from.selected_time,
-            to: values.time_to.to.selected_time,
-            category: values.category.category_select.selected_option.value,
-            subcategory: values.subcategory.subcategory_select.selected_option.value,
-            energy: parseInt(values.energy.energy_select.selected_option.value),
-            emotion: values.emotion.emotion_select.selected_option.value
-        }
-
-        return data
-    } catch (error) {
-        console.log('error @ parseData()', error);
-        return
     }
 }
 
