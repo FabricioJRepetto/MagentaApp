@@ -1,12 +1,12 @@
 import { ActivityPayload } from "../../types/ActivityPayload";
 import { UserPayload } from "../../types/UserPayload";
-import dbRepository from "../../types/db.repository.interface";
+import IdbRepository from "../../types/db.repository.interface";
 import { Activity, Day, Entry } from "../../types/models/ILogs.interface";
 import Config from "../models/config.model";
 import Logs from "../models/logs.model";
 import User from "../models/user.model";
 
-export default class MongoDB implements dbRepository {
+export default class MongoDB implements IdbRepository {
 
     async createLogs(user_id: string, slack_id: string): Promise<any> {
         try {

@@ -1,7 +1,6 @@
 import "dotenv/config"
 import { NextFunction, Request, Response } from "express";
 import { ActivityValues, User, UserValues } from "../../types/ViewSubmissionPayload";
-import { openHome, openModal } from "../repository/slack.api.repository";
 import { newActivity, newUser } from "../slack-resources/user-interface/modals";
 import Bridge from "../../application/bridge";
 
@@ -14,27 +13,30 @@ export default class InteractionCtrl {
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
+            //TODO REFACTOR: separar endpoints para eventos con y sin payload 
+
+            //? Eventos SIN Payload _______________
             // verificar API para eventos de Slack
             if (body?.type === 'url_verification') {
                 return res.send({ challenge: body.challenge });
             } else if (body?.type === 'event_callback') {
+                //? Abre la Home
                 if (body.event.type === 'app_home_opened') {
-                    await openHome(body.event.user);
+                    // buscar usuario
+                    const newUser = await this.bridge.getUser(body.event.user)
+                    await this.bridge.openHome(body.event.user, !!newUser);
                     return res.send()
                 }
             }
 
-            // case 'event_callback': {
-            //     //: Abre la Home
-            //     if (type === 'app_home_opened') {
-            //         await openHome(user.id);
-            //         return res.send()
-            //     }
-            // }
-
             //? SLASH COMMANDS _______________
             const payload = JSON.parse(body.payload);
-            const { type, user, callback_id, trigger_id } = payload;
+            const { type, user, callback_id, trigger_id, actions } = payload;
+
+            if (actions && actions[0].action_id === "new_activity") {
+                await this.bridge.openModal(trigger_id, newActivity)
+                return res.send()
+            }
 
             switch (payload.type) {
                 case 'shortcut': {
@@ -45,13 +47,14 @@ export default class InteractionCtrl {
 
                     //? Abre el modal para registrar usuario
                     if (callback_id === "user_signin") {
-                        await openModal(trigger_id, newUser)
+                        // await this.bridge.slack.openModal(trigger_id, newUser)
+                        await this.bridge.openModal(trigger_id, newUser)
                         return res.send()
                     }
 
                     //? Abre el modal para registrar actividad
                     if (callback_id === "new_activity") {
-                        await openModal(trigger_id, newActivity)
+                        await this.bridge.openModal(trigger_id, newActivity)
                         return res.send()
                     }
                 }

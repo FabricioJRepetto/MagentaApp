@@ -4,18 +4,23 @@
  */
 
 import MongoDB from "../infra/repository/mongo.repository"
-import { ActivityPayload } from "../types/ActivityPayload";
+import SlackAPI from "../infra/repository/slack.api.repository";
 import { UserPayload } from "../types/UserPayload";
 import { User, UserValues, ActivityValues } from "../types/ViewSubmissionPayload";
 import dbRepository from "../types/db.repository.interface";
 import { Activity } from "../types/models/ILogs.interface";
+import IUser from "../types/models/IUser.interface";
 
-export default class Bridge {
+export default class Bridge extends SlackAPI {
     private db: dbRepository;
+    // public slack: ISlackAPI;
 
     constructor() {
+        super()
         this.db = new MongoDB();
+        // this.slack = new SlackAPI();
     }
+
 
     public newUser = async ({ user, values }: { user: User, values: UserValues }) => {
         try {
@@ -58,6 +63,16 @@ export default class Bridge {
         } catch (error) {
             console.log('error @ Bridge.newActivity()', error);
             return error
+        }
+    }
+
+    async getUser(user_id: string): Promise<IUser | undefined> {
+        try {
+            const user = await this.db.getUser(user_id);
+            return user;
+        } catch (error) {
+            console.log('error @ Bridge.getUser()', error);
+            return undefined
         }
     }
 
