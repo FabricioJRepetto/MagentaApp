@@ -12,7 +12,6 @@ router.get('/sensei', (__, res: Response) => {
     res.send('El facusama te bendice.')
 })
 router.get('/favicon.ico', (__, res: Response) => {
-    // res.sendStatus(200)
     const PATH = path.resolve(process.cwd() + '/src/assets/icons/icon.ico');
     res.status(200).sendFile(PATH)
 })

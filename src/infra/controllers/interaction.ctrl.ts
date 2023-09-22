@@ -1,10 +1,7 @@
 import "dotenv/config"
 import { NextFunction, Request, Response } from "express";
-// import { ExternalCreator } from "../../application/controller.create";
 import { ActivityValues, User, UserValues } from "../../types/ViewSubmissionPayload";
-import { ActivityPayload } from "../../types/ActivityPayload";
-import { openModal } from "../repository/slack.api.repository";
-import { UserPayload } from "../../types/UserPayload";
+import { openHome, openModal } from "../repository/slack.api.repository";
 import { newActivity, newUser } from "../slack-resources/user-interface/modals";
 import Bridge from "../../application/bridge";
 
@@ -18,7 +15,7 @@ export default class InteractionCtrl {
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
             const payload = JSON.parse(body.payload)
-            // console.log(payload);
+            console.log(payload);
 
             switch (payload.type) {
                 // verificar API para eventos de Slack
@@ -46,10 +43,10 @@ export default class InteractionCtrl {
                         return res.send()
                     }
 
-                    //TODO Abre la Home
+                    //: Abre la Home
                     if (type === 'app_home_opened') {
-                        // Display App Home
-                        // return res.send()
+                        await openHome(user.id);
+                        return res.send()
                     }
 
                 }
@@ -77,7 +74,7 @@ export default class InteractionCtrl {
 
                         case 'new_activity': {
                             try {
-                                //TODO Guardar en DB 
+                                // Guardar en DB
                                 const response = await this.bridge.newActivity({
                                     user: <User>payload.user,
                                     values: <ActivityValues>payload.view.state.values

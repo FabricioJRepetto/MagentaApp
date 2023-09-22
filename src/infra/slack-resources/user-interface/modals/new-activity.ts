@@ -80,3 +80,5 @@ export default (): string => {
 
     return modal;
 };
+
+//? Block kit Options have a maximum length of 10, and most people have more than 10 open tasks at a given time, so we break the openTasks list into chunks of ten and add them as multiple blocks.
