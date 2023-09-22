@@ -14,12 +14,14 @@ export default class InteractionCtrl {
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
+            console.log(body);
+
             // verificar API para eventos de Slack
             if (body?.type === 'url_verification') {
                 return res.send({ challenge: body.challenge });
             }
 
-            const payload = body.payload;
+            const payload = JSON.parse(body.payload);
             console.log(payload);
             const { type, user, callback_id, trigger_id } = payload;
 
