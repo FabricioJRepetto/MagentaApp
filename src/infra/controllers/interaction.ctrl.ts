@@ -14,16 +14,17 @@ export default class InteractionCtrl {
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
+            // verificar API para eventos de Slack
+            if (body.payload.type === 'url_verification') {
+                return res.send({ challenge: body.payload.challenge });
+            }
+
             const payload = JSON.parse(body.payload)
             console.log(payload);
             const { type, user, callback_id, trigger_id } = payload;
 
             switch (payload.type) {
-                // verificar API para eventos de Slack
-                case 'url_verification': {
-                    res.send({ challenge: body.payload.challenge });
-                    break;
-                }
+
                 case 'shortcut': {
 
                     //TODO Verify the signing secret 
