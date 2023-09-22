@@ -24,7 +24,7 @@ export default class InteractionCtrl {
                 if (body.event.type === 'app_home_opened') {
                     // buscar usuario
                     const newUser = await this.bridge.getUser(body.event.user)
-                    await this.bridge.openHome(body.event.user, !!newUser);
+                    await this.bridge.openHome(body.event.user, !Boolean(newUser));
                     return res.send()
                 }
             }
@@ -32,6 +32,8 @@ export default class InteractionCtrl {
             //? SLASH COMMANDS _______________
             const payload = JSON.parse(body.payload);
             const { type, user, callback_id, trigger_id, actions } = payload;
+            console.log(payload);
+
 
             if (actions && actions[0].action_id === "new_activity") {
                 await this.bridge.openModal(trigger_id, newActivity)
