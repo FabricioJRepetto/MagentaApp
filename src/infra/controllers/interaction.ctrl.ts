@@ -19,7 +19,7 @@ export default class InteractionCtrl {
                 return res.send({ challenge: body.challenge });
             }
 
-            const payload = JSON.parse(body.payload) || body.payload;
+            const payload = body.payload;
             console.log(payload);
             const { type, user, callback_id, trigger_id } = payload;
 
