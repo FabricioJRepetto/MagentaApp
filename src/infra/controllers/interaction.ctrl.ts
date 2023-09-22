@@ -16,7 +16,7 @@ export default class InteractionCtrl {
         try {
             // verificar API para eventos de Slack
             if (body?.type === 'url_verification') {
-                return res.send({ challenge: body.payload.challenge });
+                return res.send({ challenge: body.challenge });
             }
 
             const payload = JSON.parse(body.payload)
