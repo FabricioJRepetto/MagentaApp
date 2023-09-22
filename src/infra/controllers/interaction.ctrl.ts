@@ -14,21 +14,28 @@ export default class InteractionCtrl {
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(body);
-
             // verificar API para eventos de Slack
             if (body?.type === 'url_verification') {
                 return res.send({ challenge: body.challenge });
+            } else if (body?.type === 'event_callback') {
+                await openHome(body.user.id);
+                return res.send()
             }
 
+            // case 'event_callback': {
+            //     //: Abre la Home
+            //     if (type === 'app_home_opened') {
+            //         await openHome(user.id);
+            //         return res.send()
+            //     }
+            // }
+
+            //? SLASH COMMANDS _______________
             const payload = JSON.parse(body.payload);
-            console.log(payload);
             const { type, user, callback_id, trigger_id } = payload;
 
             switch (payload.type) {
-
                 case 'shortcut': {
-
                     //TODO Verify the signing secret 
                     // if (!signature.isVerified(req)) {
                     //     return res.sendStatus(404);
@@ -43,14 +50,6 @@ export default class InteractionCtrl {
                     //? Abre el modal para registrar actividad
                     if (callback_id === "new_activity") {
                         await openModal(trigger_id, newActivity)
-                        return res.send()
-                    }
-                }
-
-                case 'event_callback': {
-                    //: Abre la Home
-                    if (type === 'app_home_opened') {
-                        await openHome(user.id);
                         return res.send()
                     }
                 }
