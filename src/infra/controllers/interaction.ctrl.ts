@@ -21,7 +21,7 @@ export default class InteractionCtrl {
             switch (payload.type) {
                 // verificar API para eventos de Slack
                 case 'url_verification': {
-                    res.send({ challenge: payload.challenge });
+                    res.send({ challenge: body.payload.challenge });
                     break;
                 }
                 case 'shortcut': {
