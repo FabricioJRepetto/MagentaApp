@@ -14,10 +14,8 @@ export default class InteractionCtrl {
 
     public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(body);
-
             // verificar API para eventos de Slack
-            if (body?.payload?.type === 'url_verification') {
+            if (body?.type === 'url_verification') {
                 return res.send({ challenge: body.payload.challenge });
             }
 
