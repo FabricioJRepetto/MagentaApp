@@ -18,8 +18,10 @@ export default class InteractionCtrl {
             if (body?.type === 'url_verification') {
                 return res.send({ challenge: body.challenge });
             } else if (body?.type === 'event_callback') {
-                await openHome(body.user.id);
-                return res.send()
+                if (body.event.type === 'app_home_opened') {
+                    await openHome(body.event.user);
+                    return res.send()
+                }
             }
 
             // case 'event_callback': {
