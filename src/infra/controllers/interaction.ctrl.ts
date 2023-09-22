@@ -16,6 +16,7 @@ export default class InteractionCtrl {
         try {
             const payload = JSON.parse(body.payload)
             console.log(payload);
+            const { type, user, callback_id, trigger_id } = payload;
 
             switch (payload.type) {
                 // verificar API para eventos de Slack
@@ -24,7 +25,6 @@ export default class InteractionCtrl {
                     break;
                 }
                 case 'shortcut': {
-                    const { type, user, callback_id, trigger_id } = payload;
 
                     //TODO Verify the signing secret 
                     // if (!signature.isVerified(req)) {
@@ -42,13 +42,14 @@ export default class InteractionCtrl {
                         await openModal(trigger_id, newActivity)
                         return res.send()
                     }
+                }
 
+                case 'event_callback': {
                     //: Abre la Home
                     if (type === 'app_home_opened') {
                         await openHome(user.id);
                         return res.send()
                     }
-
                 }
 
                 case 'view_submission': {
