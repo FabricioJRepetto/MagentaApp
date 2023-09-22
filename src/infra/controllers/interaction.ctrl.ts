@@ -34,12 +34,6 @@ export default class InteractionCtrl {
             const { type, user, callback_id, trigger_id, actions } = payload;
             console.log(payload);
 
-
-            if (actions && actions[0].action_id === "new_activity") {
-                await this.bridge.openModal(trigger_id, newActivity)
-                return res.send()
-            }
-
             switch (payload.type) {
                 case 'shortcut': {
                     //TODO Verify the signing secret 
@@ -103,6 +97,14 @@ export default class InteractionCtrl {
 
                         default:
                             break;
+                    }
+                }
+
+                case 'block_actions': {
+                    //? Boton de registro de usuario de la App Home
+                    if (actions && actions[0].action_id === "user_signin") {
+                        await this.bridge.openModal(trigger_id, newActivity)
+                        return res.send()
                     }
                 }
 
