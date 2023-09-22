@@ -43,7 +43,6 @@ export default class InteractionCtrl {
 
                     //? Abre el modal para registrar usuario
                     if (callback_id === "user_signin") {
-                        // await this.bridge.slack.openModal(trigger_id, newUser)
                         await this.bridge.openModal(trigger_id, newUser)
                         return res.send()
                     }
@@ -103,7 +102,7 @@ export default class InteractionCtrl {
                 case 'block_actions': {
                     //? Boton de registro de usuario de la App Home
                     if (actions && actions[0].action_id === "user_signin") {
-                        await this.bridge.openModal(trigger_id, newActivity)
+                        await this.bridge.openModal(trigger_id, newUser)
                         return res.send()
                     }
                 }
