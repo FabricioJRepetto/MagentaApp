@@ -1,3 +1,4 @@
+import { FilterQuery } from "mongoose";
 import { ActivityPayload } from "../../types/ActivityPayload";
 import { UserPayload } from "../../types/UserPayload";
 import IdbRepository from "../../types/db.repository.interface";
@@ -77,9 +78,9 @@ export default class MongoDB implements IdbRepository {
 
     async getUserConfig(user_id: string): Promise<any> {
         try {
-            const filter = this.userId(user_id);
+            // const filter = this.userId(user_id);
 
-            const config = await Config.findOne(filter)
+            const config = await Config.findOne(this.userId(user_id))
 
             return config;
         } catch (error) {
@@ -91,9 +92,9 @@ export default class MongoDB implements IdbRepository {
     async updateUserConfig(user_id: string, data: ConfigPayload): Promise<any> {
         try {
             const { active_hours, active_days, reminder_time } = data;
-            const filter = this.userId(user_id);
+            // const filter = this.userId(user_id);
 
-            const updatedConfig = await Config.findOneAndUpdate(filter,
+            const updatedConfig = await Config.findOneAndUpdate(this.userId(user_id),
                 {
                     $set: {
                         active_hours,
@@ -178,7 +179,7 @@ export default class MongoDB implements IdbRepository {
      * @param id String que puede ser una ID de MongoDB (ObjectID) o una ID de usuario de Slack
      * @returns Posibles retornos {usuario: ID} o {slack_user_id: ID}
      */
-    private userId(id: string): Object {
+    private userId(id: string): FilterQuery<any> {
         if (id.length === 24) {
             return { user: id }
         } else {
