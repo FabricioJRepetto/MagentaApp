@@ -77,6 +77,8 @@ export default class MongoDB implements IdbRepository {
 
     async getUserConfig(user_id: string): Promise<any> {
         try {
+            console.log(this.userId(user_id));
+
             const config = await Config.findOne(this.userId(user_id))
 
             return config;
