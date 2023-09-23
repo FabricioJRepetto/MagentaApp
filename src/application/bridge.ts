@@ -79,6 +79,8 @@ export default class Bridge extends SlackAPI {
     async getUserConfig(user_slack_id: string): Promise<IConfig | undefined> {
         try {
             const config = await this.db.getUserConfig(user_slack_id)
+            console.log(config);
+
             return config
 
         } catch (error) {
