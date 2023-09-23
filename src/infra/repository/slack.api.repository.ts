@@ -32,6 +32,8 @@ export default class SlackAPI implements ISlackAPI {
 
     /**
      * Envia la view de la app home al usuario indicado. 
+     * Si el usuario es nuevo ("newUser") muestra un botón de registro,
+     * de otra manera muestra un botó para registrar una actividad y editar configuraciónes.
      *  
      * @param user Slack ID
      */

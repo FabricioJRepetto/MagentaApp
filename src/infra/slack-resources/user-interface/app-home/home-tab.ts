@@ -6,13 +6,22 @@ export default (newUser: boolean): string => {
         Divider(),
         Section({
             text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-        })
+        }),
+        Divider()
     );
 
     if (newUser) {
         homeTab.blocks(
             Section({ text: `:wave: Hola! Al ser un usuario nuevo, debes registrar un par de datos para poder utilizar la app.` })
                 .accessory(Button({ text: 'Registrarme!', actionId: 'user_signin' })),
+        )
+    } else {
+        homeTab.blocks(
+            Section({ text: `:date: Registra una actividad` })
+                .accessory(Button({ text: 'Registrar', actionId: 'new_activity' })),
+            Divider(),
+            Section({ text: `:gear: Configura la app para saber en que horarios estás activo y otros detalles.` })
+                .accessory(Button({ text: 'Configuración', actionId: 'edit_config' })),
         )
     }
 

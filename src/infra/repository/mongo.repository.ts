@@ -1,6 +1,7 @@
 import { ActivityPayload } from "../../types/ActivityPayload";
 import { UserPayload } from "../../types/UserPayload";
 import IdbRepository from "../../types/db.repository.interface";
+import IConfig from "../../types/models/IConfig.interface";
 import { Activity, Day, Entry } from "../../types/models/ILogs.interface";
 import Config from "../models/config.model";
 import Logs from "../models/logs.model";
@@ -72,6 +73,23 @@ export default class MongoDB implements IdbRepository {
     }
     getUserLogs(user_id: string): Promise<any> {
         throw new Error("Method not implemented.");
+    }
+
+    async getUserConfig(user_id: string): Promise<any> {
+        try {
+            let config;
+
+            if (user_id.length === 24) {
+                config = await Config.findOne({ user: user_id })
+            } else {
+                config = await Config.findOne({ user_slack_id: user_id })
+            }
+
+            return config;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error)
+        }
     }
 
     async saveUserActivity(user_id: string, data: Activity, date: { day: string, month: number, year: number }): Promise<any> {

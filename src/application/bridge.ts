@@ -8,6 +8,7 @@ import SlackAPI from "../infra/repository/slack.api.repository";
 import { UserPayload } from "../types/UserPayload";
 import { User, UserValues, ActivityValues } from "../types/ViewSubmissionPayload";
 import dbRepository from "../types/db.repository.interface";
+import IConfig from "../types/models/IConfig.interface";
 import { Activity } from "../types/models/ILogs.interface";
 import IUser from "../types/models/IUser.interface";
 
@@ -20,7 +21,6 @@ export default class Bridge extends SlackAPI {
         this.db = new MongoDB();
         // this.slack = new SlackAPI();
     }
-
 
     public newUser = async ({ user, values }: { user: User, values: UserValues }) => {
         try {
@@ -72,6 +72,16 @@ export default class Bridge extends SlackAPI {
             return user;
         } catch (error) {
             console.log('error @ Bridge.getUser()', error);
+            return undefined
+        }
+    }
+
+    async getUserConfig(user_slack_id: string): Promise<IConfig | undefined> {
+        try {
+            const config = await this.db.getUserConfig(user_slack_id)
+
+        } catch (error) {
+            console.log('error @ Bridge.getUserConfig()', error);
             return undefined
         }
     }

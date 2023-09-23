@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { ActivityValues, User, UserValues } from "../../types/ViewSubmissionPayload";
 import { newActivity, newUser } from "../slack-resources/user-interface/modals";
 import Bridge from "../../application/bridge";
+import editConfig from "../slack-resources/user-interface/modals/edit-config";
 
 export default class InteractionCtrl {
     private bridge;
@@ -49,7 +50,10 @@ export default class InteractionCtrl {
 
                     //? Abre el modal para registrar actividad
                     if (callback_id === "new_activity") {
-                        await this.bridge.openModal(trigger_id, newActivity)
+                        const config = await this.bridge.getUserConfig(user)
+                        if (!config) return res.sendStatus(400)
+
+                        await this.bridge.openModal(trigger_id, () => editConfig(config))
                         return res.send()
                     }
                 }
@@ -65,6 +69,7 @@ export default class InteractionCtrl {
                                     values: <UserValues>payload.view.state.values
                                 })
                                 //: Sincronizar Google Calendar al crear usuario?
+                                //TODO Si la view desde donde se envío el form esla home, actualizarla 
                                 //TODO enviar/mostrar mensaje de confirmación 
 
                                 return res.send()
@@ -99,11 +104,26 @@ export default class InteractionCtrl {
                     }
                 }
 
+                //? BOTONES
                 case 'block_actions': {
-                    //? Boton de registro de usuario de la App Home
-                    if (actions && actions[0].action_id === "user_signin") {
-                        await this.bridge.openModal(trigger_id, newUser)
-                        return res.send()
+                    if (actions) {
+
+                        switch (actions[0].action_id) {
+
+                            //? Boton de registro de usuario de la App Home
+                            case "user_signin": {
+                                await this.bridge.openModal(trigger_id, newUser)
+                                return res.send()
+                            }
+
+                            //? Boton de configuración en la App Home
+                            case "edit_config": {
+
+                            }
+
+                            default:
+                                break;
+                        }
                     }
                 }
 
