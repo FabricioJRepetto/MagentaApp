@@ -77,9 +77,9 @@ export default class MongoDB implements IdbRepository {
 
     async getUserConfig(user_id: string): Promise<any> {
         try {
-            console.log(this.userId(user_id));
+            const filter = this.userId(user_id);
 
-            const config = await Config.findOne(this.userId(user_id))
+            const config = await Config.findOne(filter)
 
             return config;
         } catch (error) {
@@ -91,8 +91,9 @@ export default class MongoDB implements IdbRepository {
     async updateUserConfig(user_id: string, data: ConfigPayload): Promise<any> {
         try {
             const { active_hours, active_days, reminder_time } = data;
+            const filter = this.userId(user_id);
 
-            const updatedConfig = await Config.findOneAndUpdate(this.userId(user_id),
+            const updatedConfig = await Config.findOneAndUpdate(filter,
                 {
                     $set: {
                         active_hours,
