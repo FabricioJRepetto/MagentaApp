@@ -1,5 +1,5 @@
-import { ActivityPayload } from "./ActivityPayload"
 import { UserPayload } from "./UserPayload"
+import { Config } from "./models/IConfig.interface"
 import { Activity } from "./models/ILogs.interface"
 
 export default interface IdbRepository {
@@ -8,6 +8,13 @@ export default interface IdbRepository {
      * @param user_id Puede ser la ID de la base de datos o Slack ID
      */
     getUserConfig(user_id: string): Promise<any>
+    /**
+     * Actualiza las preferencias de un usuario.
+     * 
+     * @param user_id ID de base de datos o ID de Slack
+     * @param data objeto con los parametros necesarios (interface Config)
+     */
+    updateUserConfig(user_id: string, data: Config): Promise<any>
     createLogs(user_id: string, slack_id: string): Promise<any>
     createConfig(user_id: string, slack_id: string): Promise<any>
     createUser(data: UserPayload): Promise<any>

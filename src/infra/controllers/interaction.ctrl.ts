@@ -1,6 +1,6 @@
 import "dotenv/config"
 import { NextFunction, Request, Response } from "express";
-import { ActivityValues, User, UserValues } from "../../types/ViewSubmissionPayload";
+import { ActivityValues, ConfigValues, User, UserValues } from "../../types/ViewSubmissionPayload";
 import { newActivity, newUser } from "../slack-resources/user-interface/modals";
 import Bridge from "../../application/bridge";
 import editConfig from "../slack-resources/user-interface/modals/edit-config";
@@ -128,14 +128,11 @@ export default class InteractionCtrl {
 
                         case 'edit_config': {
                             try {
-                                console.log(payload.view.state.values.days.selected_days);
-                                console.log(payload.view.state.values.reminder.reminder_select);
-
                                 // Guardar en DB
-                                // const response = await this.bridge.newActivity({
-                                //     user: <User>payload.user,
-                                //     values: <any>payload.view.state.values
-                                // })
+                                const response = await this.bridge.editConfig({
+                                    user_id: payload.user.id,
+                                    values: <ConfigValues>payload.view.state.values
+                                })
                                 // console.log('# view_submission switch: data', data);
                                 //TODO Sincronizar Google Calendar 
                                 //TODO enviar/mostrar mensaje de confirmación 

@@ -87,12 +87,12 @@ export default class Bridge extends SlackAPI {
         }
     }
 
-    async editConfig({ user, values }: { user: User; values: ConfigValues; }) {
+    async editConfig({ user_id, values }: { user_id: string; values: ConfigValues; }) {
         try {
             //TODO validar datos 
             const data = this.parseConfigData({ values });
-
-
+            await this.db.updateUserConfig(user_id, data)
+            return
         } catch (error) {
             console.log('error @ Bridge.editConfig()', error);
             return error
@@ -142,9 +142,6 @@ export default class Bridge extends SlackAPI {
     }
 
     private parseConfigData = ({ values }: { values: ConfigValues }): Config => {
-        console.log(values.days.selected_days);
-        console.log(values.reminder.reminder_select);
-
         try {
             const data: Config = {
                 active_hours: {

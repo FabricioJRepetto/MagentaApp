@@ -161,6 +161,11 @@ export interface ConfigValues {
             type: string
             selected_options: [
                 {
+                    text: {
+                        type: string
+                        text: string
+                        emoji: boolean
+                    }
                     value: string
                 }
             ]
@@ -170,6 +175,11 @@ export interface ConfigValues {
         reminder_select: {
             type: string
             selected_option: {
+                text: {
+                    type: string
+                    text: string
+                    emoji: boolean
+                }
                 value: string
             }
         }

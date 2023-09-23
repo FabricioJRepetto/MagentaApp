@@ -1,7 +1,7 @@
 import { ActivityPayload } from "../../types/ActivityPayload";
 import { UserPayload } from "../../types/UserPayload";
 import IdbRepository from "../../types/db.repository.interface";
-import IConfig from "../../types/models/IConfig.interface";
+import IConfig, { Config as ConfigPayload } from "../../types/models/IConfig.interface";
 import { Activity, Day, Entry } from "../../types/models/ILogs.interface";
 import Config from "../models/config.model";
 import Logs from "../models/logs.model";
@@ -77,15 +77,30 @@ export default class MongoDB implements IdbRepository {
 
     async getUserConfig(user_id: string): Promise<any> {
         try {
-            let config;
-
-            if (user_id.length === 24) {
-                config = await Config.findOne({ user: user_id })
-            } else {
-                config = await Config.findOne({ user_slack_id: user_id })
-            }
+            const config = await Config.findOne(this.userId(user_id))
 
             return config;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error)
+        }
+    }
+
+    async updateUserConfig(user_id: string, data: ConfigPayload): Promise<any> {
+        try {
+            const { active_hours, active_days, reminder_time } = data;
+
+            const updatedConfig = await Config.findOneAndUpdate(this.userId(user_id),
+                {
+                    $set: {
+                        active_hours,
+                        active_days,
+                        reminder_time
+                    }
+                }
+            )
+
+            return updatedConfig;
         } catch (error) {
             console.log(error);
             return Promise.reject(error)
@@ -151,6 +166,21 @@ export default class MongoDB implements IdbRepository {
 
     syncGoogleCalendar(user_id: string): Promise<any> {
         throw new Error("Method not implemented.");
+    }
+
+    /**
+     * Determina un tipo de ID de usuario y retorna un argumento de filtro por usuario para una query de Mongoose.
+     * El modelo debe tener los argumentos 'user': una referencia al modelo User, y 'slack_user_id': la ID de Slack del usuario.
+     * 
+     * @param id String que puede ser una ID de MongoDB (ObjectID) o una ID de usuario de Slack
+     * @returns Posibles retornos {usuario: ID} o {slack_user_id: ID}
+     */
+    private userId(id: string): Object {
+        if (id.length === 24) {
+            return { user: id }
+        } else {
+            return { slack_user_id: id }
+        }
     }
 
 }
