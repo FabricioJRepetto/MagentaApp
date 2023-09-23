@@ -32,7 +32,7 @@ export default class InteractionCtrl {
 
             //? SLASH COMMANDS _______________
             const payload = JSON.parse(body.payload);
-            const { type, user, callback_id, trigger_id, actions } = payload;
+            const { type, view, user, callback_id, trigger_id, actions } = payload;
             console.log(payload);
 
             switch (payload.type) {
@@ -50,10 +50,7 @@ export default class InteractionCtrl {
 
                     //? Abre el modal para registrar actividad
                     if (callback_id === "new_activity") {
-                        const config = await this.bridge.getUserConfig(user)
-                        if (!config) return res.sendStatus(400)
-
-                        await this.bridge.openModal(trigger_id, () => editConfig(config))
+                        await this.bridge.openModal(trigger_id, newActivity)
                         return res.send()
                     }
                 }
@@ -70,6 +67,7 @@ export default class InteractionCtrl {
                                 })
                                 //: Sincronizar Google Calendar al crear usuario?
                                 //TODO Si la view desde donde se envío el form esla home, actualizarla 
+                                if (view.type === "home") { }
                                 //TODO enviar/mostrar mensaje de confirmación 
 
                                 return res.send()
@@ -109,7 +107,6 @@ export default class InteractionCtrl {
                     if (actions) {
 
                         switch (actions[0].action_id) {
-
                             //? Boton de registro de usuario de la App Home
                             case "user_signin": {
                                 await this.bridge.openModal(trigger_id, newUser)
@@ -118,7 +115,11 @@ export default class InteractionCtrl {
 
                             //? Boton de configuración en la App Home
                             case "edit_config": {
+                                const config = await this.bridge.getUserConfig(user.id)
+                                if (!config) return res.sendStatus(400)
 
+                                await this.bridge.openModal(trigger_id, () => editConfig(config))
+                                return res.send()
                             }
 
                             default:
