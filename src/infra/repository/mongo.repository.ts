@@ -78,9 +78,10 @@ export default class MongoDB implements IdbRepository {
 
     async getUserConfig(user_id: string): Promise<any> {
         try {
-            // const filter = this.userId(user_id);
+            const filter = user_id.length === 24 ? { user: user_id } : { slack_user_id: user_id };
 
-            const config = await Config.findOne(this.userId(user_id))
+
+            const config = await Config.findOne(filter)
 
             return config;
         } catch (error) {
@@ -92,9 +93,9 @@ export default class MongoDB implements IdbRepository {
     async updateUserConfig(user_id: string, data: ConfigPayload): Promise<any> {
         try {
             const { active_hours, active_days, reminder_time } = data;
-            // const filter = this.userId(user_id);
+            const filter = user_id.length === 24 ? { user: user_id } : { slack_user_id: user_id };
 
-            const updatedConfig = await Config.findOneAndUpdate(this.userId(user_id),
+            const updatedConfig = await Config.findOneAndUpdate(filter,
                 {
                     $set: {
                         active_hours,
@@ -170,21 +171,6 @@ export default class MongoDB implements IdbRepository {
 
     syncGoogleCalendar(user_id: string): Promise<any> {
         throw new Error("Method not implemented.");
-    }
-
-    /**
-     * Determina un tipo de ID de usuario y retorna un argumento de filtro por usuario para una query de Mongoose.
-     * El modelo debe tener los argumentos 'user': una referencia al modelo User, y 'slack_user_id': la ID de Slack del usuario.
-     * 
-     * @param id String que puede ser una ID de MongoDB (ObjectID) o una ID de usuario de Slack
-     * @returns Posibles retornos {usuario: ID} o {slack_user_id: ID}
-     */
-    private userId(id: string): FilterQuery<any> {
-        if (id.length === 24) {
-            return { user: id }
-        } else {
-            return { slack_user_id: id }
-        }
     }
 
 }
