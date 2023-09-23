@@ -116,7 +116,10 @@ export default class InteractionCtrl {
                             //? Boton de configuración en la App Home
                             case "edit_config": {
                                 const config = await this.bridge.getUserConfig(user.id)
-                                if (!config) return res.sendStatus(400)
+                                if (!config) {
+                                    console.log("error @ interactions -block_actions -edit_config: Config not found");
+                                    return res.sendStatus(400)
+                                }
 
                                 await this.bridge.openModal(trigger_id, () => editConfig(config))
                                 return res.send()
