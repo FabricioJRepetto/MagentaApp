@@ -78,10 +78,9 @@ export default class MongoDB implements IdbRepository {
 
     async getUserConfig(user_id: string): Promise<any> {
         try {
-            const filter = user_id.length === 24 ? { user: user_id } : { slack_user_id: user_id };
+            const db_id = user_id.length === 24;
 
-
-            const config = await Config.findOne(filter)
+            const config = await Config.findOne(db_id ? { user: user_id } : { slack_user_id: user_id })
 
             return config;
         } catch (error) {
@@ -93,9 +92,9 @@ export default class MongoDB implements IdbRepository {
     async updateUserConfig(user_id: string, data: ConfigPayload): Promise<any> {
         try {
             const { active_hours, active_days, reminder_time } = data;
-            const filter = user_id.length === 24 ? { user: user_id } : { slack_user_id: user_id };
+            const db_id = user_id.length === 24;
 
-            const updatedConfig = await Config.findOneAndUpdate(filter,
+            const updatedConfig = await Config.findOneAndUpdate(db_id ? { user: user_id } : { slack_user_id: user_id },
                 {
                     $set: {
                         active_hours,
