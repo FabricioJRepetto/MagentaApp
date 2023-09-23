@@ -128,7 +128,8 @@ export default class InteractionCtrl {
 
                         case 'edit_config': {
                             try {
-                                console.log(payload.view.state.values);
+                                console.log(payload.view.state.values.days.selected_days);
+                                console.log(payload.view.state.values.reminder.reminder_select);
 
                                 // Guardar en DB
                                 // const response = await this.bridge.newActivity({

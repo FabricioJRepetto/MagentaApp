@@ -142,8 +142,8 @@ export default class Bridge extends SlackAPI {
     }
 
     private parseConfigData = ({ values }: { values: ConfigValues }): Config => {
-        console.log(values.days.selected_days.selected_options);
-        console.log(values.reminder.reminder_select.selected_option);
+        console.log(values.days.selected_days);
+        console.log(values.reminder.reminder_select);
 
         try {
             const data: Config = {
