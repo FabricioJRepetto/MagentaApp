@@ -144,22 +144,34 @@ export interface UserValues {
 }
 
 export interface ConfigValues {
-    name: {
-        name_input: {
+    time_from: {
+        from: {
             type: string
-            value: string
+            selected_time: string
         }
     },
-    email: {
-        email_input: {
+    time_to: {
+        to: {
             type: string
-            value: string
+            selected_time: string
         }
     },
-    phone: {
-        phone_input: {
+    days: {
+        selected_days: {
             type: string
-            value: string
+            selected_options: [
+                {
+                    value: string
+                }
+            ]
+        }
+    },
+    reminder: {
+        reminder_select: {
+            type: string
+            selected_option: {
+                value: string
+            }
         }
     }
 }

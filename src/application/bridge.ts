@@ -6,7 +6,7 @@
 import MongoDB from "../infra/repository/mongo.repository"
 import SlackAPI from "../infra/repository/slack.api.repository";
 import { UserPayload } from "../types/UserPayload";
-import { User, UserValues, ActivityValues } from "../types/ViewSubmissionPayload";
+import { User, UserValues, ActivityValues, ConfigValues } from "../types/ViewSubmissionPayload";
 import dbRepository from "../types/db.repository.interface";
 import IConfig, { Config } from "../types/models/IConfig.interface";
 import { Activity } from "../types/models/ILogs.interface";
@@ -87,7 +87,7 @@ export default class Bridge extends SlackAPI {
         }
     }
 
-    async editConfig({ user, values }: { user: User; values: any; }) {
+    async editConfig({ user, values }: { user: User; values: ConfigValues; }) {
         try {
             //TODO validar datos 
             const data = this.parseConfigData({ values });
@@ -141,15 +141,18 @@ export default class Bridge extends SlackAPI {
         }
     }
 
-    private parseConfigData = ({ values }: { values: any }): Config => {
+    private parseConfigData = ({ values }: { values: ConfigValues }): Config => {
+        console.log(values.days.selected_days.selected_options);
+        console.log(values.reminder.reminder_select.selected_option);
+
         try {
             const data: Config = {
                 active_hours: {
-                    from: "",
-                    to: ""
+                    from: values.time_from.from.selected_time,
+                    to: values.time_to.to.selected_time
                 },
-                active_days: [1, 2, 3],
-                reminder_time: 1
+                active_days: values.days.selected_days.selected_options.map(e => parseInt(e.value)),
+                reminder_time: parseInt(values.reminder.reminder_select.selected_option.value)
             }
 
             return data

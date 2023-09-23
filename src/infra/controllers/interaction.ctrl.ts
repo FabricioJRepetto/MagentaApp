@@ -85,7 +85,6 @@ export default class InteractionCtrl {
 
                 //? SUBMITS
                 case 'view_submission': {
-                    console.log(payload);
 
                     switch (payload.view.callback_id) {
                         case 'user_signin': {
