@@ -33,7 +33,6 @@ export default class InteractionCtrl {
             //? SLASH COMMANDS _______________
             const payload = JSON.parse(body.payload);
             const { type, view, user, callback_id, trigger_id, actions } = payload;
-            console.log(payload);
 
             switch (payload.type) {
                 case 'shortcut': {
@@ -55,7 +54,38 @@ export default class InteractionCtrl {
                     }
                 }
 
+                //? BOTONES
+                case 'block_actions': {
+                    if (actions) {
+
+                        switch (actions[0].action_id) {
+                            //? Boton de registro de usuario de la App Home
+                            case "user_signin": {
+                                await this.bridge.openModal(trigger_id, newUser)
+                                return res.send()
+                            }
+
+                            //? Boton de configuración en la App Home
+                            case "edit_config": {
+                                const config = await this.bridge.getUserConfig(user.id)
+                                if (!config) {
+                                    console.log("error @ interactions -block_actions -edit_config: Config not found");
+                                    return res.status(400).send("error @interactions - block_actions - edit_config: Config not found")
+                                }
+
+                                await this.bridge.openModal(trigger_id, () => editConfig(config))
+                                return res.send()
+                            }
+
+                            default:
+                                break;
+                        }
+                    }
+                }
+
+                //? SUBMITS
                 case 'view_submission': {
+                    console.log(payload);
 
                     switch (payload.view.callback_id) {
                         case 'user_signin': {
@@ -97,37 +127,29 @@ export default class InteractionCtrl {
                             }
                         }
 
+                        case 'edit_config': {
+                            try {
+                                console.log(payload.view.state.values);
+
+                                // Guardar en DB
+                                // const response = await this.bridge.newActivity({
+                                //     user: <User>payload.user,
+                                //     values: <any>payload.view.state.values
+                                // })
+                                // console.log('# view_submission switch: data', data);
+                                //TODO Sincronizar Google Calendar 
+                                //TODO enviar/mostrar mensaje de confirmación 
+
+                                return res.send()
+
+                            } catch (error) {
+                                console.log(error);
+                                return res.status(400).send(error)
+                            }
+                        }
+
                         default:
                             break;
-                    }
-                }
-
-                //? BOTONES
-                case 'block_actions': {
-                    if (actions) {
-
-                        switch (actions[0].action_id) {
-                            //? Boton de registro de usuario de la App Home
-                            case "user_signin": {
-                                await this.bridge.openModal(trigger_id, newUser)
-                                return res.send()
-                            }
-
-                            //? Boton de configuración en la App Home
-                            case "edit_config": {
-                                const config = await this.bridge.getUserConfig(user.id)
-                                if (!config) {
-                                    console.log("error @ interactions -block_actions -edit_config: Config not found");
-                                    return res.sendStatus(400)
-                                }
-
-                                await this.bridge.openModal(trigger_id, () => editConfig(config))
-                                return res.send()
-                            }
-
-                            default:
-                                break;
-                        }
                     }
                 }
 

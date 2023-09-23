@@ -1,7 +1,5 @@
-import { Checkboxes, Divider, Input, Modal, Option, OptionBuilder, Section, StaticSelect, TimePicker } from "slack-block-builder"
+import { Checkboxes, Divider, Input, Modal, Option, Section, StaticSelect, TimePicker } from "slack-block-builder"
 import IConfig from "../../../../types/models/IConfig.interface";
-import { Undefinable, UndefinableArray } from "slack-block-builder/dist/internal";
-
 
 export default ({ active_hours, active_days, reminder_time }: IConfig): string => {
     const modal = Modal({ title: "Configuración", submit: "Guardar", close: "volver", callbackId: "edit_config" })
@@ -9,7 +7,7 @@ export default ({ active_hours, active_days, reminder_time }: IConfig): string =
             Section({ text: "Adapta la app a tus necesidades para que tu experiencia de uso sea lo más placentera posible.\n\n" }),
             Divider(),
             Section({ text: "*Horarios de actividad*" }),
-            Section({ text: "Horarios dentro de los que la app puede enviarte notificaciónes" }),
+            Section({ text: "Horarios dentro de los que la app puede enviarte notificaciónes\n\n" }),
             Input({ label: "Mi día comienza a las...", blockId: "time_from" }).element(
                 TimePicker({
                     initialTime: active_hours.from,

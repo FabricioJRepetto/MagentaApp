@@ -10,3 +10,12 @@ export default interface IConfig {
     active_days: Types.Array<number>;
     reminder_time: number;
 }
+
+export interface Config {
+    active_hours: {
+        from: string,
+        to: string
+    };
+    active_days: number[];
+    reminder_time: number;
+}

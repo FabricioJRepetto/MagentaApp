@@ -142,3 +142,24 @@ export interface UserValues {
         }
     }
 }
+
+export interface ConfigValues {
+    name: {
+        name_input: {
+            type: string
+            value: string
+        }
+    },
+    email: {
+        email_input: {
+            type: string
+            value: string
+        }
+    },
+    phone: {
+        phone_input: {
+            type: string
+            value: string
+        }
+    }
+}

@@ -8,7 +8,7 @@ import SlackAPI from "../infra/repository/slack.api.repository";
 import { UserPayload } from "../types/UserPayload";
 import { User, UserValues, ActivityValues } from "../types/ViewSubmissionPayload";
 import dbRepository from "../types/db.repository.interface";
-import IConfig from "../types/models/IConfig.interface";
+import IConfig, { Config } from "../types/models/IConfig.interface";
 import { Activity } from "../types/models/ILogs.interface";
 import IUser from "../types/models/IUser.interface";
 
@@ -87,6 +87,19 @@ export default class Bridge extends SlackAPI {
         }
     }
 
+    async editConfig({ user, values }: { user: User; values: any; }) {
+        try {
+            //TODO validar datos 
+            const data = this.parseConfigData({ values });
+
+
+        } catch (error) {
+            console.log('error @ Bridge.editConfig()', error);
+            return error
+        }
+
+    }
+
     //________________________________________________________
 
     private parseUserData = ({ user, values }: { user: User, values: UserValues }): UserPayload => {
@@ -108,7 +121,7 @@ export default class Bridge extends SlackAPI {
 
     private parseActivityData = ({ values }: { values: ActivityValues }): Activity => {
         try {
-            const data = {
+            const data: Activity = {
                 date: new Date().toISOString().split('T')[0],
                 hours: {
                     from: values.time_from.from.selected_time,
@@ -119,6 +132,24 @@ export default class Bridge extends SlackAPI {
                 energy: parseInt(values.energy.energy_select.selected_option.value),
                 emotion: values.emotion.emotion_select.selected_option.value,
                 description: values.description.taskTitle.value
+            }
+
+            return data
+        } catch (error: any) {
+            console.log('error @ parseData()', error);
+            throw new Error(error);
+        }
+    }
+
+    private parseConfigData = ({ values }: { values: any }): Config => {
+        try {
+            const data: Config = {
+                active_hours: {
+                    from: "",
+                    to: ""
+                },
+                active_days: [1, 2, 3],
+                reminder_time: 1
             }
 
             return data
