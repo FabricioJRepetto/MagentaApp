@@ -78,10 +78,13 @@ export default class MongoDB implements IdbRepository {
 
     async getUserConfig(user_id: string): Promise<any> {
         try {
-            const db_id = user_id.length === 24;
+            let config;
 
-            const config = await Config.findOne(db_id ? { user: user_id } : { slack_user_id: user_id })
-
+            if (user_id.length === 24) {
+                config = await Config.findOne({ user: user_id })
+            } else {
+                config = await Config.findOne({ slack_user_id: user_id })
+            }
             return config;
         } catch (error) {
             console.log(error);
@@ -92,19 +95,31 @@ export default class MongoDB implements IdbRepository {
     async updateUserConfig(user_id: string, data: ConfigPayload): Promise<any> {
         try {
             const { active_hours, active_days, reminder_time } = data;
-            const db_id = user_id.length === 24;
 
-            const updatedConfig = await Config.findOneAndUpdate(db_id ? { user: user_id } : { slack_user_id: user_id },
-                {
-                    $set: {
-                        active_hours,
-                        active_days,
-                        reminder_time
+            if (user_id.length === 24) {
+                const updatedConfig = await Config.findOneAndUpdate({ user: user_id },
+                    {
+                        $set: {
+                            active_hours,
+                            active_days,
+                            reminder_time
+                        }
                     }
-                }
-            )
+                )
+                return updatedConfig;
+            } else {
+                const updatedConfig = await Config.findOneAndUpdate({ slack_user_id: user_id },
+                    {
+                        $set: {
+                            active_hours,
+                            active_days,
+                            reminder_time
+                        }
+                    }
+                )
+                return updatedConfig;
+            }
 
-            return updatedConfig;
         } catch (error) {
             console.log(error);
             return Promise.reject(error)

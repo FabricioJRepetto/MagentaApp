@@ -67,8 +67,6 @@ export default class InteractionCtrl {
 
                             //? Boton de configuración en la App Home
                             case "edit_config": {
-                                console.log('### user.id:', user.id);
-
                                 const config = await this.bridge.getUserConfig(user.id)
 
                                 if (!config) {
