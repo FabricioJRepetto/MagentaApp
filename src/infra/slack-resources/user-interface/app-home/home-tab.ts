@@ -32,9 +32,9 @@ export default (user: PopulatedUser | undefined): string => {
                 Teléfono: ${user.phone}`
             }),
             Divider(),
-            Section({ text: `:gear: *Configura la app para saber en que horarios estás activo y otros detalles.*` }),
             Section({
-                text: `Horas de actividad: ${active_hours.from} - ${active_hours.to}\n
+                text: `:gear: *Configura la app para saber en que horarios estás activo y otros detalles.*\n
+                Horas de actividad: ${active_hours.from} - ${active_hours.to}\n
                 Dias de registro: ${active_days.map(d => dayName(d)).join(', ')}\n
                 Tiempo mínimo entre recordatorios: ${reminder_time < 2 ? '1 hora' : reminder_time + ' horas'}`
             })
