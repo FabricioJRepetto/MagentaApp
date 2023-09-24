@@ -7,6 +7,17 @@ import IUser, { PopulatedUser } from "../../types/models/IUser.interface";
 
 const { SLACK_BOT_TOKEN } = process.env;
 
+//? Type: Por lo menos un argumento de los siguientes
+type messageArgs = {
+    attachments: string,
+    blocks: string,
+    text: string
+}
+type AtLeastOne<Obj, Keys = keyof Obj> = Keys extends keyof Obj ? Pick<Obj, Keys> : never
+type NonEmpty<T> = Partial<T> & AtLeastOne<T>
+// Partial<A> & (Pick<A, "foo"> | Pick<A, "bar"> | Pick<A, "baz">)
+export type AtLeastOneMessageArg = NonEmpty<messageArgs>
+
 export default class SlackAPI implements ISlackAPI {
 
     /**
@@ -55,12 +66,21 @@ export default class SlackAPI implements ISlackAPI {
         }
     }
 
-    public sendMessage = async () => {
-        //TODO Enviar mensaje 
+    public sendMessage = async (user_slack_id: string, arg: AtLeastOneMessageArg) => {
+        //TODO aceptar varios tipos de "mensaje"
         try {
-            // const result = await axios.post('https://slack.com/api/chat.postMessage', qs.stringify(args));
+            // You can use their direct message channel ID (as found with im.open, for instance) instead.
+            // https://api.slack.com/methods/chat.postMessage
 
-            // return result;
+            const args = {
+                token: SLACK_BOT_TOKEN,
+                channel: user_slack_id,
+                ...arg
+            };
+
+            const result = await axios.post('https://slack.com/api/chat.postMessage', qs.stringify(args));
+
+            return result;
 
         } catch (error) {
             console.log(error);
