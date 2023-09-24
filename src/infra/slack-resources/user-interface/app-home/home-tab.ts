@@ -1,6 +1,14 @@
 import { Button, Divider, HomeTab, Section } from "slack-block-builder"
+import IUser, { PupulatedUser } from "../../../../types/models/IUser.interface";
+import IConfig from "../../../../types/models/IConfig.interface";
+import { dayName } from "../../../../utils";
 
-export default (newUser: boolean): string => {
+export default (user: PupulatedUser | undefined | null): string => {
+
+    const tbd = (arg: any): arg is IConfig => arg.config;
+
+    const config = tbd(user?.config) ? user?.config : null;
+
     const homeTab = HomeTab({ callbackId: 'main-home', privateMetaData: 'open' }).blocks(
         Section({ text: "*Magenta Productivity App*" }),
         Section({
@@ -9,17 +17,29 @@ export default (newUser: boolean): string => {
         Divider()
     );
 
-    if (newUser) {
+    if (!user) {
         homeTab.blocks(
-            Section({ text: `:wave: Hola! Al ser un usuario nuevo, debes registrar un par de datos para poder utilizar la app.` })
+            Section({ text: `:wave:* Hola! Al ser un usuario nuevo, debes registrar un par de datos para poder utilizar la app.*` })
                 .accessory(Button({ text: 'Registrarme!', actionId: 'user_signin' })),
         )
     } else {
         homeTab.blocks(
-            Section({ text: `:date: Registra una actividad` })
+            Section({ text: `:date: *Registra una nueva actividad o evento.*` })
                 .accessory(Button({ text: 'Registrar', actionId: 'new_activity' })),
             Divider(),
-            Section({ text: `:gear: Configura la app para saber en que horarios estás activo y otros detalles.` })
+            Section({
+                text: `:identification_card: *Tus datos:*\n
+                Nombre: ${user.name}\n
+                Email: ${user.email}\n
+                Teléfono: ${user.phone}`
+            }),
+            Divider(),
+            Section({ text: `:gear: *Configura la app para saber en que horarios estás activo y otros detalles.*` }),
+            Section({
+                text: `Horas de actividad: ${config?.active_hours.from} - ${config?.active_hours.to}\n
+                Dias de registro: ${config?.active_days.map(d => dayName(d)).join(', ')}\n
+                Tiempo mínimo entre recordatorios: ${config?.reminder_time! < 2 ? '1 hora' : config?.reminder_time + ' horas'}`
+            })
                 .accessory(Button({ text: 'Configuración', actionId: 'edit_config' })),
         )
     }

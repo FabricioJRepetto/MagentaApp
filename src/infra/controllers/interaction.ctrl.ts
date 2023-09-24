@@ -24,8 +24,8 @@ export default class InteractionCtrl {
                 //? Abre la Home
                 if (body.event.type === 'app_home_opened') {
                     // buscar usuario
-                    const newUser = await this.bridge.getUser(body.event.user)
-                    await this.bridge.openHome(body.event.user, !Boolean(newUser));
+                    const user = await this.bridge.getPopulatedUser(body.event.user, "config")
+                    await this.bridge.openHome(body.event.user, user);
                     return res.send()
                 }
             }

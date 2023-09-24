@@ -3,6 +3,7 @@ import qs from "qs";
 import axios from "axios";
 import { homeTab } from "../slack-resources/user-interface/app-home";
 import ISlackAPI from "../../types/slack.api.interface";
+import IUser, { PupulatedUser } from "../../types/models/IUser.interface";
 
 const { SLACK_BOT_TOKEN } = process.env;
 
@@ -37,12 +38,12 @@ export default class SlackAPI implements ISlackAPI {
      *  
      * @param user Slack ID
      */
-    public openHome = async (user: string, newUser: boolean): Promise<any> => {
+    public openHome = async (user: string, user_data: PupulatedUser | undefined): Promise<any> => {
         try {
             const args = {
                 token: SLACK_BOT_TOKEN,
                 user_id: user,
-                view: homeTab(newUser)
+                view: homeTab(user_data)
             };
 
             const result = await axios.post('https://slack.com/api/views.publish', qs.stringify(args));

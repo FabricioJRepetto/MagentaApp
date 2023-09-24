@@ -76,6 +76,38 @@ export default class Bridge extends SlackAPI {
         }
     }
 
+    /**
+     * Busca un usuario y popula el campo indicado o todos los campos posibles.
+     * 
+     * @param user_id Db User ID or Slack ID
+     * @param path_to_populate "config" o "logs", dejar vacio para popular ambos campos
+     * @returns 
+     */
+    async getPopulatedUser(user_id: string, path_to_populate?: "config" | "logs"): Promise<IUser | undefined> {
+        try {
+            let user;
+
+            switch (path_to_populate) {
+                case 'config':
+                    user = await this.db.getUserWithConfig(user_id);
+                    break;
+
+                case 'logs':
+                    user = await this.db.getUserWithLogs(user_id);
+                    break;
+
+                default:
+                    user = await this.db.getPopulatedUser(user_id);
+                    break;
+            }
+            return user;
+
+        } catch (error) {
+            console.log('error @ Bridge.getUser()', error);
+            return undefined
+        }
+    }
+
     async getUserConfig(user_slack_id: string): Promise<IConfig | undefined> {
         try {
             const config = await this.db.getUserConfig(user_slack_id)

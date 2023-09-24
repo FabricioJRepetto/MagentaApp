@@ -1,5 +1,6 @@
 import { Checkboxes, Divider, Input, Modal, Option, Section, StaticSelect, TimePicker } from "slack-block-builder"
 import IConfig from "../../../../types/models/IConfig.interface";
+import { dayName } from "../../../../utils";
 
 export default ({ active_hours, active_days, reminder_time }: IConfig): string => {
     const modal = Modal({ title: "Configuración", submit: "Guardar", close: "volver", callbackId: "edit_config" })
@@ -53,19 +54,6 @@ export default ({ active_hours, active_days, reminder_time }: IConfig): string =
             ),
             Divider()
         )
-
-    const dayName = (n: number): string => {
-        const days = [
-            "Domingo",
-            "Lunes",
-            "Martes",
-            "Miércoles",
-            "Jueves",
-            "Viernes",
-            "Sábado"
-        ]
-        return days[n]
-    }
 
     return modal.buildToJSON();
 }
