@@ -5,10 +5,6 @@ import { dayName } from "../../../../utils";
 
 export default (user: PopulatedUser | undefined): string => {
 
-    const tbd = (arg: any): arg is IConfig => arg.config;
-
-    const config = tbd(user?.config) ? user?.config : null;
-
     const homeTab = HomeTab({ callbackId: 'main-home', privateMetaData: 'open' }).blocks(
         Section({ text: "*Magenta Productivity App*" }),
         Section({
@@ -17,12 +13,14 @@ export default (user: PopulatedUser | undefined): string => {
         Divider()
     );
 
-    if (!user) {
+    if (user === undefined) {
         homeTab.blocks(
             Section({ text: `:wave:* Hola! Al ser un usuario nuevo, debes registrar un par de datos para poder utilizar la app.*` })
                 .accessory(Button({ text: 'Registrarme!', actionId: 'user_signin' })),
         )
     } else {
+        const { active_hours, active_days, reminder_time } = <IConfig>user?.config;
+
         homeTab.blocks(
             Section({ text: `:date: *Registra una nueva actividad o evento.*` })
                 .accessory(Button({ text: 'Registrar', actionId: 'new_activity' })),
@@ -36,9 +34,9 @@ export default (user: PopulatedUser | undefined): string => {
             Divider(),
             Section({ text: `:gear: *Configura la app para saber en que horarios estás activo y otros detalles.*` }),
             Section({
-                text: `Horas de actividad: ${config?.active_hours.from} - ${config?.active_hours.to}\n
-                Dias de registro: ${config?.active_days.map(d => dayName(d)).join(', ')}\n
-                Tiempo mínimo entre recordatorios: ${config?.reminder_time! < 2 ? '1 hora' : config?.reminder_time + ' horas'}`
+                text: `Horas de actividad: ${active_hours.from} - ${active_hours.to}\n
+                Dias de registro: ${active_days.map(d => dayName(d)).join(', ')}\n
+                Tiempo mínimo entre recordatorios: ${reminder_time < 2 ? '1 hora' : reminder_time + ' horas'}`
             })
                 .accessory(Button({ text: 'Configuración', actionId: 'edit_config' })),
         )
