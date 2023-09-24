@@ -15,28 +15,28 @@ export default (user: PopulatedUser | undefined): string => {
 
     if (user === undefined) {
         homeTab.blocks(
-            Section({ text: `:wave:* Hola! Al ser un usuario nuevo, debes registrar un par de datos para poder utilizar la app.*` })
+            Section({ text: `:wave: Hola! Al ser un usuario nuevo, debes registrar un par de datos para poder utilizar la app.` })
                 .accessory(Button({ text: 'Registrarme!', actionId: 'user_signin' })),
         )
     } else {
         const { active_hours, active_days, reminder_time } = <IConfig>user?.config;
 
         homeTab.blocks(
-            Section({ text: `:date: *Registra una nueva actividad o evento.*` })
+            Section({ text: `:date: Registra una nueva actividad o evento.` })
                 .accessory(Button({ text: 'Registrar', actionId: 'new_activity' })),
             Divider(),
             Section({
                 text: `:identification_card: *Tus datos:*\n
-                Nombre: ${user.name}\n
-                Email: ${user.email}\n
-                Teléfono: ${user.phone}`
+                Nombre: *${user.name}*\n
+                Email: *${user.email}*\n
+                Teléfono: *${user.phone}*`
             }),
             Divider(),
             Section({
                 text: `:gear: *Configura la app para saber en que horarios estás activo y otros detalles.*\n
-                Horas de actividad: ${active_hours.from} - ${active_hours.to}\n
-                Dias de registro: ${active_days.map(d => dayName(d)).join(', ')}\n
-                Tiempo mínimo entre recordatorios: ${reminder_time < 2 ? '1 hora' : reminder_time + ' horas'}`
+                Horas de actividad: *${active_hours.from} - ${active_hours.to}*\n
+                Dias de registro: *${active_days.map(d => dayName(d)).join(', ')}*\n
+                Tiempo mínimo entre recordatorios: *${reminder_time < 2 ? '1 hora' : reminder_time + ' horas'}*`
             })
                 .accessory(Button({ text: 'Configuración', actionId: 'edit_config' })),
         )
