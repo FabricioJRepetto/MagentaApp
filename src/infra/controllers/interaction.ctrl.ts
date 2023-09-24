@@ -70,7 +70,6 @@ export default class InteractionCtrl {
                                 const config = await this.bridge.getUserConfig(user.id)
 
                                 if (!config) {
-                                    console.log(config);
                                     console.log("error @ interactions -block_actions -edit_config: Config not found");
                                     return res.status(400).send("error @interactions -block_actions -edit_config: Config not found")
                                 }

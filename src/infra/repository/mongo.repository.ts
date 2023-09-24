@@ -12,13 +12,22 @@ export default class MongoDB implements IdbRepository {
 
     async createLogs(user_id: string, slack_id: string): Promise<any> {
         try {
-            const response = await Logs.create({
+            const logs = await Logs.create({
                 user: user_id,
                 user_slack_id: slack_id,
                 entries: []
             })
 
-            return response
+            //? update ref on User
+            await User.findByIdAndUpdate(user_id,
+                {
+                    $set: {
+                        logs: logs._id
+                    }
+                }
+            )
+
+            return logs
         } catch (error: any) {
             console.log(error);
             return Promise.reject(error)
@@ -27,13 +36,21 @@ export default class MongoDB implements IdbRepository {
 
     async createConfig(user_id: string, slack_id: string): Promise<any> {
         try {
-            const response = await Config.create({
+            const config = await Config.create({
                 user: user_id,
                 user_slack_id: slack_id
             })
 
-            console.log(response);
-            return response
+            //? update ref on User
+            await User.findByIdAndUpdate(user_id,
+                {
+                    $set: {
+                        config: config._id
+                    }
+                }
+            )
+
+            return config
         } catch (error) {
             console.log(error);
             return Promise.reject(error)
@@ -57,6 +74,58 @@ export default class MongoDB implements IdbRepository {
                 user = await User.findById(user_id)
             } else {
                 user = await User.findOne({ slack_id: user_id })
+            }
+
+            return user;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error)
+        }
+    }
+
+    async getUserWithConfig(user_id: string): Promise<any> {
+        try {
+            let user;
+            if (user_id.length === 24) {
+                user = await User.findById(user_id).populate("config")
+            } else {
+                user = await User.findOne({ slack_id: user_id }).populate("config")
+            }
+
+            return user;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error)
+        }
+    }
+
+    async getUserWithLogs(user_id: string): Promise<any> {
+        try {
+            let user;
+            if (user_id.length === 24) {
+                user = await User.findById(user_id).populate("logs")
+            } else {
+                user = await User.findOne({ slack_id: user_id }).populate("logs")
+            }
+
+            return user;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error)
+        }
+    }
+
+    async getPopulatedUser(user_id: string): Promise<any> {
+        try {
+            let user;
+            if (user_id.length === 24) {
+                user = await User.findById(user_id)
+                    .populate("logs")
+                    .populate("config")
+            } else {
+                user = await User.findOne({ slack_id: user_id })
+                    .populate("logs")
+                    .populate("config")
             }
 
             return user;

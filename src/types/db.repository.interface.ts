@@ -25,6 +25,9 @@ export default interface IdbRepository {
      * @returns 
      */
     getUser(user_id: string): Promise<any>
+    getUserWithConfig(user_id: string): Promise<any>
+    getUserWithLogs(user_id: string): Promise<any>
+    getPopulatedUser(user_id: string): Promise<any>
     /**
      * Guarda una nueva actividad. La fecha en la que se registra es la misma que la fecha de recepción de la petición.
      * 
