@@ -1,9 +1,9 @@
 import { Button, Divider, HomeTab, Section } from "slack-block-builder"
-import IUser, { PupulatedUser } from "../../../../types/models/IUser.interface";
+import { PopulatedUser } from "../../../../types/models/IUser.interface";
 import IConfig from "../../../../types/models/IConfig.interface";
 import { dayName } from "../../../../utils";
 
-export default (user: PupulatedUser | undefined | null): string => {
+export default (user: PopulatedUser | undefined): string => {
 
     const tbd = (arg: any): arg is IConfig => arg.config;
 

@@ -16,7 +16,7 @@ export default interface IUser {
     role: ROLES
 }
 
-export interface PupulatedUser {
+export interface PopulatedUser {
     name: string;
     config: IConfig | Types.ObjectId;
     logs: ILogs | Types.ObjectId;

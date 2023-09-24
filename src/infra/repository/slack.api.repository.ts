@@ -3,7 +3,7 @@ import qs from "qs";
 import axios from "axios";
 import { homeTab } from "../slack-resources/user-interface/app-home";
 import ISlackAPI from "../../types/slack.api.interface";
-import IUser, { PupulatedUser } from "../../types/models/IUser.interface";
+import IUser, { PopulatedUser } from "../../types/models/IUser.interface";
 
 const { SLACK_BOT_TOKEN } = process.env;
 
@@ -38,7 +38,7 @@ export default class SlackAPI implements ISlackAPI {
      *  
      * @param user Slack ID
      */
-    public openHome = async (user: string, user_data: PupulatedUser | undefined): Promise<any> => {
+    public openHome = async (user: string, user_data: PopulatedUser | undefined): Promise<any> => {
         try {
             const args = {
                 token: SLACK_BOT_TOKEN,

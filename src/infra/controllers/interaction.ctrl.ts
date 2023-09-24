@@ -4,6 +4,7 @@ import { ActivityValues, ConfigValues, User, UserValues } from "../../types/View
 import { newActivity, newUser } from "../slack-resources/user-interface/modals";
 import Bridge from "../../application/bridge";
 import editConfig from "../slack-resources/user-interface/modals/edit-config";
+import { PopulatedUser } from "../../types/models/IUser.interface";
 
 export default class InteractionCtrl {
     private bridge;
@@ -24,8 +25,9 @@ export default class InteractionCtrl {
                 //? Abre la Home
                 if (body.event.type === 'app_home_opened') {
                     // buscar usuario
+
                     const user = await this.bridge.getPopulatedUser(body.event.user, "config")
-                    await this.bridge.openHome(body.event.user, user);
+                    await this.bridge.openHome(body.event.user, user ? <PopulatedUser>user : undefined);
                     return res.send()
                 }
             }
