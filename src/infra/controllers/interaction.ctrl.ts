@@ -68,8 +68,8 @@ export default class InteractionCtrl {
                                 return res.send()
                             }
                             //? Boton Registro de usuario de la App Home
-                            case "_": {
-                                await this.bridge.openModal(trigger_id, newUser)
+                            case "new_activity": {
+                                await this.bridge.openModal(trigger_id, newActivity)
                                 return res.send()
                             }
 
