@@ -79,6 +79,7 @@ export default class SlackAPI implements ISlackAPI {
             };
 
             const result = await axios.post('https://slack.com/api/chat.postMessage', qs.stringify(args));
+            console.log(result);
 
             return result;
 
