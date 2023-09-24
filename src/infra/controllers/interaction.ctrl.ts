@@ -59,15 +59,21 @@ export default class InteractionCtrl {
                 //? BOTONES
                 case 'block_actions': {
                     if (actions) {
+                        console.log(payload);
 
                         switch (actions[0].action_id) {
-                            //? Boton de registro de usuario de la App Home
+                            //? Boton Nueva Actividad de la App Home
                             case "user_signin": {
                                 await this.bridge.openModal(trigger_id, newUser)
                                 return res.send()
                             }
+                            //? Boton Registro de usuario de la App Home
+                            case "_": {
+                                await this.bridge.openModal(trigger_id, newUser)
+                                return res.send()
+                            }
 
-                            //? Boton de configuración en la App Home
+                            //? Boton Editar Configuración en la App Home
                             case "edit_config": {
                                 const config = await this.bridge.getUserConfig(user.id)
 
@@ -120,7 +126,7 @@ export default class InteractionCtrl {
                                 // console.log('# view_submission switch: data', data);
                                 //TODO Sincronizar Google Calendar 
                                 //: enviar/mostrar mensaje de confirmación 
-                                // await this.bridge.sendMessage(payload.user.id, { text: "Actividad registrada" })
+                                await this.bridge.sendMessage(payload.user.id, { text: "Actividad registrada" })
 
                                 return res.send()
 
