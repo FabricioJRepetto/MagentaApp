@@ -103,7 +103,7 @@ export default class Bridge extends SlackAPI {
             return user;
 
         } catch (error) {
-            console.log('error @ Bridge.getUser()', error);
+            console.log('error @ Bridge.getPopulatedUser()', error);
             return undefined
         }
     }
