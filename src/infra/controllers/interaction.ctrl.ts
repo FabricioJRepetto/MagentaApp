@@ -120,7 +120,7 @@ export default class InteractionCtrl {
                                 // console.log('# view_submission switch: data', data);
                                 //TODO Sincronizar Google Calendar 
                                 //: enviar/mostrar mensaje de confirmación 
-                                await this.bridge.sendMessage(payload.user.id, { text: "Actividad registrada" })
+                                // await this.bridge.sendMessage(payload.user.id, { text: "Actividad registrada" })
 
                                 return res.send()
 
