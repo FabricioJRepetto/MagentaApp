@@ -9,7 +9,7 @@ const configSchema = new Schema<IConfig>(
             from: { type: String, default: "09:00" },
             to: { type: String, default: "21:00" }
         },
-        active_days: [0, 1, 2, 3, 4, 5, 6],
+        active_days: { default: [0, 1, 2, 3, 4, 5, 6] },
         reminder_time: { type: Number, default: 1 }
     },
     {
