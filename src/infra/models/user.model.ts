@@ -5,8 +5,8 @@ import ROLES from '../../types/roles.enum';
 const userSchema = new Schema<IUser>(
     {
         name: { type: String, required: true },
-        config: { type: Schema.Types.ObjectId, ref: 'Config' },
-        logs: { type: Schema.Types.ObjectId, ref: 'Logs' },
+        config: { type: Schema.Types.ObjectId, ref: "Config" },
+        logs: { type: Schema.Types.ObjectId, ref: "Logs" },
         username: { type: String },
         email: { type: String, required: true, unique: true },
         phone: { type: String, required: true, unique: true },
