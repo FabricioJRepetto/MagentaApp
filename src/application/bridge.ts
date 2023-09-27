@@ -223,9 +223,19 @@ export default class Bridge {
         }
     }
 
-    async openHome(user: string, user_data: PopulatedUser | undefined) {
+    /**
+     * Busca un usuario y su Configuración y abre la View 'Home' (mostrando los datos encontrados o un botón para registrarse) para el usuario.
+     * 
+     * @param user user Slack ID
+     * @returns 
+     */
+    async openHome(user: string) {
         try {
-            this.slack.openHome(user, user_data);
+            // buscar usuario con su Configuracion
+            //: popular logs y mostrarlos en home?
+            const userData = await this.db.getUserWithConfig(user)
+            await this.slack.openHome(user, userData ? <PopulatedUser>userData : undefined);
+
         } catch (error) {
             console.log('error @ Bridge.openHome()', error);
             return error

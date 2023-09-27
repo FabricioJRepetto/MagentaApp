@@ -48,6 +48,8 @@ export default class SlackAPI implements ISlackAPI {
      * de otra manera muestra un botó para registrar una actividad y editar configuraciónes.
      *  
      * @param user Slack ID
+     * @param user_data Datos de configuración del usuario indicado, o undefined si el usuario es nuevo.
+     * 
      */
     public openHome = async (user: string, user_data: PopulatedUser | undefined): Promise<any> => {
         try {
@@ -59,7 +61,6 @@ export default class SlackAPI implements ISlackAPI {
 
             const result = await axios.post('https://slack.com/api/views.publish', qs.stringify(args));
 
-            // console.log('# openHome()', result.data.ok);
             result?.data?.response_metadata?.messages && console.log('error @ openHome() request', result.data.response_metadata.messages);
         } catch (error) {
             console.log(error);

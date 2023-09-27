@@ -84,52 +84,64 @@ export default class MongoDB implements IdbRepository {
         }
     }
 
+    /**
+     * Busca un usuario y lo devuelve junto con su Configuración
+     * 
+     * @param user_id Db user ID o Slack ID
+     * 
+     * @returns Retorna un documento de usuario con el campo Config populado o undefined si no se encuentra un usuario
+     */
     async getUserWithConfig(user_id: string): Promise<any> {
         try {
-            let user;
             if (user_id.length === 24) {
-                user = await User.findById(user_id).populate("config")
+                return await User.findById(user_id).populate("config")
             } else {
-                user = await User.findOne({ slack_id: user_id }).populate("config")
+                return await User.findOne({ slack_id: user_id }).populate("config")
             }
-
-            return user;
         } catch (error) {
             console.log(error);
             return Promise.reject(error)
         }
     }
 
+    /**
+     * Busca un usuario y lo devuelve junto con su historial de Logs
+     * 
+     * @param user_id Db user ID o Slack ID
+     * 
+     * @returns Retorna un documento de usuario con el campo Logs populado o undefined si no se encuentra un usuario
+     */
     async getUserWithLogs(user_id: string): Promise<any> {
         try {
-            let user;
             if (user_id.length === 24) {
-                user = await User.findById(user_id).populate("logs")
+                return await User.findById(user_id).populate("logs")
             } else {
-                user = await User.findOne({ slack_id: user_id }).populate("logs")
+                return await User.findOne({ slack_id: user_id }).populate("logs")
             }
-
-            return user;
         } catch (error) {
             console.log(error);
             return Promise.reject(error)
         }
     }
 
+    /**
+     * Busca un usuario y lo devuelve junto con su Configuración e historial de Logs
+     * 
+     * @param user_id Db user ID o Slack ID
+     * 
+     * @returns Retorna un documento de usuario con campos populado o undefined si no se encuentra un usuario
+     */
     async getPopulatedUser(user_id: string): Promise<any> {
         try {
-            let user;
             if (user_id.length === 24) {
-                user = await User.findById(user_id)
+                return await User.findById(user_id)
                     .populate("logs")
                     .populate("config")
             } else {
-                user = await User.findOne({ slack_id: user_id })
+                return await User.findOne({ slack_id: user_id })
                     .populate("logs")
                     .populate("config")
             }
-
-            return user;
         } catch (error) {
             console.log(error);
             return Promise.reject(error)

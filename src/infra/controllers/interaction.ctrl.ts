@@ -12,11 +12,10 @@ export default class InteractionCtrl {
         this.bridge = new Bridge();
     }
 
-    public interactionHandler = async ({ body }: Request, res: Response, next: NextFunction) => {
+    public interactionHandler = async ({ body }: Request, res: Response) => {
         try {
-            //TODO REFACTOR: separar endpoints para eventos con y sin payload 
-
             //? Eventos SIN Payload _______________
+
             // verificar API para eventos de Slack
             if (body?.type === 'url_verification') {
                 return res.send({ challenge: body.challenge });
@@ -24,18 +23,20 @@ export default class InteractionCtrl {
                 //? Abre la Home
                 if (body.event.type === 'app_home_opened') {
                     // buscar usuario
-
-                    const user = await this.bridge.getPopulatedUser(body.event.user, "config")
-                    await this.bridge.openHome(body.event.user, user ? <PopulatedUser>user : undefined);
+                    // const user = await this.bridge.getPopulatedUser(body.event.user, "config")
+                    await this.bridge.openHome(body.event.user);
                     return res.send()
                 }
             }
 
-            //? SLASH COMMANDS _______________
+            //? Eventos CON Payload _______________
+
             const payload = JSON.parse(body.payload);
             const { type, view, user, callback_id, trigger_id, actions } = payload;
 
             switch (payload.type) {
+
+                // COMANDOS
                 case 'shortcut': {
                     //TODO Verify the signing secret 
                     // if (!signature.isVerified(req)) {
@@ -55,7 +56,7 @@ export default class InteractionCtrl {
                     }
                 }
 
-                //? BOTONES
+                // BOTONES
                 case 'block_actions': {
                     if (actions) {
 
@@ -79,13 +80,12 @@ export default class InteractionCtrl {
 
                             default:
                                 console.log("!! switch: case: 'block_actions' action:  default case");
-
                                 break;
                         }
                     }
                 }
 
-                //? SUBMITS
+                // SUBMITS
                 case 'view_submission': {
 
                     switch (payload.view.callback_id) {
