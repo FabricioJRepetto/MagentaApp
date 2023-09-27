@@ -39,11 +39,11 @@ export default class Bridge {
                 await this.db.createConfig(result._id, user.id)
                 await this.db.createLogs(result._id, user.id)
 
-                this.slack.sendMessage(user.id, {
+                await this.slack.sendMessage(user.id, {
                     text: `:white_check_mark: Registro de usuario exitoso. Bienvenido ${result.name}!`
                 })
             } else {
-                this.slack.sendMessage(user.id, {
+                await this.slack.sendMessage(user.id, {
                     text: ":thinking_face: Algo salió mal..."
                 })
             }
@@ -66,16 +66,16 @@ export default class Bridge {
             const year = new Date().getFullYear();
 
             await this.db.saveUserActivity(user.id, data, { day, month, year })
-                .then(() => {
-                    this.slack.sendMessage(user.id, {
+                .then(async () => {
+                    await this.slack.sendMessage(user.id, {
                         text: ":white_check_mark: Actividad registrada."
                     })
-                })
-                .catch(err => {
-                    this.slack.sendMessage(user.id, {
+                }).catch(async err => {
+                    await this.slack.sendMessage(user.id, {
                         text: `:thinking_face: Algo salió mal...\n ${err}`
                     })
                 })
+
             return;
         } catch (error) {
             console.log('error @ Bridge.newActivity()', error);
@@ -143,13 +143,13 @@ export default class Bridge {
             //TODO validar datos 
             const data = this.parseConfigData({ values });
             await this.db.updateUserConfig(user_id, data)
-                .then(() => {
-                    this.slack.sendMessage(user_id, {
+                .then(async () => {
+                    await this.slack.sendMessage(user_id, {
                         text: ":white_check_mark: Configuración actualizada."
                     })
                 })
-                .catch(err => {
-                    this.slack.sendMessage(user_id, {
+                .catch(async err => {
+                    await this.slack.sendMessage(user_id, {
                         text: `:thinking_face: Algo salió mal...\n ${err}`
                     })
                 })
