@@ -178,19 +178,19 @@ export default class Bridge {
 
                 case "user_signin":
                     if (userFund) {
-                        this.slack.sendMessage(user_slack_id, {
+                        await this.slack.sendMessage(user_slack_id, {
                             text: "Ya estás registrado, no necesitas hacerlo otra vez. Podés editar tus datos en la web."
                         })
                     } else {
-                        this.slack.openModal(trigger_id, view)
+                        await this.slack.openModal(trigger_id, view)
                     }
                     break;
 
                 case "new_activity":
                     if (userFund) {
-                        this.slack.openModal(trigger_id, view)
+                        await this.slack.openModal(trigger_id, view)
                     } else {
-                        this.slack.sendMessage(user_slack_id, {
+                        await this.slack.sendMessage(user_slack_id, {
                             text: "Pimero debes completar tu cuenta.\n Utiliza \\registrarse o ve a la Home de la aplicación para terminar tu registro de usuario."
                         })
                     }
@@ -204,9 +204,9 @@ export default class Bridge {
                             console.log("error @ interactions -block_actions -edit_config: Config not found");
                             break;
                         }
-                        this.slack.openModal(trigger_id, () => editConfig(config))
+                        await this.slack.openModal(trigger_id, () => editConfig(config))
                     } else {
-                        this.slack.sendMessage(user_slack_id, {
+                        await this.slack.sendMessage(user_slack_id, {
                             text: "Pimero debes completar tu cuenta.\n Utiliza \\registrarse o ve a la Home de la aplicación para terminar tu registro de usuario."
                         })
                     }
