@@ -34,7 +34,7 @@ export default class InteractionCtrl {
             const payload = JSON.parse(body.payload);
             const { type, view, user, callback_id, trigger_id, actions } = payload;
 
-            switch (payload.type) {
+            switch (type) {
 
                 // COMANDOS
                 case 'shortcut': {
@@ -88,13 +88,13 @@ export default class InteractionCtrl {
                 // SUBMITS
                 case 'view_submission': {
 
-                    switch (payload.view.callback_id) {
+                    switch (view.callback_id) {
                         case 'user_signin': {
                             try {
                                 // Guardar en DB
                                 await this.bridge.newUser({
-                                    user: <User>payload.user,
-                                    values: <UserValues>payload.view.state.values
+                                    user: <User>user,
+                                    values: <UserValues>view.state.values
                                 })
                                 return res.send()
 
@@ -109,8 +109,8 @@ export default class InteractionCtrl {
                                 // Guardar en DB
                                 //TODO Y sincronizar Google Calendar 
                                 await this.bridge.newActivity({
-                                    user: <User>payload.user,
-                                    values: <ActivityValues>payload.view.state.values
+                                    user: <User>user,
+                                    values: <ActivityValues>view.state.values
                                 })
                                 return res.send()
 
@@ -124,8 +124,8 @@ export default class InteractionCtrl {
                             try {
                                 // Guardar en DB
                                 await this.bridge.editConfig({
-                                    user_id: payload.user.id,
-                                    values: <ConfigValues>payload.view.state.values
+                                    user_id: user.id,
+                                    values: <ConfigValues>view.state.values
                                 })
                                 return res.send()
 
