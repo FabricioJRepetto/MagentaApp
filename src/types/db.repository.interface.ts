@@ -1,6 +1,7 @@
 import { UserPayload } from "./UserPayload"
 import { Config } from "./models/IConfig.interface"
 import { Activity } from "./models/ILogs.interface"
+import IUser from "./models/IUser.interface"
 
 export default interface IdbRepository {
     /**

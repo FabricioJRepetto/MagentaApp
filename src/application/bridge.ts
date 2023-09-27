@@ -5,21 +5,22 @@
 
 import MongoDB from "../infra/repository/mongo.repository"
 import SlackAPI from "../infra/repository/slack.api.repository";
+import { editConfig } from "../infra/slack-resources/user-interface/modals";
 import { UserPayload } from "../types/UserPayload";
 import { User, UserValues, ActivityValues, ConfigValues } from "../types/ViewSubmissionPayload";
 import dbRepository from "../types/db.repository.interface";
 import IConfig, { Config } from "../types/models/IConfig.interface";
 import { Activity } from "../types/models/ILogs.interface";
-import IUser from "../types/models/IUser.interface";
+import IUser, { PopulatedUser } from "../types/models/IUser.interface";
+import ISlackAPI from "../types/slack.api.interface";
 
-export default class Bridge extends SlackAPI {
+export default class Bridge {
     private db: dbRepository;
-    // public slack: ISlackAPI;
+    public slack: ISlackAPI;
 
     constructor() {
-        super()
         this.db = new MongoDB();
-        // this.slack = new SlackAPI();
+        this.slack = new SlackAPI();
     }
 
     public newUser = async ({ user, values }: { user: User, values: UserValues }) => {
@@ -37,10 +38,17 @@ export default class Bridge extends SlackAPI {
             if (result?._id) {
                 await this.db.createConfig(result._id, user.id)
                 await this.db.createLogs(result._id, user.id)
+
+                this.slack.sendMessage(user.id, {
+                    text: `:white_check_mark: Registro de usuario exitoso. Bienvenido ${result.name}!`
+                })
+            } else {
+                this.slack.sendMessage(user.id, {
+                    text: ":thinking_face: Algo salió mal..."
+                })
             }
 
-            console.log(result);
-            return result;
+            return;
         } catch (error) {
             console.log('error @ Bridge.newUser()', error);
             return error
@@ -57,9 +65,18 @@ export default class Bridge extends SlackAPI {
             const month = new Date().getMonth();
             const year = new Date().getFullYear();
 
-            const result = await this.db.saveUserActivity(user.id, data, { day, month, year });
-
-
+            await this.db.saveUserActivity(user.id, data, { day, month, year })
+                .then(() => {
+                    this.slack.sendMessage(user.id, {
+                        text: ":white_check_mark: Actividad registrada."
+                    })
+                })
+                .catch(err => {
+                    this.slack.sendMessage(user.id, {
+                        text: `:thinking_face: Algo salió mal...\n ${err}`
+                    })
+                })
+            return;
         } catch (error) {
             console.log('error @ Bridge.newActivity()', error);
             return error
@@ -126,12 +143,93 @@ export default class Bridge extends SlackAPI {
             //TODO validar datos 
             const data = this.parseConfigData({ values });
             await this.db.updateUserConfig(user_id, data)
+                .then(() => {
+                    this.slack.sendMessage(user_id, {
+                        text: ":white_check_mark: Configuración actualizada."
+                    })
+                })
+                .catch(err => {
+                    this.slack.sendMessage(user_id, {
+                        text: `:thinking_face: Algo salió mal...\n ${err}`
+                    })
+                })
+
             return
         } catch (error) {
             console.log('error @ Bridge.editConfig()', error);
             return error
         }
 
+    }
+
+    /**
+     * 
+     * @param user_slack_id ID de usuario de Slack.
+     * @param action Tipo de evento (callback_id).
+     * @param trigger_id trigger_id para responder al evento.
+     * @param view Callback que retorna una view en formato JSON.
+     * @returns 
+     */
+    async openModal(user_slack_id: string, action: string, trigger_id: string, view: () => string) {
+        try {
+            const userFund = await this.db.getUser(user_slack_id)
+
+            switch (action) {
+
+                case "user_signin":
+                    if (userFund) {
+                        this.slack.sendMessage(user_slack_id, {
+                            text: "Ya estás registrado, no necesitas hacerlo otra vez. Podés editar tus datos en la web."
+                        })
+                    } else {
+                        this.slack.openModal(trigger_id, view)
+                    }
+                    break;
+
+                case "new_activity":
+                    if (userFund) {
+                        this.slack.openModal(trigger_id, view)
+                    } else {
+                        this.slack.sendMessage(user_slack_id, {
+                            text: "Pimero debes completar tu cuenta.\n Utiliza \\registrarse o ve a la Home de la aplicación para terminar tu registro de usuario."
+                        })
+                    }
+                    break;
+
+                case "edit_config":
+                    if (userFund) {
+                        const config = await this.db.getUserConfig(user_slack_id)
+
+                        if (!config) {
+                            console.log("error @ interactions -block_actions -edit_config: Config not found");
+                            break;
+                        }
+                        this.slack.openModal(trigger_id, () => editConfig(config))
+                    } else {
+                        this.slack.sendMessage(user_slack_id, {
+                            text: "Pimero debes completar tu cuenta.\n Utiliza \\registrarse o ve a la Home de la aplicación para terminar tu registro de usuario."
+                        })
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+
+        } catch (error) {
+            console.log('error @ Bridge.openModal()', error);
+            return error
+        }
+    }
+
+    async openHome(user: string, user_data: PopulatedUser | undefined) {
+        try {
+            this.slack.openHome(user, user_data);
+        } catch (error) {
+            console.log('error @ Bridge.openHome()', error);
+            return error
+        }
     }
 
     //________________________________________________________

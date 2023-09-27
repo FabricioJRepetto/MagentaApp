@@ -7,6 +7,7 @@ import { Activity, Day, Entry } from "../../types/models/ILogs.interface";
 import Config from "../models/config.model";
 import Logs from "../models/logs.model";
 import User from "../models/user.model";
+import IUser from "../../types/models/IUser.interface";
 
 export default class MongoDB implements IdbRepository {
 
@@ -168,6 +169,9 @@ export default class MongoDB implements IdbRepository {
                         active_days,
                         reminder_time
                     }
+                },
+                {
+                    new: true
                 }
             )
             return updatedConfig;
@@ -180,18 +184,11 @@ export default class MongoDB implements IdbRepository {
 
     async saveUserActivity(user_id: string, data: Activity, date: { day: string, month: number, year: number }): Promise<any> {
         try {
-            //TODO Refactor:
-            //* A_ añadir slack_id al esquema de logs para ahorrar una consulta a la DB
-            //: B_ enviar la ID de usuario al modal?
-            // const user = await User.findOne({ slack_id: user_id }) // Buscamos id del usuario utilizando su slack_id
-            // if (!user) {
-            //     throw new Error("Wrong user slack_id");
-            // }
-
-            let logs = await Logs.findOne({ user_slack_id: user_id }) // Buscamos los Logs del usuario utilizando su _id
+            let logs = await Logs.findOne({ user_slack_id: user_id }) // Buscamos los Logs del usuario utilizando su user_slack_id
             if (!logs) {
-                throw new Error("Wrong user slack_id");
+                throw new Error("Wrong user_slack_id");
             }
+
 
             //? Logica para saber donde guardar la actividad
             // Checkeamos si hay una entrada con la fecha indicada
