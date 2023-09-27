@@ -9,8 +9,8 @@ const userSchema = new Schema<IUser>(
         logs: { type: Schema.Types.ObjectId, ref: "Logs" },
         username: { type: String },
         email: { type: String, required: true, unique: true },
-        phone: { type: String, required: true, unique: true },
-        slack_id: { type: String, required: true },
+        phone: { type: String },
+        slack_id: { type: String },
         active: { type: Boolean, default: true },
         password: { type: String },
         role: { type: String, default: ROLES.USER }

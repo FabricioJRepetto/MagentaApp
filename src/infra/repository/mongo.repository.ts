@@ -1,7 +1,7 @@
 import { FilterQuery } from "mongoose";
 import { ActivityPayload } from "../../types/ActivityPayload";
 import { UserPayload } from "../../types/UserPayload";
-import IdbRepository from "../../types/db.repository.interface";
+import IdbRepository, { AtLeastOneRefCreationArg } from "../../types/db.repository.interface";
 import IConfig, { Config as ConfigPayload } from "../../types/models/IConfig.interface";
 import { Activity, Day, Entry } from "../../types/models/ILogs.interface";
 import Config from "../models/config.model";
@@ -12,24 +12,14 @@ import IUser, { PopulatedUser } from "../../types/models/IUser.interface";
 export default class MongoDB implements IdbRepository {
     async getActiveUsers(): Promise<any> {
         try {
-            const userList = await User.aggregate([
+            //TODO Filtrar lo más posible en la query 
+            const userList = await User.find(
                 {
-                    $unwind: "$config",
-                },
-                {
-                    $lookup: {
-                        from: "Configuration",
-                        localField: "config",
-                        foreignField: "_id",
-                        as: "config",
-                    }
-                },
-                {
-                    $match: {
-                        "config.notification": true
-                    }
-                }
-            ])
+                    active: true,
+                    slack_id: { $exists: true }
+                })
+                .populate("config")
+                .populate("logs")
 
             return userList
 
@@ -39,13 +29,15 @@ export default class MongoDB implements IdbRepository {
         }
     }
 
-    async createLogs(user_id: string, slack_id: string): Promise<any> {
+    async createLogs(user_id: string, arg: AtLeastOneRefCreationArg): Promise<any> {
         try {
-            const logs = await Logs.create({
+            const data = {
                 user: user_id,
-                user_slack_id: slack_id,
-                entries: []
-            })
+                entries: [],
+                ...arg
+            }
+
+            const logs = await Logs.create(data)
 
             //? update ref on User
             await User.findByIdAndUpdate(user_id,
@@ -63,12 +55,14 @@ export default class MongoDB implements IdbRepository {
         }
     }
 
-    async createConfig(user_id: string, slack_id: string): Promise<any> {
+    async createConfig(user_id: string, arg: AtLeastOneRefCreationArg): Promise<any> {
         try {
-            const config = await Config.create({
+            const data = {
                 user: user_id,
-                user_slack_id: slack_id
-            })
+                ...arg
+            }
+
+            const config = await Config.create(data)
 
             //? update ref on User
             await User.findByIdAndUpdate(user_id,
@@ -86,7 +80,17 @@ export default class MongoDB implements IdbRepository {
         }
     }
 
-    async createUser(data: UserPayload): Promise<any> {
+    async createSlackUser(data: UserPayload): Promise<any> {
+        try {
+            const response = await User.create(data)
+            return response
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error)
+        }
+    }
+
+    async createGoogleUser(data: { name: string, email: string }): Promise<any> {
         try {
             const response = await User.create(data)
             return response
@@ -104,8 +108,18 @@ export default class MongoDB implements IdbRepository {
             } else {
                 user = await User.findOne({ slack_id: user_id })
             }
-
             return user;
+
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error)
+        }
+    }
+
+    async getUserByEmail(email: string): Promise<any> {
+        try {
+            return await User.findOne({ email })
+
         } catch (error) {
             console.log(error);
             return Promise.reject(error)

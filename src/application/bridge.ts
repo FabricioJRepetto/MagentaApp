@@ -23,24 +23,31 @@ export default class Bridge {
         this.slack = new SlackAPI();
     }
 
-    public newUser = async ({ user, values }: { user: User, values: UserValues }) => {
+    /**
+     * Crea un nuevo usuario a partir de un formulario de Slack
+     * 
+     * @param param Un objeto con las propiedades user y values
+     * @returns 
+     */
+    public newSlackUser = async ({ user, values }: { user: User, values: UserValues }) => {
         try {
             const userExists = await this.db.getUser(user.id)
             if (userExists) {
+                //TODO Si ya existe actualizar con datos faltantes 
                 return userExists
             }
 
             //TODO validar datos 
             const data = this.parseUserData({ user, values })
 
-            const result = await this.db.createUser(data)
+            const result = await this.db.createSlackUser(data)
 
             if (result?._id) {
-                await this.db.createConfig(result._id, user.id)
-                await this.db.createLogs(result._id, user.id)
+                await this.db.createConfig(result._id, { user_slack_id: user.id })
+                await this.db.createLogs(result._id, { user_slack_id: user.id })
 
                 await this.slack.sendMessage(user.id, {
-                    text: `:white_check_mark: Registro de usuario exitoso. Bienvenido ${result.name}!`
+                    text: `:white_check_mark: Registro de usuario exitoso. Bienvenido ${result.name.split(" ")[0]}!`
                 })
             } else {
                 await this.slack.sendMessage(user.id, {
@@ -50,7 +57,42 @@ export default class Bridge {
 
             return;
         } catch (error) {
-            console.log('error @ Bridge.newUser()', error);
+            console.log('error @ Bridge.newSlackUser()', error);
+            return error
+        }
+    }
+
+    /**
+     * Crea un nuevo usuario a partir de un login de Google
+     * 
+     * @param param Un objeto con las propiedades user y values
+     * @returns 
+     */
+    public newGoogleUser = async (payload: any) => {
+        try {
+            const {
+                email,
+                name
+            } = payload;
+
+            const userExists = await this.db.getUserByEmail(email)
+            if (userExists) {
+                //TODO Si ya existe actualizar con datos faltantes 
+                return userExists
+            }
+
+            const result = await this.db.createGoogleUser(payload)
+
+            if (result?._id) {
+                await this.db.createConfig(result._id, { email })
+                await this.db.createLogs(result._id, { email })
+
+                return `✅ Registro de usuario exitoso. Bienvenido ${name.split(" ")[0]}!`
+            } else {
+                return "🤔 Algo salió mal..."
+            }
+        } catch (error) {
+            console.log('error @ Bridge.newGoogleUser()', error);
             return error
         }
     }

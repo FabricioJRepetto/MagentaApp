@@ -3,7 +3,18 @@ import { Config } from "./models/IConfig.interface"
 import { Activity } from "./models/ILogs.interface"
 import IUser from "./models/IUser.interface"
 
+//? Type: Por lo menos un argumento de los siguientes
+type refCreationArgs = {
+    user_slack_id: string,
+    email: string
+}
+type AtLeastOne<Obj, Keys = keyof Obj> = Keys extends keyof Obj ? Pick<Obj, Keys> : never
+type NonEmpty<T> = Partial<T> & AtLeastOne<T>
+// Partial<A> & (Pick<A, "foo"> | Pick<A, "bar"> | Pick<A, "baz">)
+export type AtLeastOneRefCreationArg = NonEmpty<refCreationArgs>
+
 export default interface IdbRepository {
+    getUserByEmail(email: string): Promise<any>
     /**
      * 
      * @param user_id Puede ser la ID de la base de datos o Slack ID
@@ -16,9 +27,10 @@ export default interface IdbRepository {
      * @param data objeto con los parametros necesarios (interface Config)
      */
     updateUserConfig(user_id: string, data: Config): Promise<any>
-    createLogs(user_id: string, slack_id: string): Promise<any>
-    createConfig(user_id: string, slack_id: string): Promise<any>
-    createUser(data: UserPayload): Promise<any>
+    createLogs(user_id: string, arg: AtLeastOneRefCreationArg): Promise<any>
+    createConfig(user_id: string, arg: AtLeastOneRefCreationArg): Promise<any>
+    createSlackUser(data: UserPayload): Promise<any>
+    createGoogleUser(data: { name: string, email: string }): Promise<any>
     /**
      * Busca un usuario por ID o por SLACK ID
      * 

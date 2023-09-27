@@ -91,7 +91,7 @@ export default class InteractionCtrl {
                         case 'user_signin': {
                             try {
                                 // Guardar en DB
-                                await this.bridge.newUser({
+                                await this.bridge.newSlackUser({
                                     user: <User>user,
                                     values: <UserValues>view.state.values
                                 })

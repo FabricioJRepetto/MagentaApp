@@ -2,7 +2,7 @@
 import path from "node:path";
 import { Response, Router } from "express"
 const router: Router = Router()
-// import { router as testRouter } from "./test.routes"
+import { router as testRouter } from "./test.routes"
 import { router as interRouter } from "./interaction.routes"
 import { router as cronRouter } from "./cron.routes";
 
@@ -17,7 +17,7 @@ router.get('/favicon.ico', (__, res: Response) => {
     res.status(200).sendFile(PATH)
 })
 
-// router.use('/test', testRouter)
+router.use('/test', testRouter)
 router.use('/slack/events', interRouter)
 router.use('/api/cron', cronRouter)
 

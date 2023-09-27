@@ -1,7 +1,7 @@
 import { ContainerBuilder } from "node-dependency-injection";
 import InteractionCtrl from "./controllers/interaction.ctrl";
 import CronCtrl from "./controllers/cron.ctrl";
-// import SlackClient from "./repository/slackClient";
+import TestCtrl from "./controllers/test.ctrl";
 
 const container = new ContainerBuilder();
 
@@ -17,7 +17,9 @@ const container = new ContainerBuilder();
 
 // const requestCreator = container.get("request.creator");
 
-// container.register("test.ctrl", TestCtrl).addArgument(requestCreator);
+//? Test
+container
+    .register("test.ctrl", TestCtrl);
 
 //? Controlador Interacciones de Slack
 container

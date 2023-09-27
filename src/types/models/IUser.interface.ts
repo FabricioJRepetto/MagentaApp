@@ -8,9 +8,9 @@ export default interface IUser {
     config?: Types.ObjectId;
     logs?: Types.ObjectId;
     username?: string;
-    phone: string;
+    phone?: string;
     email: string;
-    slack_id: string;
+    slack_id?: string;
     active: boolean;
     password?: string;
     role: ROLES
@@ -21,9 +21,9 @@ export interface PopulatedUser {
     config: IConfig | Types.ObjectId;
     logs: ILogs | Types.ObjectId;
     username?: string;
-    phone: string;
+    phone?: string;
     email: string;
-    slack_id: string;
+    slack_id?: string;
     active: boolean;
     password?: string;
     role: ROLES
