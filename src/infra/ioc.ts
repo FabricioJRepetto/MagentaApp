@@ -1,7 +1,6 @@
 import { ContainerBuilder } from "node-dependency-injection";
-import { ExternalCreator } from "../application/controller.create";
-import TestCtrl from "./controllers/test.ctrl";
 import InteractionCtrl from "./controllers/interaction.ctrl";
+import CronCtrl from "./controllers/cron.ctrl";
 // import SlackClient from "./repository/slackClient";
 
 const container = new ContainerBuilder();
@@ -20,8 +19,12 @@ const container = new ContainerBuilder();
 
 // container.register("test.ctrl", TestCtrl).addArgument(requestCreator);
 
+//? Controlador Interacciones de Slack
 container
     .register("interaction.ctrl", InteractionCtrl)
-// .addArgument(requestCreator);
+
+//? Controlador Cron de Vercel
+container
+    .register("cron.ctrl", CronCtrl)
 
 export default container;

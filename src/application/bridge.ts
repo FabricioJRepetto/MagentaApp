@@ -242,6 +242,29 @@ export default class Bridge {
         }
     }
 
+    async notify(): Promise<any> {
+        try {
+
+            /**
+             * 1- crear una lista de todos los usuarios filtrada por
+             *  - el usuario está activo
+             *  - el usuario tiene los recordatorios activos
+             *  - estamos dentro de la franja de actividad (dia) 
+             *  - estamos dentro de la franja de actividad (hora)
+             *  
+             *  - ha pasado el tiempo minimo de recordatorio indicado en la config desde el ultimo registro
+             *  - no tiene un evento activo en la base de datos
+             *  - no tiene un evento activo actualmente en Google Calendar
+             */
+
+            // const userList: IUser = await this.db.getActiveUsers()
+
+        } catch (error) {
+            console.log('error @ Bridge.openHome()', error);
+            return error
+        }
+    }
+
     //________________________________________________________
 
     private parseUserData = ({ user, values }: { user: User, values: UserValues }): UserPayload => {
@@ -287,11 +310,12 @@ export default class Bridge {
         try {
             const data: Config = {
                 active_hours: {
-                    from: values.time_from.from.selected_time,
-                    to: values.time_to.to.selected_time
+                    from: parseInt(values.time_from.from.selected_time.split(":")[0]),
+                    to: parseInt(values.time_to.to.selected_time.split(":")[0])
                 },
                 active_days: values.days.selected_days.selected_options.map(e => parseInt(e.value)),
-                reminder_time: parseInt(values.reminder.reminder_select.selected_option.value)
+                reminder_time: parseInt(values.reminder.reminder_select.selected_option.value),
+                notification: values.notification.notification_state.selected_option.value === "1" ? true : false
             }
 
             return data

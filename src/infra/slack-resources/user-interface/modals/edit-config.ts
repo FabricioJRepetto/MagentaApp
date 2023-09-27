@@ -2,7 +2,7 @@ import { Checkboxes, Divider, Input, Modal, Option, Section, StaticSelect, TimeP
 import IConfig from "../../../../types/models/IConfig.interface";
 import { dayName } from "../../../../utils";
 
-export default ({ active_hours, active_days, reminder_time }: IConfig): string => {
+export default ({ active_hours, active_days, reminder_time, notification }: IConfig): string => {
     const modal = Modal({ title: "Configuración", submit: "Guardar", close: "volver", callbackId: "edit_config" })
         .blocks(
             Section({ text: "Adapta la app a tus necesidades para que tu experiencia de uso sea lo más placentera posible.\n\n" }),
@@ -11,14 +11,14 @@ export default ({ active_hours, active_days, reminder_time }: IConfig): string =
             Section({ text: "Horarios dentro de los que la app puede enviarte notificaciónes\n\n" }),
             Input({ label: "Mi día comienza a las...", blockId: "time_from" }).element(
                 TimePicker({
-                    initialTime: active_hours.from,
+                    initialTime: "" + active_hours.from + ":00",
                     placeholder: "desde",
                     actionId: "from"
                 })
             ),
             Input({ label: "Y termina a las...", blockId: "time_to" }).element(
                 TimePicker({
-                    initialTime: active_hours.to,
+                    initialTime: "" + active_hours.to + ":00",
                     placeholder: "hasta",
                     actionId: "to"
                 })
@@ -52,7 +52,17 @@ export default ({ active_hours, active_days, reminder_time }: IConfig): string =
                         Option({ text: "2", value: "2" })
                     ])
             ),
-            Divider()
+            Divider(),
+            Section({ text: "*Notificaciones*" }),
+            Section({ text: "Tener en cuenta que la funcionalidad principal de la aplicación es ayudarte a mantener un registro constante mediante las notificaciones." }),
+            Input({ label: "¿Recibir notificaciones?", blockId: "notification" }).element(
+                StaticSelect({ actionId: "notification_state" })
+                    .initialOption(Option({ text: `${notification ? "Si, recibirlas" : "No me molesten"}`, value: `${notification ? "1" : "0"}` }))
+                    .options([
+                        Option({ text: "No me molesten", value: "0" }),
+                        Option({ text: "Si, recibirlas", value: "1" })
+                    ])
+            )
         )
 
     return modal.buildToJSON();

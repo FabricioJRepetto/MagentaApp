@@ -1,13 +1,12 @@
 import "dotenv/config"
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { ActivityValues, ConfigValues, User, UserValues } from "../../types/ViewSubmissionPayload";
 import { newActivity, newUser } from "../slack-resources/user-interface/modals";
 import Bridge from "../../application/bridge";
-import { PopulatedUser } from "../../types/models/IUser.interface";
 
 export default class InteractionCtrl {
     private bridge;
-    // constructor(private readonly bridge: Bridge) { }
+
     constructor() {
         this.bridge = new Bridge();
     }

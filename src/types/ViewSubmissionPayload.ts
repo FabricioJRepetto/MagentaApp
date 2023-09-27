@@ -183,5 +183,18 @@ export interface ConfigValues {
                 value: string
             }
         }
+    },
+    notification: {
+        notification_state: {
+            type: string
+            selected_option: {
+                text: {
+                    type: string
+                    text: string
+                    emoji: boolean
+                }
+                value: string
+            }
+        }
     }
 }

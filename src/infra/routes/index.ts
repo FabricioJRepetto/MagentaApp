@@ -4,6 +4,7 @@ import { Response, Router } from "express"
 const router: Router = Router()
 // import { router as testRouter } from "./test.routes"
 import { router as interRouter } from "./interaction.routes"
+import { router as cronRouter } from "./cron.routes";
 
 router.get("/", (__, res: Response) => {
     res.send("Welcome to Magenta productivity app API");
@@ -18,6 +19,7 @@ router.get('/favicon.ico', (__, res: Response) => {
 
 // router.use('/test', testRouter)
 router.use('/slack/events', interRouter)
+router.use('/api/cron', cronRouter)
 
 export default router
 
