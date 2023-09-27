@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 export default interface IConfig {
     user: Types.ObjectId;
-    user_slack_id: string;
+    user_slack_id?: string;
     active_hours: {
         from: number,
         to: number
