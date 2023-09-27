@@ -244,7 +244,7 @@ export default class Bridge {
 
     async notify(): Promise<any> {
         try {
-
+            //TODO 
             /**
              * 1- crear una lista de todos los usuarios filtrada por
              *  - el usuario está activo
@@ -257,7 +257,9 @@ export default class Bridge {
              *  - no tiene un evento activo actualmente en Google Calendar
              */
 
-            // const userList: IUser = await this.db.getActiveUsers()
+            const userList = await this.db.getActiveUsers()
+
+            return userList
 
         } catch (error) {
             console.log('error @ Bridge.openHome()', error);

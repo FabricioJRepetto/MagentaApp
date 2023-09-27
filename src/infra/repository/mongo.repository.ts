@@ -7,9 +7,37 @@ import { Activity, Day, Entry } from "../../types/models/ILogs.interface";
 import Config from "../models/config.model";
 import Logs from "../models/logs.model";
 import User from "../models/user.model";
-import IUser from "../../types/models/IUser.interface";
+import IUser, { PopulatedUser } from "../../types/models/IUser.interface";
 
 export default class MongoDB implements IdbRepository {
+    async getActiveUsers(): Promise<any> {
+        try {
+            const userList = await User.aggregate([
+                {
+                    $unwind: "$config",
+                },
+                {
+                    $lookup: {
+                        from: "Configuration",
+                        localField: "config",
+                        foreignField: "_id",
+                        as: "config",
+                    }
+                },
+                {
+                    $match: {
+                        "config.notification": true
+                    }
+                }
+            ])
+
+            return userList
+
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error)
+        }
+    }
 
     async createLogs(user_id: string, slack_id: string): Promise<any> {
         try {

@@ -29,6 +29,12 @@ export default interface IdbRepository {
     getUserWithConfig(user_id: string): Promise<any>
     getUserWithLogs(user_id: string): Promise<any>
     getPopulatedUser(user_id: string): Promise<any>
+
+    /**
+     * Busca todos los usuarios activos y con notificaciones activas.
+     * Devuelve un Array de usuarios con su configuración y logs.
+     */
+    getActiveUsers(): Promise<any>
     /**
      * Guarda una nueva actividad. La fecha en la que se registra es la misma que la fecha de recepción de la petición.
      * 

@@ -14,8 +14,8 @@ export default class CronCtrl {
      */
     public handler = async ({ body }: Request, res: Response) => {
         try {
-            await this.bridge.notify()
-            res.send()
+            const response = await this.bridge.notify()
+            res.json(response)
 
         } catch (err) {
             console.log(err);
