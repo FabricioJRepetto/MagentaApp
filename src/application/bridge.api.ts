@@ -119,9 +119,9 @@ export default class Bridge {
 
             const IDList = auxList.map(user => ({ name: user.name.split(" ")[0], id: user.slack_id }))
 
-            //TODO Funciona?
+            //TODO crear un message View con boton para registrar 
             for await (const user of IDList) {
-                this.slack.sendMessage(user.id!, { text: `${user.name} es hora de registrar tu actividad!\n ¿Qué fue lo último que hiciste?\n Utiliza \\Actividad para registrar una actividad.` })
+                this.slack.sendMessage(user.id!, { text: `${user.name} es hora de registrar tu actividad! \n¿Qué fue lo último que hiciste? \nUtiliza \\Actividad para registrar una actividad.` })
             }
 
             return auxList
