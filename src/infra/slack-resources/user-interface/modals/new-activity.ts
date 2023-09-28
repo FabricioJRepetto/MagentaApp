@@ -4,7 +4,11 @@ export default (): string => {
     const time = new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" }),
         hour = new Date(time).getHours();
 
-    const timeFormat = (time: number) => time < 10 ? "0" + time : "" + time + ":00"
+    const timeFormat = (time: number): string => {
+        const aux = time < 10 ? "0" + time : "" + time + ":00";
+        console.log(aux);
+        return aux
+    }
 
     const modal = Modal({ title: 'Registrar actividad', submit: 'Enviar', close: "cancelar", callbackId: 'new_activity' })
         .blocks(
