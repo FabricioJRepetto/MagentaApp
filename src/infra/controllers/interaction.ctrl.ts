@@ -2,7 +2,7 @@ import "dotenv/config"
 import { Request, Response } from "express";
 import { ActivityValues, ConfigValues, User, UserValues } from "../../types/ViewSubmissionPayload";
 import { newActivity, newUser } from "../slack-resources/user-interface/modals";
-import Bridge from "../../application/bridge";
+import Bridge from "../../application/bridge.events";
 
 export default class InteractionCtrl {
     private bridge;

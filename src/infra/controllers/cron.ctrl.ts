@@ -1,6 +1,6 @@
 import "dotenv/config"
 import { Request, Response } from "express";
-import Bridge from "../../application/bridge";
+import Bridge from "../../application/bridge.api";
 
 export default class CronCtrl {
     private bridge;

@@ -1,5 +1,5 @@
 /**
- * Implementación de la lógica de los controladores
+ * Implementación de la lógica de los controladores para SLACK
  * Mediador entre controlador/endpoint y repositorio
  */
 
@@ -58,41 +58,6 @@ export default class Bridge {
             return;
         } catch (error) {
             console.log('error @ Bridge.newSlackUser()', error);
-            return error
-        }
-    }
-
-    /**
-     * Crea un nuevo usuario a partir de un login de Google
-     * 
-     * @param param Un objeto con las propiedades user y values
-     * @returns 
-     */
-    public newGoogleUser = async (payload: any) => {
-        try {
-            const {
-                email,
-                name
-            } = payload;
-
-            const userExists = await this.db.getUserByEmail(email)
-            if (userExists) {
-                //TODO Si ya existe actualizar con datos faltantes 
-                return userExists
-            }
-
-            const result = await this.db.createGoogleUser(payload)
-
-            if (result?._id) {
-                await this.db.createConfig(result._id, { email })
-                await this.db.createLogs(result._id, { email })
-
-                return `✅ Registro de usuario exitoso. Bienvenido ${name.split(" ")[0]}!`
-            } else {
-                return "🤔 Algo salió mal..."
-            }
-        } catch (error) {
-            console.log('error @ Bridge.newGoogleUser()', error);
             return error
         }
     }
@@ -284,31 +249,6 @@ export default class Bridge {
         }
     }
 
-    async notify(): Promise<any> {
-        try {
-            //TODO 
-            /**
-             * 1- crear una lista de todos los usuarios filtrada por
-             *  - el usuario está activo
-             *  - el usuario tiene los recordatorios activos
-             *  - estamos dentro de la franja de actividad (dia) 
-             *  - estamos dentro de la franja de actividad (hora)
-             *  
-             *  - ha pasado el tiempo minimo de recordatorio indicado en la config desde el ultimo registro
-             *  - no tiene un evento activo en la base de datos
-             *  - no tiene un evento activo actualmente en Google Calendar
-             */
-
-            const userList = await this.db.getActiveUsers()
-
-            return userList
-
-        } catch (error) {
-            console.log('error @ Bridge.openHome()', error);
-            return error
-        }
-    }
-
     //________________________________________________________
 
     private parseUserData = ({ user, values }: { user: User, values: UserValues }): UserPayload => {
@@ -333,8 +273,8 @@ export default class Bridge {
             const data: Activity = {
                 date: new Date().toISOString().split('T')[0],
                 hours: {
-                    from: values.time_from.from.selected_time,
-                    to: values.time_to.to.selected_time
+                    from: parseInt(values.time_from.from.selected_time.split(":")[0]),
+                    to: parseInt(values.time_to.to.selected_time.split(":")[0])
                 },
                 category: values.category.category_select.selected_option.value,
                 subcategory: values.subcategory.subcategory_select.selected_option.value,

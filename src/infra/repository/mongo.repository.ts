@@ -10,6 +10,21 @@ import User from "../models/user.model";
 import IUser, { PopulatedUser } from "../../types/models/IUser.interface";
 
 export default class MongoDB implements IdbRepository {
+
+    async getAllUsers(): Promise<any> {
+        try {
+            const userList = await User.find()
+                .populate("config")
+                .populate("logs")
+
+            return userList
+
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error)
+        }
+    }
+
     async getActiveUsers(): Promise<any> {
         try {
             //TODO Filtrar lo más posible en la query 

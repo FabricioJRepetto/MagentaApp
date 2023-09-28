@@ -14,6 +14,7 @@ type NonEmpty<T> = Partial<T> & AtLeastOne<T>
 export type AtLeastOneRefCreationArg = NonEmpty<refCreationArgs>
 
 export default interface IdbRepository {
+    getAllUsers(): Promise<any>
     getUserByEmail(email: string): Promise<any>
     /**
      * 
@@ -43,7 +44,7 @@ export default interface IdbRepository {
     getPopulatedUser(user_id: string): Promise<any>
 
     /**
-     * Busca todos los usuarios activos y con notificaciones activas.
+     * Busca todos los usuarios activos y con un Slack ID.
      * Devuelve un Array de usuarios con su configuración y logs.
      */
     getActiveUsers(): Promise<any>

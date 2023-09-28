@@ -21,8 +21,8 @@ export interface Day {
 export interface Activity {
     date: string;
     hours: {
-        from: string;
-        to: string;
+        from: number;
+        to: number;
     };
     description: string;
     category: CATEGORY,
@@ -46,8 +46,8 @@ const example_logs = {
                         {
                             date: "19-9-2023",
                             hours: {
-                                from: "9:00",
-                                to: "11:00"
+                                from: 9,
+                                to: 11
                             },
                             category: "PRODUCTIVIDAD",
                             subcategory: "TRABAJO",
@@ -59,8 +59,8 @@ const example_logs = {
                         {
                             date: "1-9-2023",
                             hours: {
-                                from: "12:00",
-                                to: "13:00"
+                                from: 12,
+                                to: 13
                             },
                             category: "AUTOCUIDADO",
                             subcategory: "COMER",
