@@ -86,12 +86,13 @@ export default class Bridge {
              */
 
             // Usuarios "activos" y con un Slack ID
-            const userList = await this.db.getActiveUsers()
+            const userList: PopulatedUser[] = await this.db.getActiveUsers()
 
             //: Logica filtrado
             //TODO Refactorizar 
 
             let promises: Promise<any>[] = [];
+            let idList: String[] = [];
             const today = new Date().getDay();
 
             for (const user of userList) {
@@ -109,9 +110,10 @@ export default class Bridge {
                         if (this.hasToNotify(CalendarEntries, reminder_time)) {
                             //: Agregar promesa a la lista 
                             //TODO crear un message View con boton para registrar 
-                            promises.push(new Promise(() => {
-                                this.slack.sendMessage(user.id!, { text: `${user.name} es hora de registrar tu actividad! \n¿Qué fue lo último que hiciste? \nUtiliza \\Actividad para registrar una actividad.` })
-                            }))
+                            idList.push(user.slack_id!)
+                            promises.push(
+                                this.slack.sendMessage(user.slack_id!, { text: `${user.name} es hora de registrar tu actividad! \n¿Qué fue lo último que hiciste? \nUtiliza \\Actividad para registrar una actividad.` })
+                            )
                         }
                     }
                 }
@@ -120,10 +122,11 @@ export default class Bridge {
             //: Completar promesas y responder
             let response = {
                 fulfilled: 0,
-                rejected: 0
+                rejected: 0,
+                idList
             }
-            Promise.allSettled(promises)
-                .then((results) => results.forEach((result) => response[result.status] += 1));
+            const promiseAll = await Promise.allSettled(promises)
+            promiseAll.forEach((result) => response[result.status] += 1)
 
             return response
 
