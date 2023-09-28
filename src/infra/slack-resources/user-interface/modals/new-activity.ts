@@ -4,6 +4,8 @@ export default (): string => {
     const time = new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" }),
         hour = new Date(time).getHours();
 
+    const timeFormat = (time: number) => time < 10 ? "0" + time : "" + time + ":00"
+
     const modal = Modal({ title: 'Registrar actividad', submit: 'Enviar', close: "cancelar", callbackId: 'new_activity' })
         .blocks(
             Blocks.Section({ text: "Registra una nueva actividad" }),
@@ -16,14 +18,14 @@ export default (): string => {
             Blocks.Divider(),
             Blocks.Input({ label: "Desde", blockId: "time_from" }).element(
                 Elements.TimePicker({
-                    initialTime: hour + ":00",
+                    initialTime: timeFormat(hour),
                     placeholder: "desde",
                     actionId: "from"
                 })
             ),
             Blocks.Input({ label: "Hasta", blockId: "time_to" }).element(
                 Elements.TimePicker({
-                    initialTime: hour + 1 + ":00",
+                    initialTime: timeFormat(hour + 1),
                     placeholder: "hasta",
                     actionId: "to"
                 })
