@@ -3,6 +3,8 @@ import IConfig from "../../../../types/models/IConfig.interface";
 import { dayName } from "../../../../utils";
 
 export default ({ active_hours, active_days, reminder_time, notification }: IConfig): string => {
+    const timeFormat = (time: number) => time < 10 ? "0" + time : "" + time + ":00"
+
     const modal = Modal({ title: "Configuración", submit: "Guardar", close: "volver", callbackId: "edit_config" })
         .blocks(
             Section({ text: "Adapta la app a tus necesidades para que tu experiencia de uso sea lo más placentera posible.\n\n" }),
@@ -11,14 +13,14 @@ export default ({ active_hours, active_days, reminder_time, notification }: ICon
             Section({ text: "Horarios dentro de los que la app puede enviarte notificaciónes\n\n" }),
             Input({ label: "Mi día comienza a las...", blockId: "time_from" }).element(
                 TimePicker({
-                    initialTime: "" + active_hours.from + ":00",
+                    initialTime: timeFormat(active_hours.from),
                     placeholder: "desde",
                     actionId: "from"
                 })
             ),
             Input({ label: "Y termina a las...", blockId: "time_to" }).element(
                 TimePicker({
-                    initialTime: "" + active_hours.to + ":00",
+                    initialTime: timeFormat(active_hours.to),
                     placeholder: "hasta",
                     actionId: "to"
                 })
