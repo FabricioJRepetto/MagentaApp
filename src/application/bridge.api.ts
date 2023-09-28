@@ -91,7 +91,7 @@ export default class Bridge {
             //: Logica filtrado
             //TODO Refactorizar 
 
-            let auxList: PopulatedUser[] = [];
+            let promises: Promise<any>[] = [];
             const today = new Date().getDay();
 
             for (const user of userList) {
@@ -100,31 +100,32 @@ export default class Bridge {
 
                 //: Día y Horarios de actividad
                 if (active_days.includes(today) && this.inActiveHours(active_hours)) {
-                    //: Buscar Logs de hoy
-                    //:     si no hay, agregar el usuario a la lista
-                    //:     si hay, checkear que haya un margen de "reminder_time" horas
+                    //: Buscar en Logs de hoy, hay? paso el tiempo para notificar?
                     if (this.hasToNotify(entries, reminder_time)) {
+                        //: Buscar en Calendar eventos de hoy, hay? paso el tiempo para notificar?
                         //TODO hacer petición de eventos en Google Calendar 
                         //TODO parsear datos 
                         const CalendarEntries: Entry[] = [];
-                        //: Checkear si hay un evento en Calendar
-                        //:     si no hay, agregar el usuario a la lista
-                        //:     si hay, checkear que haya un margen de "reminder_time" horas
                         if (this.hasToNotify(CalendarEntries, reminder_time)) {
-                            auxList.push(user)
+                            //: Agregar promesa a la lista 
+                            //TODO crear un message View con boton para registrar 
+                            promises.push(new Promise(() => {
+                                this.slack.sendMessage(user.id!, { text: `${user.name} es hora de registrar tu actividad! \n¿Qué fue lo último que hiciste? \nUtiliza \\Actividad para registrar una actividad.` })
+                            }))
                         }
                     }
                 }
             }
 
-            const IDList = auxList.map(user => ({ name: user.name.split(" ")[0], id: user.slack_id }))
-
-            //TODO crear un message View con boton para registrar 
-            for await (const user of IDList) {
-                this.slack.sendMessage(user.id!, { text: `${user.name} es hora de registrar tu actividad! \n¿Qué fue lo último que hiciste? \nUtiliza \\Actividad para registrar una actividad.` })
+            //: Completar promesas y responder
+            let response = {
+                fulfilled: 0,
+                rejected: 0
             }
+            Promise.allSettled(promises)
+                .then((results) => results.forEach((result) => response[result.status] += 1));
 
-            return auxList
+            return response
 
         } catch (error) {
             console.log('error @ Bridge.openHome()', error);

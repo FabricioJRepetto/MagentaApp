@@ -6,7 +6,6 @@ export default (): string => {
 
     const timeFormat = (time: number): string => {
         const aux = time < 10 ? "0" + time : "" + time;
-        console.log(aux);
         return aux + ":00";
     }
 
