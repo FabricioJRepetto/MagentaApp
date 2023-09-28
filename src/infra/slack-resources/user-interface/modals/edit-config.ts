@@ -4,9 +4,9 @@ import { dayName } from "../../../../utils";
 
 export default ({ active_hours, active_days, reminder_time, notification }: IConfig): string => {
     const timeFormat = (time: number): string => {
-        const aux = time < 10 ? "0" + time : "" + time + ":00";
+        const aux = time < 10 ? "0" + time : "" + time;
         console.log(aux);
-        return aux
+        return aux + ":00";
     }
 
     const modal = Modal({ title: "Configuración", submit: "Guardar", close: "volver", callbackId: "edit_config" })

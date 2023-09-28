@@ -5,9 +5,9 @@ export default (): string => {
         hour = new Date(time).getHours();
 
     const timeFormat = (time: number): string => {
-        const aux = time < 10 ? "0" + time : "" + time + ":00";
+        const aux = time < 10 ? "0" + time : "" + time;
         console.log(aux);
-        return aux
+        return aux + ":00";
     }
 
     const modal = Modal({ title: 'Registrar actividad', submit: 'Enviar', close: "cancelar", callbackId: 'new_activity' })
