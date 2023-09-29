@@ -5,8 +5,8 @@ const activitySchema = new Schema<Activity>(
     {
         date: { type: String },
         hours: {
-            from: { type: String },
-            to: { type: String }
+            from: { type: Number },
+            to: { type: Number }
         },
         description: { type: String },
         category: { type: String },

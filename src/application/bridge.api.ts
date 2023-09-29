@@ -11,7 +11,7 @@ import { PopulatedUser } from "../types/models/IUser.interface";
 import IConfig from "../types/models/IConfig.interface";
 import ILogs, { Activity, Day, Entry } from "../types/models/ILogs.interface";
 import { notificationMessage } from "../infra/slack-resources/user-interface/messages";
-import { findDayLogs, getYesterdayDate, isBussy, previousEvent } from "./utils";
+import { findDayLogs, getYesterdayDate, isBussy, nowTime, previousEvent, timeToNumber } from "./utils";
 
 export default class Bridge {
     private db: dbRepository;
@@ -137,7 +137,7 @@ export default class Bridge {
      * @returns Retorna un booleano.
      */
     private inActiveHours = ({ from, to }: { from: number, to: number }): Boolean => {
-        const now = new Date().getHours();
+        const now = nowTime();
 
         if (from < to) {
             // ejemplo: 9am - 18pm
