@@ -68,7 +68,6 @@ export default class SlackAPI implements ISlackAPI {
     }
 
     public sendMessage = async (user_slack_id: string, arg: AtLeastOneMessageArg) => {
-        //TODO aceptar varios tipos de "mensaje"
         try {
             // You can use their direct message channel ID (as found with im.open, for instance) instead.
             // https://api.slack.com/methods/chat.postMessage

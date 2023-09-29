@@ -10,6 +10,8 @@ import dbRepository from "../types/db.repository.interface";
 import { PopulatedUser } from "../types/models/IUser.interface";
 import IConfig from "../types/models/IConfig.interface";
 import ILogs, { Activity, Day, Entry } from "../types/models/ILogs.interface";
+import { notificationMessage } from "../infra/slack-resources/user-interface/messages";
+import { findDayLogs, getYesterdayDate, isBussy, previousEvent } from "./utils";
 
 export default class Bridge {
     private db: dbRepository;
@@ -70,27 +72,19 @@ export default class Bridge {
         }
     }
 
+    /**
+     * Busca los usuarios que cumplen los criterios para ser notificados y les envia una notificación a Slack.
+     * Los usuarios seleccionados deben estar "activos", tener una ID de Slack asociada 
+     * y cumplir las especificaciones seteadas en su configuración.
+     * 
+     * @returns cantidad de envios de notificaciones exitosos y fallidos.
+     */
     async notify(): Promise<any> {
         try {
-            //TODO 
-            /**
-             * 1- crear una lista de todos los usuarios filtrada por
-             *  * el usuario está activo
-             *  * el usuario tiene los recordatorios activos
-             * 
-             *  * estamos dentro de la franja de actividad (dia) 
-             *  * estamos dentro de la franja de actividad (hora)
-             * 
-             *  * ha pasado el tiempo minimo de recordatorio indicado en la config desde el ultimo evento
-             *  : no tiene un evento activo actualmente en Google Calendar
-             */
-
             // Usuarios "activos" y con un Slack ID
             const userList: PopulatedUser[] = await this.db.getActiveUsers()
 
             //: Logica filtrado
-            //TODO Refactorizar 
-
             let promises: Promise<any>[] = [];
             let idList: String[] = [];
             const today = new Date().getDay();
@@ -101,20 +95,18 @@ export default class Bridge {
 
                 //: Día y Horarios de actividad
                 if (active_days.includes(today) && this.inActiveHours(active_hours)) {
+
                     //: Buscar en Logs de hoy, hay? paso el tiempo para notificar?
                     if (this.hasToNotify(entries, reminder_time)) {
-                        //: Buscar en Calendar eventos de hoy, hay? paso el tiempo para notificar?
-                        //TODO hacer petición de eventos en Google Calendar 
-                        //TODO parsear datos 
-                        const CalendarEntries: Entry[] = [];
-                        if (this.hasToNotify(CalendarEntries, reminder_time)) {
-                            //: Agregar promesa a la lista 
-                            //TODO crear un message View con boton para registrar 
-                            idList.push(user.slack_id!)
-                            promises.push(
-                                this.slack.sendMessage(user.slack_id!, { text: `${user.name} es hora de registrar tu actividad! \n¿Qué fue lo último que hiciste? \nUtiliza \\Actividad para registrar una actividad.` })
-                            )
-                        }
+
+                        //: Agregar promesa a la lista 
+                        //TODO crear un message View con boton para registrar 
+                        idList.push(user.slack_id!)
+                        promises.push(
+                            this.slack.sendMessage(user.slack_id!, { blocks: notificationMessage(user.name.split(" ")[0]) })
+                        )
+
+                        //: Google Calendar ?                        
                     }
                 }
             }
@@ -165,55 +157,44 @@ export default class Bridge {
      * @returns Boolean
      */
     private hasToNotify(entries: Entry[], reminder_time: number): Boolean {
-        const day = new Date().toLocaleDateString('en-Us'),
-            month = new Date().getMonth(),
-            year = new Date().getFullYear();
+        const now = new Date().getHours(),
+            day = new Date().toLocaleDateString('en-Us');
 
-        // Buscamos una entrada con la fecha actual (mes-año)
-        const targetMonth: Entry | undefined = entries.find(e => e.month === month && e.year === year)
+        const targetDay: Day | null = findDayLogs(day, entries);
+        const yesterday: Day | null = findDayLogs(getYesterdayDate(), entries);
 
-        if (targetMonth) { // Buscamos un día con la fecha actual
-            const targetDay = targetMonth.days.find(d => d.date === day)
+        if (targetDay) {
+            if (isBussy(targetDay.activity)) { // verificamos si hay evento en curso
+                return false // Si hay, no enviar notificación
 
-            if (targetDay) { // buscamos el ultimo evento
-                const lastActivity = this.lastActivity(targetDay.activity)
+            } else { // Si no hay, buscar el evento anterior
+                const prev = previousEvent(targetDay.activity, yesterday ? yesterday.activity : [])
 
-                return this.isTimeToRemind(lastActivity, reminder_time)
+                // si no hay evento anterior o si pasó el tiempo requerido: notificar
+                if (prev === null || prev?.hours.to <= now - reminder_time) {
+                    return true;
+                }
+                // el ultimo evento es del dia anterior
+                if (new Date(prev.date) < new Date(day)) {
+                    // checkear tiempo transcurrido desde ayer
+                    if (23 - prev.hours.to + now >= reminder_time) {
+                        return true;
+                    }
+                }
+                // si hay evento y no paso el tiempo: no notificar
+                return false;
             }
+        } else if (yesterday) { // Si hay "ayer" checkear su ultimo evento
+            const prev = previousEvent(yesterday.activity)
+
+            // si no hay evento anterior o si pasó el tiempo requerido
+            if (prev === null || 23 - prev.hours.to + now >= reminder_time) {
+                return true;
+            }
+            // si hay evento y no paso el tiempo: no notificar
+            return false
         }
 
         return true // hay que notificar
-    }
-
-    /**
-     * Determina si transcurrio el tiempo especificado por el usuario para recibir una notificación.
-     * 
-     * @param time Hora de finalización de un evento
-     * @param reminder_time Horas minimas que deben transcurrir entre cada notificación. Determinado por la configuración del usuario.
-     * @returns true: hay que notificar; false: no hay que notificar aún;
-     */
-    private isTimeToRemind(activity: Activity | null, reminder_time: number): Boolean {
-        if (!activity) return true
-
-        const now = new Date().getHours()
-        if (activity.hours.to + reminder_time >= now) return true
-
-        return false
-    }
-
-    private lastActivity(entries: Activity[]): Activity | null {
-        let later: number = 0;
-        let aux: Activity | null = null;
-
-        for (const activity of entries) {
-            const end: number = activity.hours.to;
-
-            if (end >= later) {
-                later = end;
-                aux = activity;
-            }
-        }
-
-        return aux;
     }
 }
