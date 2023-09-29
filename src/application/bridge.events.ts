@@ -13,6 +13,7 @@ import IConfig, { Config } from "../types/models/IConfig.interface";
 import { Activity } from "../types/models/ILogs.interface";
 import IUser, { PopulatedUser } from "../types/models/IUser.interface";
 import ISlackAPI from "../types/slack.api.interface";
+import { timeToNumber } from "./utils";
 
 export default class Bridge {
     private db: dbRepository;
@@ -273,8 +274,8 @@ export default class Bridge {
             const data: Activity = {
                 date: new Date().toISOString().split('T')[0],
                 hours: {
-                    from: parseInt(values.time_from.from.selected_time.split(":")[0]),
-                    to: parseInt(values.time_to.to.selected_time.split(":")[0])
+                    from: timeToNumber(values.time_from.from.selected_time),
+                    to: timeToNumber(values.time_to.to.selected_time)
                 },
                 category: values.category.category_select.selected_option.value,
                 subcategory: values.subcategory.subcategory_select.selected_option.value,
@@ -294,8 +295,8 @@ export default class Bridge {
         try {
             const data: Config = {
                 active_hours: {
-                    from: parseInt(values.time_from.from.selected_time.split(":")[0]),
-                    to: parseInt(values.time_to.to.selected_time.split(":")[0])
+                    from: timeToNumber(values.time_from.from.selected_time),
+                    to: timeToNumber(values.time_to.to.selected_time)
                 },
                 active_days: values.days.selected_days.selected_options.map(e => parseInt(e.value)),
                 reminder_time: parseInt(values.reminder.reminder_select.selected_option.value),

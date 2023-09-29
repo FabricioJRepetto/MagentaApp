@@ -1,13 +1,13 @@
 import { Modal, Blocks, Elements, Option } from 'slack-block-builder';
+import { numberToTime, timeToNumber } from '../../../../application/utils';
 
 export default (): string => {
-    const time = new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" }),
-        hour = new Date(time).getHours();
+    //? Block kit Options have a maximum length of 10, and most people have more than 10 open tasks at a given time, so we break the openTasks list into chunks of ten and add them as multiple blocks.
 
-    const timeFormat = (time: number): string => {
-        const aux = time < 10 ? "0" + time : "" + time;
-        return aux + ":00";
-    }
+    const time = new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" }),
+        hour = timeToNumber(time.split(' ')[1]);
+
+    //TODO FROM: tomar horario definalización del ultimo evento 
 
     const modal = Modal({ title: 'Registrar actividad', submit: 'Enviar', close: "cancelar", callbackId: 'new_activity' })
         .blocks(
@@ -21,14 +21,14 @@ export default (): string => {
             Blocks.Divider(),
             Blocks.Input({ label: "Desde", blockId: "time_from" }).element(
                 Elements.TimePicker({
-                    initialTime: timeFormat(hour),
+                    initialTime: numberToTime(hour - 1),
                     placeholder: "desde",
                     actionId: "from"
                 })
             ),
             Blocks.Input({ label: "Hasta", blockId: "time_to" }).element(
                 Elements.TimePicker({
-                    initialTime: timeFormat(hour + 1),
+                    initialTime: numberToTime(hour),
                     placeholder: "hasta",
                     actionId: "to"
                 })
@@ -86,4 +86,3 @@ export default (): string => {
     return modal;
 };
 
-//? Block kit Options have a maximum length of 10, and most people have more than 10 open tasks at a given time, so we break the openTasks list into chunks of ten and add them as multiple blocks.
