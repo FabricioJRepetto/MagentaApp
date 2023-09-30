@@ -5,7 +5,7 @@ import morgan from "morgan";
 import routes from "./infra/routes/index"
 import { error404, generalErrorHandler } from "./infra/middlewares";
 
-const { PORT = 3000 } = process.env
+const { PORT = 4000 } = process.env
 
 const app = express()
 
@@ -19,7 +19,7 @@ app.use('*', error404)
 app.use(generalErrorHandler);
 
 export const startServer = () => {
-    app.listen(PORT, () => console.log(`[✔] · Server listening on port ${PORT}`));
+    app.listen(PORT, () => console.log(`[✔] · Server listening on port ${PORT} => http://localhost:${PORT}`));
 }
 
 export const closeServer = () => {

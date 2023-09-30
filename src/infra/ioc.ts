@@ -2,6 +2,7 @@ import { ContainerBuilder } from "node-dependency-injection";
 import InteractionCtrl from "./controllers/interaction.ctrl";
 import CronCtrl from "./controllers/cron.ctrl";
 import TestCtrl from "./controllers/test.ctrl";
+import UserCtrl from "./controllers/user.ctrl";
 
 const container = new ContainerBuilder();
 
@@ -28,5 +29,9 @@ container
 //? Controlador Cron de Vercel
 container
     .register("cron.ctrl", CronCtrl)
+
+//? Controlador de Usuarios
+container
+    .register("user.ctrl", UserCtrl)
 
 export default container;
