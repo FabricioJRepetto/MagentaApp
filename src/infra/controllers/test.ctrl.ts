@@ -11,7 +11,8 @@ export default class TestCtrl {
 
     public newUser = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
-            const data = await this.bridge.newGoogleUser(body)
+            const data = { ok: true }
+            // const data = await this.bridge.newGoogleUser(body)
             res.status(200).json(data)
 
         } catch (err) {

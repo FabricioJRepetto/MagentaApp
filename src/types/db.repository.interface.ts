@@ -30,7 +30,7 @@ export default interface IdbRepository {
     updateUserConfig(user_id: string, data: Config): Promise<any>
     createLogs(user_id: string, arg: AtLeastOneRefCreationArg): Promise<any>
     createConfig(user_id: string, arg: AtLeastOneRefCreationArg): Promise<any>
-    createSlackUser(data: UserPayload): Promise<any>
+    linkSlackUser(data: UserPayload): Promise<any>
     createGoogleUser(data: { name: string, email: string }): Promise<any>
     /**
      * Busca un usuario por ID o por SLACK ID

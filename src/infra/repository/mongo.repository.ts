@@ -1,4 +1,4 @@
-import { FilterQuery } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { ActivityPayload } from "../../types/ActivityPayload";
 import { UserPayload } from "../../types/UserPayload";
 import IdbRepository, { AtLeastOneRefCreationArg } from "../../types/db.repository.interface";
@@ -8,6 +8,7 @@ import Config from "../models/config.model";
 import Logs from "../models/logs.model";
 import User from "../models/user.model";
 import IUser, { PopulatedUser } from "../../types/models/IUser.interface";
+import { dbUser } from "../../types/query/db.query";
 
 export default class MongoDB implements IdbRepository {
 
@@ -95,9 +96,18 @@ export default class MongoDB implements IdbRepository {
         }
     }
 
-    async createSlackUser(data: UserPayload): Promise<any> {
+    async linkSlackUser(data: UserPayload): Promise<any> {
         try {
-            const response = await User.create(data)
+            const { email, slack_id } = data;
+            const response = await User.findOneAndUpdate({ email },
+                {
+                    $set: {
+                        slack_id
+                    }
+                },
+                { new: true }
+            )
+
             return response
         } catch (error) {
             console.log(error);
@@ -105,9 +115,9 @@ export default class MongoDB implements IdbRepository {
         }
     }
 
-    async createGoogleUser(data: { name: string, email: string }): Promise<any> {
+    async createGoogleUser(data: { name: string, email: string, google_id: string, picture: string }): Promise<IUser & { _id: Types.ObjectId }> {
         try {
-            const response = await User.create(data)
+            const response: IUser & { _id: Types.ObjectId } = await User.create(data)
             return response
         } catch (error) {
             console.log(error);
@@ -133,7 +143,8 @@ export default class MongoDB implements IdbRepository {
 
     async getUserByEmail(email: string): Promise<any> {
         try {
-            return await User.findOne({ email })
+            const user: IUser & { _id: Types.ObjectId } | null = await User.findOne({ email })
+            return user
 
         } catch (error) {
             console.log(error);
@@ -297,11 +308,11 @@ export default class MongoDB implements IdbRepository {
         }
     }
 
-    async checkUserCurrentEvent(user_id: string): Promise<any> {
+    syncGoogleCalendar(user_id: string): Promise<any> {
         throw new Error("Method not implemented.");
     }
 
-    syncGoogleCalendar(user_id: string): Promise<any> {
+    async checkUserCurrentEvent(user_id: string): Promise<any> {
         throw new Error("Method not implemented.");
     }
 

@@ -5,7 +5,7 @@ import morgan from "morgan";
 import routes from "./infra/routes/index"
 import { error404, generalErrorHandler } from "./infra/middlewares";
 
-const { PORT = 4000 } = process.env
+const { PORT = 3000 } = process.env
 
 const app = express()
 

@@ -12,8 +12,8 @@ export default (user: PopulatedUser | undefined): string => {
 
     if (user === undefined) {
         homeTab.blocks(
-            Section({ text: `:wave: Hola! Al ser un usuario nuevo, debes registrar un par de datos para poder utilizar la app.` })
-                .accessory(Button({ text: 'Registrarme!', actionId: 'user_signin' })),
+            Section({ text: `:wave: ¡Hola! Parece que es tu primera vez por acá... Para comenzar a utilizar la app primero debes *registrarte en la web* y luego vincular tu *Slack* desde este menú.` })
+                .accessory(Button({ text: '¡Vincular!', actionId: 'user_signin' })),
         )
     } else {
         const { active_hours, active_days, reminder_time } = <IConfig>user?.config;

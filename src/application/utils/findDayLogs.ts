@@ -1,4 +1,4 @@
-import { Activity, Day, Entry } from "../../types/models/ILogs.interface"
+import { Day, Entry } from "../../types/models/ILogs.interface"
 
 /**
  * Busca una entrada de registros dada determinada fecha.

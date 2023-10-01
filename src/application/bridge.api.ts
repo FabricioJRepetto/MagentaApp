@@ -12,14 +12,13 @@ import ILogs, { Activity, Day, Entry } from "../types/models/ILogs.interface";
 import { notificationMessage } from "../infra/slack-resources/user-interface/messages";
 import { findDayLogs, getYesterdayDate, isBussy, nowTime, previousEvent, timeToNumber } from "./utils";
 import { User, UserValues, ActivityValues, ConfigValues } from "../types/ViewSubmissionPayload";
-import { DecodedGoogleCredentials } from "../types/request/decodedGoogleCredentials.interface";
 import jwt from "jsonwebtoken";
+import { googleDecodedCredentials, googleSigninCredentials } from "../types/request/googleLogin";
+import { signinRes } from "../types/response/signin";
+import { populatedUserRes } from "../types/response/user";
+import { dbUser } from "../types/query/db.query";
 
-interface googleLoginPayload {
-    clientId: string,
-    credential: string,
-    select_by: string
-}
+const { JWT_SECRET } = process.env
 
 export default class Bridge {
     private db: dbRepository;
@@ -36,34 +35,75 @@ export default class Bridge {
      * @param param Un objeto con las propiedades user y values
      * @returns 
      */
-    public handleGoogleLogin = async ({ clientId, credential, select_by }: googleLoginPayload): Promise<any> => {
+    public handleGoogleLogin = async ({ clientId, credential, select_by }: googleSigninCredentials): Promise<signinRes | undefined> => {
         try {
             //: decode el jwt y parsear los datos
-            const { email, name, picture } = <DecodedGoogleCredentials>jwt.decode(credential);
+            const payload = <googleDecodedCredentials>jwt.decode(credential);
 
             //: verificar si existe un user con ese email
-                //: Crear o actualziar
-            const userExists = await this.db.getUserByEmail(email)
+            const userExists = await this.db.getUserByEmail(payload.email)
+
             if (userExists) {
-                //TODO Si ya existe actualizar con datos faltantes 
-                return userExists
-            }
+                //: parsear datos del usuario y retornar token
+                const { _id, email, name, role, picture, google_id, slack_id } = userExists;
+                const token = this.userToJWT(userExists)
 
-            //: retornar el token SIN datos sensibles
-
-            const result = await this.db.createGoogleUser(payload)
-
-            if (result?._id) {
-                await this.db.createConfig(result._id, { email })
-                await this.db.createLogs(result._id, { email })
-
-                return `✅ Registro de usuario exitoso. Bienvenido ${name.split(" ")[0]}!`
+                return {
+                    error: false,
+                    message: `Bienvenido ${payload.name.split(" ")[0]}!`,
+                    user: { _id, email, name, role, picture, google_id, slack_id },
+                    token
+                }
             } else {
-                return "🤔 Algo salió mal..."
+                //: crear usuario
+                const result = await this.db.createGoogleUser(payload)
+                console.log(result);
+
+                if (result?._id) {
+                    await this.db.createConfig(result._id, { email: payload.email })
+                    await this.db.createLogs(result._id, { email: payload.email })
+
+                    //: parsear datos del usuario y retornar token
+                    const { _id, email, name, role, picture, google_id, slack_id } = result;
+                    const token = this.userToJWT(result)
+                    return {
+                        error: false,
+                        message: `Registro de usuario exitoso. Bienvenido ${payload.name.split(" ")[0]}!`,
+                        user: { _id, email, name, role, picture, google_id, slack_id },
+                        token
+                    }
+
+                } else {
+                    return { error: true, message: "Algo salió mal..." }
+                }
             }
+
         } catch (error) {
             console.log('error @ Bridge.newGoogleUser()', error);
-            return error
+            return
+        }
+    }
+
+    public getUser = async (user_id: string): Promise<populatedUserRes | undefined> => {
+        try {
+            const user = await this.db.getPopulatedUser(user_id)
+            if (user) {
+                return {
+                    error: false,
+                    message: 'user found',
+                    user
+                }
+
+            } else {
+                return {
+                    error: true,
+                    message: 'user not found'
+                }
+            }
+
+        } catch (error) {
+            console.log('error @ Bridge.getUser()', error);
+            return
         }
     }
 
@@ -206,5 +246,18 @@ export default class Bridge {
         }
 
         return true // hay que notificar
+    }
+
+    private userToJWT(user: dbUser) {
+        const { id, email, name, role, google_id, slack_id } = user;
+        const aux = { id, email, name, role, google_id, slack_id };
+        const token = jwt.sign({ user: aux },
+            JWT_SECRET!,
+            {
+                expiresIn: '7d'
+            }
+        );
+
+        return token;
     }
 }

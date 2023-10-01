@@ -32,27 +32,33 @@ export default class Bridge {
      */
     public newSlackUser = async ({ user, values }: { user: User, values: UserValues }) => {
         try {
-            const userExists = await this.db.getUser(user.id)
-            if (userExists) {
-                //TODO Si ya existe actualizar con datos faltantes 
-                return userExists
-            }
-
             //TODO validar datos 
             const data = this.parseUserData({ user, values })
 
-            const result = await this.db.createSlackUser(data)
+            const userExists = await this.db.getUser(user.id)
+
+            if (userExists) { // Ya hay un usuario con esa slack_id
+                if (userExists.email === data.email) {
+                    await this.slack.sendMessage(user.id, {
+                        text: `:exploding_head: ¡Tus cuentas ya se encuentran vinculadas!`
+                    })
+                } else {
+                    await this.slack.sendMessage(user.id, {
+                        text: `:thinking_face: Ya hay una cuenta vinculada a tu Slack... Comprueba si el email es correcto.`
+                    })
+                }
+                return userExists
+            }
+
+            const result = await this.db.linkSlackUser(data)
 
             if (result?._id) {
-                await this.db.createConfig(result._id, { user_slack_id: user.id })
-                await this.db.createLogs(result._id, { user_slack_id: user.id })
-
                 await this.slack.sendMessage(user.id, {
-                    text: `:white_check_mark: Registro de usuario exitoso. Bienvenido ${result.name.split(" ")[0]}!`
+                    text: `:handshake: Cuentas vinculadas exitosamente. ¡Ya puedes utilizar todas las funcionalidades de la app!`
                 })
             } else {
                 await this.slack.sendMessage(user.id, {
-                    text: ":thinking_face: Algo salió mal..."
+                    text: ":upside_down_face: Algo salió mal..."
                 })
             }
 
@@ -255,10 +261,7 @@ export default class Bridge {
     private parseUserData = ({ user, values }: { user: User, values: UserValues }): UserPayload => {
         try {
             const data = {
-                name: values.name.name_input.value,
                 email: values.email.email_input.value,
-                phone: values.phone.phone_input.value,
-                username: user.username,
                 slack_id: user.id
             }
 

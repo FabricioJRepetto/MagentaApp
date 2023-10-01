@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import IUser from "../../types/models/IUser.interface";
-import ROLES from '../../types/roles.enum';
+import ROLES from '../../types/models/roles.enum';
 
 const userSchema = new Schema<IUser>(
     {
@@ -8,9 +8,11 @@ const userSchema = new Schema<IUser>(
         config: { type: Schema.Types.ObjectId, ref: "Configuration" },
         logs: { type: Schema.Types.ObjectId, ref: "Logs" },
         username: { type: String },
+        picture: { type: String },
+        google_id: { type: String },
+        slack_id: { type: String },
         email: { type: String, required: true, unique: true },
         phone: { type: String },
-        slack_id: { type: String },
         active: { type: Boolean, default: true },
         password: { type: String },
         role: { type: String, default: ROLES.USER }

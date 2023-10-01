@@ -1,8 +1,7 @@
 import "dotenv/config"
 import { NextFunction, Request, Response } from "express";
 import Bridge from "../../application/bridge.api";
-import jwt from "jsonwebtoken";
-import { DecodedGoogleCredentials } from "../../types/request/decodedGoogleCredentials.interface";
+import { idQuery } from "../../types/request/queries";
 
 export default class UserCtrl {
     private bridge;
@@ -12,28 +11,17 @@ export default class UserCtrl {
     }
 
     /**
-     * login/signin
-     */
-    public login = async ({ body }: Request, res: Response, next: NextFunction) => {
-        try {
-            
-
-            res.sendStatus(200)
-            
-        } catch (error) {
-            next(error)
-        }
-    }
-
-    /**
      * signin
      */
     public signin = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(body);
+            const result = await this.bridge.handleGoogleLogin(body)
 
-            res.sendStatus(200)
-            
+            if (result?.error) {
+                return res.status(400).json(result)
+            } else {
+                return res.json(result)
+            }
         } catch (error) {
             next(error)
         }
@@ -47,7 +35,33 @@ export default class UserCtrl {
             console.log(body);
 
             res.sendStatus(200)
-            
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    /**
+     * TODO login
+     */
+    public login = async ({ body }: Request, res: Response, next: NextFunction) => {
+        try {
+            console.log(body)
+            res.sendStatus(200)
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    public getUserData = async (req: Request<{}, {}, {}, idQuery>, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.query
+            const data = await this.bridge.getUser(id)
+
+            if (data) return res.status(data.error ? 400 : 200).json(data)
+            return res.status(500)
+
         } catch (error) {
             next(error)
         }
