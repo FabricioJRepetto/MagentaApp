@@ -108,6 +108,24 @@ export default class MongoDB implements IdbRepository {
                 { new: true }
             )
 
+            if (response?.id) {
+                await Config.findOneAndUpdate({ user: response.id },
+                    {
+                        $set: {
+                            user_slack_id: slack_id
+                        }
+                    }
+                )
+
+                await Logs.findOneAndUpdate({ user: response.id },
+                    {
+                        $set: {
+                            user_slack_id: slack_id
+                        }
+                    }
+                )
+            }
+
             return response
         } catch (error) {
             console.log(error);

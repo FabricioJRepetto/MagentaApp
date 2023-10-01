@@ -58,7 +58,7 @@ export default class Bridge {
                 })
             } else {
                 await this.slack.sendMessage(user.id, {
-                    text: ":upside_down_face: Algo salió mal..."
+                    text: ":thinking_face: Algo salió mal... Parece que no hay una cuenta registrada con ese email."
                 })
             }
 
