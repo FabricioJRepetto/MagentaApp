@@ -115,8 +115,9 @@ export default class MongoDB implements IdbRepository {
         }
     }
 
-    async createGoogleUser(data: { name: string, email: string, google_id: string, picture: string }): Promise<IUser & { _id: Types.ObjectId }> {
+    async createGoogleUser({ name, email, sub, picture }: { name: string, email: string, sub: string, picture: string }): Promise<IUser & { _id: Types.ObjectId }> {
         try {
+            const data = { name, email, google_id: sub, picture };
             const response: IUser & { _id: Types.ObjectId } = await User.create(data)
             return response
         } catch (error) {

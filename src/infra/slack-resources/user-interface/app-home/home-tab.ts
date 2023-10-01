@@ -25,8 +25,7 @@ export default (user: PopulatedUser | undefined): string => {
             Section({
                 text: `:identification_card: *Tus datos:*\n
                 Nombre: *${user.name}*\n
-                Email: *${user.email}*\n
-                Teléfono: *${user.phone}*`
+                Email: *${user.email}*`
             }),
             Divider(),
             Section({
