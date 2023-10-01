@@ -1,17 +1,22 @@
 import { NextFunction, Request, Response } from "express";
 import Bridge from "../../application/bridge.api";
+import MongoDB from "../repository/mongo.repository";
+import IdbRepository from "../../types/db.repository.interface";
 
 // Controlador, solo recibe y responde
 export default class TestCtrl {
     private bridge: Bridge;
+    private db: IdbRepository;
 
     constructor() {
         this.bridge = new Bridge();
+        this.db = new MongoDB();
     }
 
     public newUser = async ({ body }: Request, res: Response, next: NextFunction) => {
         try {
-            const data = { ok: true }
+            const { name, email, sub, picture } = body;
+            const data = await this.db.createGoogleUser(body)
             // const data = await this.bridge.newGoogleUser(body)
             res.status(200).json(data)
 

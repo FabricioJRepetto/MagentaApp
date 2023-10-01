@@ -8,7 +8,6 @@ import Config from "../models/config.model";
 import Logs from "../models/logs.model";
 import User from "../models/user.model";
 import IUser, { PopulatedUser } from "../../types/models/IUser.interface";
-import { dbUser } from "../../types/query/db.query";
 
 export default class MongoDB implements IdbRepository {
 
@@ -108,7 +107,7 @@ export default class MongoDB implements IdbRepository {
                 { new: true }
             )
 
-            if (response?.id) {
+            if (response?.id) { // Agrega la Slack id en Config y Logs del usuario
                 await Config.findOneAndUpdate({ user: response.id },
                     {
                         $set: {
@@ -133,11 +132,30 @@ export default class MongoDB implements IdbRepository {
         }
     }
 
-    async createGoogleUser({ name, email, sub, picture }: { name: string, email: string, sub: string, picture: string }): Promise<IUser & { _id: Types.ObjectId }> {
+    async createGoogleUser(data: { name: string, email: string, sub: string, picture: string }): Promise<any> {
         try {
-            const data = { name, email, google_id: sub, picture };
-            const response: IUser & { _id: Types.ObjectId } = await User.create(data)
-            return response
+            const newUser: IUser & { _id: Types.ObjectId } = await User.create(data)
+
+            // if (newUser?._id) {
+            // }
+            // Crear config & logs con referencia al usuario
+            const config = await Config.create({ user: newUser._id, email: data.email })
+            const logs = await Logs.create({ user: newUser._id, email: data.email })
+
+            // Actualizar referencias en usuario
+            const populatedUser = await User.findByIdAndUpdate(newUser._id,
+                {
+                    $set: {
+                        config: config._id,
+                        logs: logs._id,
+                    }
+                },
+                { new: true }
+            )
+                .populate("logs")
+                .populate("config")
+
+            return populatedUser
         } catch (error) {
             console.log(error);
             return Promise.reject(error)
@@ -163,6 +181,20 @@ export default class MongoDB implements IdbRepository {
     async getUserByEmail(email: string): Promise<any> {
         try {
             const user: IUser & { _id: Types.ObjectId } | null = await User.findOne({ email })
+            return user
+
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error)
+        }
+    }
+
+    async getPopulatedUserByEmail(email: string): Promise<any> {
+        try {
+            const user: IUser & { _id: Types.ObjectId } | null = await User.findOne({ email })
+                .populate("logs")
+                .populate("config")
+
             return user
 
         } catch (error) {

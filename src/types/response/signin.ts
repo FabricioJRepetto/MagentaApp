@@ -1,8 +1,13 @@
+import { Config } from "../models/IConfig.interface";
+import ILogs from "../models/ILogs.interface";
+
 export interface signinRes {
     error: boolean;
     message: string;
-    user?: parsedUser;
     token?: string;
+    user?: parsedUser;
+    logs?: ILogs;
+    config?: Config;
 }
 
 export interface parsedUser {

@@ -30,7 +30,17 @@ export default interface IdbRepository {
     updateUserConfig(user_id: string, data: Config): Promise<any>
     createLogs(user_id: string, arg: AtLeastOneRefCreationArg): Promise<any>
     createConfig(user_id: string, arg: AtLeastOneRefCreationArg): Promise<any>
+    /**
+     * Vincula un Slack id con una cuenta de usuario utilizando el email como referencia.
+     * @param data Un objeto con un email valido y una nueva Slack id
+     * @returns 
+     */
     linkSlackUser(data: UserPayload): Promise<any>
+    /**
+     * Al recibir un signin de google, determina si crear un nuevo usuario o solo hacer un login.
+     * @param data name, email, sub y picture del usuario
+     * @returns 
+     */
     createGoogleUser(data: { name: string, email: string }): Promise<any>
     /**
      * Busca un usuario por ID o por SLACK ID
@@ -42,6 +52,18 @@ export default interface IdbRepository {
     getUserWithConfig(user_id: string): Promise<any>
     getUserWithLogs(user_id: string): Promise<any>
     getPopulatedUser(user_id: string): Promise<any>
+    /**
+     * Busca un usuario por email
+     * @param email 
+     * @returns 
+     */
+    getUserByEmail(email: string): Promise<any>
+    /**
+     * Busca un usuario por email y lo retorna populado
+     * @param email 
+     * @returns 
+     */
+    getPopulatedUserByEmail(email: string): Promise<any>
 
     /**
      * Busca todos los usuarios activos y con un Slack ID.

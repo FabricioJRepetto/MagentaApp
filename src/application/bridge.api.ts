@@ -41,7 +41,7 @@ export default class Bridge {
             const payload = <googleDecodedCredentials>jwt.decode(credential);
 
             //: verificar si existe un user con ese email
-            const userExists = await this.db.getUserByEmail(payload.email)
+            const userExists = await this.db.getPopulatedUserByEmail(payload.email)
 
             if (userExists) {
                 //: parsear datos del usuario y retornar token
@@ -52,17 +52,15 @@ export default class Bridge {
                     error: false,
                     message: `Bienvenido ${payload.name.split(" ")[0]}!`,
                     user: { _id, email, name, role, picture, google_id, slack_id },
+                    logs: userExists.logs,
+                    config: userExists.config,
                     token
                 }
             } else {
                 //: crear usuario
                 const result = await this.db.createGoogleUser(payload)
-                console.log(result);
 
                 if (result?._id) {
-                    await this.db.createConfig(result._id, { email: payload.email })
-                    await this.db.createLogs(result._id, { email: payload.email })
-
                     //: parsear datos del usuario y retornar token
                     const { _id, email, name, role, picture, google_id, slack_id } = result;
                     const token = this.userToJWT(result)
