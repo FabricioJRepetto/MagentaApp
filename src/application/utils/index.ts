@@ -1,3 +1,4 @@
+import dayName from "./dayName";
 import findDayLogs from "./findDayLogs";
 import getYesterdayDate from "./getYesterdayDate";
 import isBussy from "./isBussy";
@@ -7,6 +8,7 @@ import previousEvent from "./previousEvent";
 import timeToNumber from "./timeToNumber";
 
 export {
+    dayName,
     nowTime,
     timeToNumber,
     numberToTime,

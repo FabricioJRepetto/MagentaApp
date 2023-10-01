@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from "mongoose";
+import { FilterQuery, ObjectId, Types } from "mongoose";
 import { ActivityPayload } from "../../types/ActivityPayload";
 import { UserPayload } from "../../types/UserPayload";
 import IdbRepository, { AtLeastOneRefCreationArg } from "../../types/db.repository.interface";
@@ -136,8 +136,6 @@ export default class MongoDB implements IdbRepository {
         try {
             const newUser: IUser & { _id: Types.ObjectId } = await User.create(data)
 
-            // if (newUser?._id) {
-            // }
             // Crear config & logs con referencia al usuario
             const config = await Config.create({ user: newUser._id, email: data.email })
             const logs = await Logs.create({ user: newUser._id, email: data.email })

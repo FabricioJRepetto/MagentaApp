@@ -1,8 +1,7 @@
 import { Button, Divider, HomeTab, Section } from "slack-block-builder"
 import { PopulatedUser } from "../../../../types/models/IUser.interface";
 import IConfig from "../../../../types/models/IConfig.interface";
-import { dayName } from "../../../../utils";
-import { numberToTime } from "../../../../application/utils";
+import { dayName, numberToTime } from "../../../../application/utils";
 
 export default (user: PopulatedUser | undefined): string => {
 

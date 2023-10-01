@@ -1,7 +1,6 @@
 import { Checkboxes, Divider, Input, Modal, Option, Section, StaticSelect, TimePicker } from "slack-block-builder"
 import IConfig from "../../../../types/models/IConfig.interface";
-import { dayName } from "../../../../utils";
-import { numberToTime } from "../../../../application/utils";
+import { dayName, numberToTime } from "../../../../application/utils";
 
 export default ({ active_hours, active_days, reminder_time, notification }: IConfig): string => {
 

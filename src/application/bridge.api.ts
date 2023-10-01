@@ -68,6 +68,8 @@ export default class Bridge {
                         error: false,
                         message: `Registro de usuario exitoso. Bienvenido ${payload.name.split(" ")[0]}!`,
                         user: { _id, email, name, role, picture, google_id, slack_id },
+                        logs: result.logs,
+                        config: result.config,
                         token
                     }
 
