@@ -275,7 +275,7 @@ export default class Bridge {
     private parseActivityData = ({ values }: { values: ActivityValues }): Activity => {
         try {
             const data: Activity = {
-                date: new Date().toISOString().split('T')[0],
+                date: new Date().toLocaleDateString('en', { timeZone: "America/Argentina/Buenos_Aires" }),
                 hours: {
                     from: timeToNumber(values.time_from.from.selected_time),
                     to: timeToNumber(values.time_to.to.selected_time)
