@@ -75,9 +75,9 @@ export default class Bridge {
             const data = this.parseActivityData({ values });
 
             //TODO recibir fechas o definir por defecto 
-            const day = new Date().toLocaleDateString('en-Us');
-            const month = new Date().getMonth();
-            const year = new Date().getFullYear();
+            const day = new Date().toLocaleDateString('en', { timeZone: "America/Argentina/Buenos_Aires" });
+            const month = new Date(day).getMonth();
+            const year = new Date(day).getFullYear();
 
             await this.db.saveUserActivity(user.id, data, { day, month, year })
                 .then(async () => {
