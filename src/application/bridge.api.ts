@@ -79,7 +79,7 @@ export default class Bridge {
             }
 
         } catch (error) {
-            console.log('error @ Bridge.newGoogleUser()', error);
+            console.log('error @ Bridge.handleGoogleLogin()', error);
             return
         }
     }
