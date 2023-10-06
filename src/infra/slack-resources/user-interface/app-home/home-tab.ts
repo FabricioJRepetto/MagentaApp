@@ -11,7 +11,7 @@ export default (user: PopulatedUser | undefined): string => {
 
     if (user === undefined) {
         homeTab.blocks(
-            Section({ text: `:wave: ¡Hola! Parece que es tu primera vez por acá... Para comenzar a utilizar la app primero debes *registrarte en la web* y luego vincular tu *Slack* desde este menú.` })
+            Section({ text: `:wave: ¡Hola! Parece que es tu primera vez por acá... Para comenzar a utilizar la app primero debes *registrarte en la web* y luego vincular tu *Slack* desde este menú.\n Si no te registraste aún, hacelo en la [WEB](https://magenta-app-dashboard.vercel.app)` })
                 .accessory(Button({ text: '¡Vincular!', actionId: 'user_signin' })),
         )
     } else {

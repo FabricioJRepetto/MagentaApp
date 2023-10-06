@@ -1,11 +1,9 @@
 import { Modal, Blocks, Elements, Option } from 'slack-block-builder';
-import { numberToTime, timeToNumber } from '../../../../application/utils';
+import { nowTime, numberToTime, timeToNumber } from '../../../../application/utils';
+import now from '../../../../application/utils/now';
 
 export default (): string => {
     //? Block kit Options have a maximum length of 10, and most people have more than 10 open tasks at a given time, so we break the openTasks list into chunks of ten and add them as multiple blocks.
-
-    const time = new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" }),
-        hour = timeToNumber(time.split(' ')[1]);
 
     //TODO FROM: tomar horario definalización del ultimo evento 
 
@@ -21,14 +19,14 @@ export default (): string => {
             Blocks.Divider(),
             Blocks.Input({ label: "Desde", blockId: "time_from" }).element(
                 Elements.TimePicker({
-                    initialTime: numberToTime(hour - 1),
+                    initialTime: numberToTime(nowTime() - 1),
                     placeholder: "desde",
                     actionId: "from"
                 })
             ),
             Blocks.Input({ label: "Hasta", blockId: "time_to" }).element(
                 Elements.TimePicker({
-                    initialTime: numberToTime(hour),
+                    initialTime: numberToTime(nowTime()),
                     placeholder: "hasta",
                     actionId: "to"
                 })
