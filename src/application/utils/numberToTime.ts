@@ -4,7 +4,7 @@
  * @param time Horario expresado en número decimal
  * @returns String de horario
  */
-export default (time: number): string => {
+export default function first(time: number): string {
     // time < 10 ? "0" + time : "" + time
     let string = time.toFixed(2).toString().split("."),
         hour = parseInt(string[0]),
